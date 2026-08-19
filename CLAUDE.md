@@ -45,28 +45,38 @@ répond à une erreur documentée de l'ancien site. Les lire avant de coder.
 
 ## Intégration avec l'app de gestion (CSHP Gestion)
 
-- Le formulaire d'essai (`src/components/FormulaireEssai.astro`, partagé) poste vers
-  `POST {club.apiLeads}` avec `{ name, phone, email, sport, message, provenance }`.
-- ⚠️ **CORS à activer côté app** pour le domaine du site avant la mise en ligne
-  (le formulaire affiche un repli téléphone/courriel en attendant).
-- **Attribution des landing pages** : `provenance: 'RESEAUX_SOCIAUX'` (valeur sûre de
-  l'enum de l'app) + le tag d'angle et les UTM joints au début du `message`
-  (ex. `[karate-enfant] utm_campaign=rentree2026 | …`). Si l'app ajoute un jour des
-  valeurs d'enum dédiées, changer la prop `provenance` des pages, rien d'autre.
+- **Contrat API réel de `POST {club.apiLeads}`** (vérifié contre le code de l'app,
+  2026-08-19) : accepte UNIQUEMENT `firstName`* `lastName`* `gender` `phone` `email`
+  `sport` `requestType` (ESSAI|RAPPEL|TARIFS|AUTRE) et le honeypot **`website`
+  (présent et vide)**. Zod supprime silencieusement tout champ inconnu.
+- Le formulaire (`src/components/FormulaireEssai.astro`, partagé) envoie ce contrat
+  PLUS le **contrat cible** en préparation côté app : `source`
+  (`site-accueil` / `landing-<tag>`), `utmSource`, `utmCampaign`, `utmContent`, `note`
+  (âge + message). Ignorés aujourd'hui, captés automatiquement dès le déploiement
+  côté app. Ne rien changer au site à ce moment-là.
+- **CORS : déjà ouvert côté app** (`app.use(cors())` sans restriction). Rien à activer ;
+  le chantier éventuel (sécurité) serait de le restreindre aux deux domaines.
 - Détails : `docs/contexte-club.md`.
 
 ## Landing pages publicitaires et pixel Meta
 
 - Une landing = une page dans `src/pages/essai-gratuit-*.astro` qui remplit les props
   de `LandingEssai.astro` (gabarit `Landing.astro` : pas de navigation, `noindex`).
-  Trois angles en place : `karate-enfant`, `ninjas-4-8`, `kickboxing-femmes`.
-- URLs de pub : ajouter les UTM (`?utm_campaign=…&utm_content=…`), capturés
-  automatiquement dans le message du lead.
+  Angles en place : `karate-enfant`, `ninjas-4-8`. **`kickboxing-femmes` retirée**
+  (2026-08-19) : le programme n'est pas confirmé dans l'offre actuelle ; ne jamais
+  envoyer de pub vers un cours qui n'existe pas. À recréer si le programme est décidé
+  (le composant supporte déjà `sportVerrouille`/`avecAge`).
+- URLs de pub : ajouter les UTM (`?utm_campaign=…&utm_content=…`), envoyés avec le lead
+  (contrat cible) dès que l'app les accepte.
 - **Pixel Meta** : `src/components/MetaPixel.astro`, activé en collant l'ID dans
   `src/data/marketing.json` (`metaPixelId`). Vide = aucun script tiers, aucun bandeau.
   Consentement préalable obligatoire (Loi 25) : bandeau Accepter/Refuser, choix
-  mémorisé ; `PageView` après consentement, `Lead` à la soumission réussie du
-  formulaire (`content_name` = tag de l'angle).
+  mémorisé (retrait possible sur `/confidentialite/`) ; `PageView` après consentement,
+  `Lead` avec `eventID` unique (déduplication CAPI) uniquement après un 200 de l'API,
+  `LeadFormEchec` (trackCustom) si l'API échoue.
+- **Stratégie de campagne** (décision 2026-08-19) : la campagne C1 reste sur les
+  formulaires instantanés Meta ; les landings servent à la fiche Google, aux QR codes,
+  à la réactivation (C2) et au retargeting de janvier.
 
 ## Mise en ligne — checklist critique
 

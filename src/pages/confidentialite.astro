@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+import club from '../data/club.json';
+---
+
+<Base
+  titre="Politique de confidentialité | CSHP"
+  description="Comment le Centre Sportif de Haute-Performance recueille et protège vos renseignements personnels : formulaire d'essai, témoin de mesure publicitaire, vos droits."
+>
+  <section class="conf">
+    <div class="colonne conf-colonne">
+      <p class="kicker">Vos renseignements</p>
+      <h1 class="display conf-titre">Politique de confidentialité</h1>
+      <p class="conf-maj">Dernière mise à jour : 19 août 2026</p>
+
+      <h2>Qui nous sommes</h2>
+      <p>
+        Le {club.nom} ({club.sigle}) exploite ce site. Responsable de la protection des
+        renseignements personnels : la direction du club, joignable à
+        <a href={`mailto:${club.courriel}`}>{club.courriel}</a> ou au
+        <a href={`tel:${club.telephoneHref}`} class="tabulaire">{club.telephone}</a>,
+        {club.adresse.rue}, {club.adresse.ville} ({club.adresse.province}) {club.adresse.codePostal}.
+      </p>
+
+      <h2>Ce que nous recueillons, et pourquoi</h2>
+      <p>
+        <strong>Formulaire d'essai gratuit.</strong> Prénom, nom, téléphone, courriel,
+        activité choisie et, si vous les fournissez, l'âge de l'enfant et votre message.
+        Ces renseignements servent à une seule chose : vous rappeler pour planifier votre
+        essai et répondre à votre demande. Ils sont transmis de façon chiffrée (HTTPS) au
+        système de gestion du club et ne sont ni vendus ni partagés à des fins commerciales.
+      </p>
+      <p>
+        <strong>Témoin de mesure publicitaire (pixel Meta).</strong> Uniquement si vous
+        cliquez « Accepter » dans le bandeau prévu à cet effet, nous chargeons le pixel de
+        Meta pour savoir quelles publicités amènent des demandes d'essai. Si vous refusez,
+        aucun témoin de mesure n'est déposé et le site fonctionne exactement pareil. Votre
+        choix est mémorisé dans votre navigateur, pas sur nos serveurs.
+      </p>
+      <p>
+        <strong>Le reste du site.</strong> Le site est un site statique : il ne crée pas de
+        compte, ne dépose pas d'autre témoin et ne recueille rien à votre insu.
+      </p>
+
+      <h2>Vos droits</h2>
+      <p>
+        Conformément à la loi québécoise sur la protection des renseignements personnels
+        (Loi 25), vous pouvez demander l'accès aux renseignements que nous détenons sur
+        vous, leur rectification ou leur suppression. Écrivez-nous à
+        <a href={`mailto:${club.courriel}`}>{club.courriel}</a> et nous y donnerons suite.
+      </p>
+
+      <h2>Retirer votre consentement à la mesure publicitaire</h2>
+      <p>
+        Vous avez accepté le témoin de mesure et vous changez d'idée ? Cliquez ci-dessous :
+        votre choix est effacé et le bandeau vous sera présenté de nouveau à votre
+        prochaine visite.
+      </p>
+      <p>
+        <button type="button" id="retirer-consentement" class="btn btn-contour">Réinitialiser mon choix</button>
+        <span id="retrait-statut" role="status" aria-live="polite" class="retrait-statut"></span>
+      </p>
+    </div>
+  </section>
+
+  <script>
+    const bouton = document.getElementById('retirer-consentement');
+    const statut = document.getElementById('retrait-statut');
+    bouton?.addEventListener('click', () => {
+      try { localStorage.removeItem('cshp-consentement-pub'); } catch {}
+      if (statut) statut.textContent = "C'est fait. Votre choix a été réinitialisé.";
+    });
+  </script>
+
+  <style>
+    .conf-colonne { max-width: 760px; }
+    .conf-titre { font-size: clamp(34px, 5vw, 52px); margin: 12px 0 6px; }
+    .conf-maj { color: var(--sourdine); font-size: 14px; margin-bottom: 28px; }
+    .conf h2 { font-size: 19px; margin: 28px 0 10px; }
+    .conf p { color: var(--encre-2); }
+    .conf a { color: var(--rouge); }
+    .retrait-statut { margin-left: 14px; font-weight: 600; font-size: 14.5px; }
+  </style>
+</Base>

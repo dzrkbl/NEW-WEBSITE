@@ -122,7 +122,7 @@ Une vraie grille de cours sur `/horaire/` (bon contenu !), des heures d'ouvertur
 /contact/                        → /contact/
 /kickboxing-pour-femmes-a-montreal-…/                   → /articles/kickboxing-femmes-montreal/
 /privacy-policy/                 → /confidentialite/
-/terms-conditions/               → /conditions/
+/terms-conditions/               → /confidentialite/
 
 # Boutique de démo (200 aujourd'hui) — supprimer et rediriger
 /shop/ /cart/ /checkout/ /my-account/ /product/* /product-category/*  → 301 /tarifs/

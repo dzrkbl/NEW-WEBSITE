@@ -46,7 +46,7 @@ Effectifs réels (ordre de grandeur, import 2026) : Karaté ~69, Ninjas ~25, Jud
 
 L'app de gestion en production (`https://cshp-backend.onrender.com`, Express + React, auto-déployée depuis `main`) expose déjà **deux points d'entrée publics** :
 
-1. **`POST /api/leads`** (public, rate-limité) — crée un prospect. Le pipeline aval existe déjà : relance automatique de l'admin après 3 jours sans suivi (`LEAD_RELANCE`), conversion outillée, champ `provenance` (`WEB`, `RESEAUX_SOCIAUX`, …).
+1. **`POST /api/leads`** (public, rate-limité) — crée un prospect. Contrat réel vérifié (2026-08-19) : `firstName`* `lastName`* `gender` `phone` `email` `sport` `requestType` + honeypot `website` vide ; les champs inconnus sont supprimés par zod (pas de `provenance`/`message` pour l'instant ; contrat cible `source`/`utm*`/`note` en chantier côté app). Le pipeline aval existe déjà : relance automatique de l'admin après 3 jours sans suivi (`LEAD_RELANCE`), conversion outillée.
 2. **`/inscription`** (fiche d'inscription en ligne publique) — consentements, anti-doublon, création du membre EN_ATTENTE, courriels de bienvenue/notification déjà branchés.
 
 **Conséquence : le nouveau site n'a besoin d'aucun backend de formulaire.**
@@ -54,7 +54,7 @@ L'app de gestion en production (`https://cshp-backend.onrender.com`, Express + R
 - Le bouton « Inscription » = lien vers la fiche en ligne existante.
 - Le site devient la façade du système existant ; le CRM, les relances et les courriels restent dans l'app.
 
-À valider avec le proprio : CORS côté app pour le domaine du site, et la valeur `provenance` à utiliser par landing page.
+CORS : déjà ouvert côté app (`app.use(cors())`). L'attribution par landing passera par les champs du contrat cible (`source`, `utm*`, `note`).
 
 ## 5. Marque
 

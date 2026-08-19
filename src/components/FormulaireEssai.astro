@@ -1,20 +1,25 @@
 ---
 // Formulaire d'essai gratuit, réutilisé par l'accueil et les landing pages.
-// - Poste vers l'app de gestion (club.apiLeads) avec la provenance fournie.
-// - Le tag d'angle et les UTM de la page sont joints au message pour l'attribution.
-// - Déclenche l'événement Meta « Lead » si le pixel est actif (consentement donné).
+//
+// Contrat API (vérifié contre src/routes/leads.ts de l'app de gestion) :
+//   POST {club.apiLeads} accepte firstName* lastName* gender phone email sport
+//   requestType (ESSAI|RAPPEL|TARIFS|AUTRE) et le honeypot `website` (présent et vide).
+//   Tout champ inconnu est silencieusement supprimé par zod.
+// Contrat cible (chantier côté app) envoyé EN PLUS dès maintenant : source,
+//   utmSource, utmCampaign, utmContent, note. Ignorés aujourd'hui, captés dès
+//   que l'app les ajoute. Aucun changement du site à prévoir à ce moment-là.
+// Pixel : événement « Lead » (avec eventID unique pour la déduplication CAPI)
+//   uniquement après une réponse 200 de l'API.
 import club from '../data/club.json';
 
 interface Props {
-  provenance?: string;
-  tag?: string;
+  tag?: string;             // identifiant d'angle : accueil, karate-enfant, ninjas-4-8…
   sportInitial?: string;
   sportVerrouille?: boolean;
   avecAge?: boolean;
   cta?: string;
 }
 const {
-  provenance = 'WEB',
   tag = 'accueil',
   sportInitial = 'KARATE',
   sportVerrouille = false,
@@ -22,6 +27,7 @@ const {
   cta = 'Réserver mon essai gratuit',
 } = Astro.props;
 
+const source = tag === 'accueil' ? 'site-accueil' : `landing-${tag}`;
 const sports = [
   ['KARATE', 'Karaté'],
   ['JUDO', 'Judo'],
@@ -32,10 +38,16 @@ const sports = [
 const idBase = `essai-${tag}`;
 ---
 
-<form class="formulaire" method="post" novalidate data-provenance={provenance} data-tag={tag}>
-  <div class="champ">
-    <label for={`${idBase}-nom`}>Votre nom (parent ou athlète adulte)</label>
-    <input id={`${idBase}-nom`} name="name" type="text" autocomplete="name" required />
+<form class="formulaire" method="post" novalidate data-tag={tag} data-source={source}>
+  <div class="champ-rangee">
+    <div class="champ">
+      <label for={`${idBase}-prenom`}>Votre prénom</label>
+      <input id={`${idBase}-prenom`} name="firstName" type="text" autocomplete="given-name" required />
+    </div>
+    <div class="champ">
+      <label for={`${idBase}-nom`}>Votre nom</label>
+      <input id={`${idBase}-nom`} name="lastName" type="text" autocomplete="family-name" required />
+    </div>
   </div>
   <div class="champ-rangee">
     <div class="champ">
@@ -71,6 +83,11 @@ const idBase = `essai-${tag}`;
     <label for={`${idBase}-message`}>Un mot sur vos objectifs <span class="optionnel">(optionnel)</span></label>
     <textarea id={`${idBase}-message`} name="message" rows="3"></textarea>
   </div>
+  <p class="hp" aria-hidden="true">
+    <label>Ne pas remplir ce champ
+      <input type="text" name="website" tabindex="-1" autocomplete="off" />
+    </label>
+  </p>
   <button type="submit" class="btn btn-rouge">{cta}</button>
   <p class="statut" role="status" aria-live="polite"></p>
   <p class="repli">
@@ -83,10 +100,6 @@ const idBase = `essai-${tag}`;
   import club from '../data/club.json';
 
   const utm = new URLSearchParams(window.location.search);
-  const marqueurs = ['utm_campaign', 'utm_content', 'utm_source']
-    .map((k) => (utm.get(k) ? `${k}=${utm.get(k)}` : ''))
-    .filter(Boolean)
-    .join(' ');
 
   document.querySelectorAll<HTMLFormElement>('form.formulaire').forEach((form) => {
     const statut = form.querySelector<HTMLParagraphElement>('.statut');
@@ -95,35 +108,43 @@ const idBase = `essai-${tag}`;
       if (!form.reportValidity() || !statut) return;
       const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
       const tag = form.dataset.tag || 'accueil';
-      const message = [
-        tag !== 'accueil' ? `[${tag}]` : '',
-        marqueurs,
-        data.message,
-        data.age ? `Âge : ${data.age}` : '',
-      ]
+      const note = [data.message, data.age ? `Âge de l'enfant : ${data.age}` : '']
         .filter(Boolean)
         .join(' | ');
+      const corps: Record<string, string> = {
+        // Contrat actuel de l'app
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone,
+        email: data.email,
+        sport: data.sport,
+        requestType: 'ESSAI',
+        website: data.website || '',
+        // Contrat cible (ignoré par zod tant que l'app ne l'a pas déployé)
+        source: form.dataset.source || 'site',
+      };
+      for (const cle of ['utm_source', 'utm_campaign', 'utm_content'] as const) {
+        const v = utm.get(cle);
+        if (v) corps[cle.replace(/_(\w)/, (_, c) => c.toUpperCase())] = v; // utmSource, utmCampaign, utmContent
+      }
+      if (note) corps.note = note;
+
       statut.textContent = 'Envoi en cours…';
       try {
         const r = await fetch(club.apiLeads, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: data.name,
-            phone: data.phone,
-            email: data.email,
-            sport: data.sport,
-            message,
-            provenance: form.dataset.provenance || 'WEB',
-          }),
+          body: JSON.stringify(corps),
         });
         if (!r.ok) throw new Error(String(r.status));
         statut.textContent = 'Merci ! Votre demande est bien reçue. On vous rappelle rapidement.';
         form.reset();
-        (window as any).fbq?.('track', 'Lead', { content_name: tag });
+        const eventID = (crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`);
+        (window as any).fbq?.('track', 'Lead', { content_name: tag }, { eventID });
       } catch {
         statut.textContent =
           'Le formulaire ne répond pas pour le moment. Appelez-nous ou écrivez-nous, les coordonnées sont juste à côté.';
+        (window as any).fbq?.('trackCustom', 'LeadFormEchec', { content_name: tag });
       }
     });
   });
@@ -141,6 +162,7 @@ const idBase = `essai-${tag}`;
     padding: 11px 12px;
   }
   input:focus, select:focus, textarea:focus { outline: 2px solid var(--rouge); outline-offset: 1px; border-color: var(--rouge); }
+  .hp { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
   button.btn { width: 100%; margin-top: 4px; }
   .statut { min-height: 1.4em; font-weight: 600; font-size: 14.5px; margin: 12px 0 0; color: var(--encre-2); }
   .repli { font-size: 13.5px; color: var(--sourdine); margin: 10px 0 0; }
