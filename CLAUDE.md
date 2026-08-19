@@ -37,8 +37,9 @@ répond à une erreur documentée de l'ancien site. Les lire avant de coder.
    `global.css` (`--rouge`, `--encre`, `--papier`…). Aucune couleur en dur dans
    les composants. Le vert #39B54A et le bleu #003388 de l'ancien thème sont bannis.
 9. **SEO local** : chaque page a title + meta description uniques ciblant
-   « karaté/judo enfant Montréal / Saint-Léonard ». Le JSON-LD
-   `SportsActivityLocation` vit dans `src/layouts/Base.astro` et lit `club.json`.
+   « karaté/judo enfant Montréal / Rosemont » (quartier réel — jamais revendiquer
+   un quartier où le club n'est pas). Le JSON-LD `SportsActivityLocation` vit
+   dans `src/layouts/Base.astro` et lit `club.json`.
 10. **Vie privée (Loi 25)** : aucune donnée de membre dans ce dépôt. Les
     formulaires envoient vers l'app de gestion, rien n'est stocké ici.
 
@@ -67,6 +68,8 @@ répond à une erreur documentée de l'ancien site. Les lire avant de coder.
 - Texte réel de l'ancien site (à recycler, jamais à inventer) : `docs/contenu-site-actuel.md`.
 - Inventaire des 176 images de l'ancien site : `docs/inventaire-images.md`.
 - Photos retenues : `src/assets/photos/` (originaux 1600-1920 px, JPEG q82).
-- Divergences à trancher avec le propriétaire : le taekwondo (affiché mais sans
-  cours à la grille), l'âge exact des Ninjas (4-8 vs 5-8 vs 4-9), le quartier
-  revendiqué (Saint-Léonard retenu pour le SEO local).
+- **Décisions du propriétaire (2026-08-19)** : le cœur de clientèle = enfants
+  de 5 à 9 ans → la première image de chaque page montre un enfant ; taekwondo
+  retiré (non offert actuellement) ; quartier = **Rosemont** (pas Saint-Léonard) ;
+  coachs judo = Randon Montoya et James Ekobena (Abdou Bouabdallah parti).
+- Encore à trancher : l'âge exact du programme Ninjas (4-8 vs 5-8 vs 4-9).

@@ -7,7 +7,7 @@
     "ville": "Montréal",
     "province": "QC",
     "codePostal": "H1M 1A9",
-    "quartier": "Saint-Léonard"
+    "quartier": "Rosemont"
   },
   "telephone": "514 747-5865",
   "telephoneHref": "+15147475865",
@@ -24,8 +24,7 @@
   },
   "federations": [
     "Karaté Québec", "Karaté Canada",
-    "Judo Québec", "Judo Canada",
-    "Taekwondo Québec", "Taekwondo Canada"
+    "Judo Québec", "Judo Canada"
   ],
   "apiLeads": "https://cshp-backend.onrender.com/api/leads"
 }

@@ -1,13 +1,13 @@
 ---
 import { Image } from 'astro:assets';
 import club from '../data/club.json';
-import photoHero from '../assets/photos/hero-judo-projection.jpg';
+import photoHero from '../assets/photos/hero-judo-enfants.jpg';
 ---
 
 <section class="hero" aria-labelledby="hero-titre">
   <Image
     src={photoHero}
-    alt="Projection de judo entre deux jeunes athlètes du CSHP, kimonos blanc et bleu, sur les tatamis du dojo"
+    alt="Deux enfants du CSHP en plein combat de judo, kimonos blanc et bleu, sous le regard de leurs coachs"
     widths={[640, 1024, 1600]}
     sizes="100vw"
     class="hero-photo"
@@ -40,7 +40,7 @@ import photoHero from '../assets/photos/hero-judo-projection.jpg';
 
 <style>
   .hero { position: relative; min-height: clamp(560px, 86vh, 820px); display: flex; align-items: flex-end; overflow: hidden; background: var(--sombre); }
-  .hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 38%; }
+  .hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 50%; }
   .hero-voile {
     position: absolute; inset: 0;
     background:

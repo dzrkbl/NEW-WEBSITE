@@ -18,7 +18,7 @@ const jsonLd = {
   name: club.nom,
   alternateName: club.sigle,
   description:
-    "École d'arts martiaux à Montréal (Saint-Léonard) : karaté, judo et programme Ninjas U8 pour enfants et adolescents, kickboxing et remise en forme pour adultes.",
+    "École d'arts martiaux à Montréal (Rosemont) : karaté, judo et programme Ninjas U8 pour enfants et adolescents, kickboxing et remise en forme pour adultes.",
   url: Astro.site?.toString(),
   telephone: `+1-${club.telephone.replace(/\s/g, '-')}`,
   email: club.courriel,
@@ -164,28 +164,28 @@ const annee = new Date().getFullYear();
       }
       .saut:focus { left: 0; }
 
-      /* ---- entête ---- */
-      .entete { position: sticky; top: 0; z-index: 50; background: var(--papier); border-bottom: 1px solid var(--ligne); }
+      /* ---- entête (sombre : le logo est conçu pour fond foncé) ---- */
+      .entete { position: sticky; top: 0; z-index: 50; background: var(--sombre); color: var(--sur-sombre); }
       .entete-int { display: flex; align-items: center; gap: 28px; padding-block: 12px; }
       .marque { display: flex; align-items: center; gap: 12px; text-decoration: none; margin-right: auto; }
       .marque-txt { display: flex; flex-direction: column; line-height: 1.05; }
-      .marque-sigle { font-size: 26px; letter-spacing: 0.04em; }
-      .marque-nom { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sourdine); font-weight: 500; }
+      .marque-sigle { font-size: 26px; letter-spacing: 0.04em; color: #fff; }
+      .marque-nom { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sur-sombre-sourdine); font-weight: 500; }
       .nav { display: flex; gap: 26px; }
-      .nav a { text-decoration: none; font-weight: 500; font-size: 15px; color: var(--encre-2); }
-      .nav a:hover { color: var(--rouge); }
+      .nav a { text-decoration: none; font-weight: 500; font-size: 15px; color: var(--sur-sombre); }
+      .nav a:hover { color: var(--rouge-vif); }
       .entete-cta { padding: 11px 20px; font-size: 14.5px; }
       .burger { display: none; position: relative; }
       .burger summary { list-style: none; display: flex; flex-direction: column; gap: 5px; padding: 10px; cursor: pointer; }
       .burger summary::-webkit-details-marker { display: none; }
-      .burger summary span { width: 24px; height: 2.5px; background: var(--encre); }
+      .burger summary span { width: 24px; height: 2.5px; background: var(--sur-sombre); }
       .burger-nav {
         position: absolute; right: 0; top: calc(100% + 10px);
-        background: var(--papier); border: 1px solid var(--ligne); border-radius: var(--rayon);
+        background: var(--sombre-2); border: 1px solid rgba(245, 242, 236, 0.16); border-radius: var(--rayon);
         display: flex; flex-direction: column; gap: 4px; padding: 16px; min-width: 220px;
-        box-shadow: 0 12px 32px rgba(23, 24, 28, 0.14);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
       }
-      .burger-nav a { text-decoration: none; font-weight: 600; padding: 8px 6px; }
+      .burger-nav a { text-decoration: none; font-weight: 600; padding: 8px 6px; color: var(--sur-sombre); }
       @media (max-width: 880px) {
         .nav, .entete-cta { display: none; }
         .burger { display: block; }
