@@ -1,5 +1,6 @@
 ---
 import club from '../data/club.json';
+import FormulaireEssai from './FormulaireEssai.astro';
 const adresseMaps = encodeURIComponent(`${club.nom}, ${club.adresse.rue}, ${club.adresse.ville}, ${club.adresse.province}`);
 ---
 
@@ -31,84 +32,10 @@ const adresseMaps = encodeURIComponent(`${club.nom}, ${club.adresse.rue}, ${club
       </div>
     </div>
 
-    <form class="formulaire revele" method="post" novalidate>
-      <div class="champ">
-        <label for="f-nom">Votre nom (parent ou athlète adulte)</label>
-        <input id="f-nom" name="name" type="text" autocomplete="name" required />
-      </div>
-      <div class="champ-rangee">
-        <div class="champ">
-          <label for="f-tel">Téléphone</label>
-          <input id="f-tel" name="phone" type="tel" autocomplete="tel" inputmode="tel" required />
-        </div>
-        <div class="champ">
-          <label for="f-courriel">Courriel</label>
-          <input id="f-courriel" name="email" type="email" autocomplete="email" required />
-        </div>
-      </div>
-      <div class="champ-rangee">
-        <div class="champ">
-          <label for="f-sport">Activité</label>
-          <select id="f-sport" name="sport">
-            <option value="KARATE">Karaté</option>
-            <option value="JUDO">Judo</option>
-            <option value="NINJAS">Ninjas U8 (4-8 ans)</option>
-            <option value="KICKBOXING">Cardio-kickboxing femmes</option>
-            <option value="AUTRE">Autre / je ne sais pas encore</option>
-          </select>
-        </div>
-        <div class="champ">
-          <label for="f-age">Âge de l'enfant <span class="optionnel">(optionnel)</span></label>
-          <input id="f-age" name="age" type="text" inputmode="numeric" />
-        </div>
-      </div>
-      <div class="champ">
-        <label for="f-message">Un mot sur vos objectifs <span class="optionnel">(optionnel)</span></label>
-        <textarea id="f-message" name="message" rows="3"></textarea>
-      </div>
-      <button type="submit" class="btn btn-rouge">Réserver mon essai gratuit</button>
-      <p class="statut" role="status" aria-live="polite"></p>
-      <p class="repli">
-        Un pépin avec le formulaire ? Appelez-nous au
-        <a href={`tel:${club.telephoneHref}`} class="tabulaire">{club.telephone}</a>, ça nous fera plaisir.
-      </p>
-    </form>
+    <div class="essai-form revele">
+      <FormulaireEssai provenance="WEB" tag="accueil" />
+    </div>
   </div>
-
-  <script>
-    import club from '../data/club.json';
-    const form = document.querySelector<HTMLFormElement>('.formulaire');
-    const statut = form?.querySelector<HTMLParagraphElement>('.statut');
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!form.reportValidity() || !statut) return;
-      const data = Object.fromEntries(new FormData(form).entries());
-      const message = [data.message, data.age ? `Âge : ${data.age}` : '']
-        .filter(Boolean)
-        .join(' | ');
-      statut.textContent = 'Envoi en cours…';
-      try {
-        const r = await fetch(club.apiLeads, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: data.name,
-            phone: data.phone,
-            email: data.email,
-            sport: data.sport,
-            message,
-            provenance: 'WEB',
-          }),
-        });
-        if (!r.ok) throw new Error(String(r.status));
-        statut.textContent = 'Merci ! Votre demande est bien reçue. On vous rappelle rapidement.';
-        form.reset();
-      } catch {
-        statut.textContent =
-          'Le formulaire ne répond pas pour le moment. Appelez-nous ou écrivez-nous, les coordonnées sont juste à côté.';
-      }
-    });
-  </script>
 
   <style>
     .essai-grille { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(32px, 5vw, 80px); align-items: start; }
@@ -122,22 +49,6 @@ const adresseMaps = encodeURIComponent(`${club.nom}, ${club.adresse.rue}, ${club
     .valeur { color: var(--sur-sombre); font-size: 17px; font-weight: 600; text-decoration-color: rgba(245,242,236,0.3); }
     .valeur:hover { color: #fff; }
 
-    .formulaire { background: var(--papier); color: var(--encre); border-radius: var(--rayon); padding: clamp(22px, 3vw, 34px); }
-    .champ { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-    .champ-rangee { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    label { font-size: 13.5px; font-weight: 700; }
-    .optionnel { color: var(--sourdine); font-weight: 500; }
-    input, select, textarea {
-      font: inherit; color: var(--encre);
-      background: #fff; border: 1px solid var(--ligne); border-radius: var(--rayon);
-      padding: 11px 12px;
-    }
-    input:focus, select:focus, textarea:focus { outline: 2px solid var(--rouge); outline-offset: 1px; border-color: var(--rouge); }
-    button.btn { width: 100%; margin-top: 4px; }
-    .statut { min-height: 1.4em; font-weight: 600; font-size: 14.5px; margin: 12px 0 0; color: var(--encre-2); }
-    .repli { font-size: 13.5px; color: var(--sourdine); margin: 10px 0 0; }
-    .repli a { color: var(--encre); }
     @media (max-width: 900px) { .essai-grille { grid-template-columns: 1fr; } }
-    @media (max-width: 560px) { .champ-rangee { grid-template-columns: 1fr; } }
   </style>
 </section>

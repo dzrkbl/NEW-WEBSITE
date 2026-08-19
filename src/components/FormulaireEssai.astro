@@ -1,0 +1,149 @@
+---
+// Formulaire d'essai gratuit, réutilisé par l'accueil et les landing pages.
+// - Poste vers l'app de gestion (club.apiLeads) avec la provenance fournie.
+// - Le tag d'angle et les UTM de la page sont joints au message pour l'attribution.
+// - Déclenche l'événement Meta « Lead » si le pixel est actif (consentement donné).
+import club from '../data/club.json';
+
+interface Props {
+  provenance?: string;
+  tag?: string;
+  sportInitial?: string;
+  sportVerrouille?: boolean;
+  avecAge?: boolean;
+  cta?: string;
+}
+const {
+  provenance = 'WEB',
+  tag = 'accueil',
+  sportInitial = 'KARATE',
+  sportVerrouille = false,
+  avecAge = true,
+  cta = 'Réserver mon essai gratuit',
+} = Astro.props;
+
+const sports = [
+  ['KARATE', 'Karaté'],
+  ['JUDO', 'Judo'],
+  ['NINJAS', 'Ninjas U8 (4-8 ans)'],
+  ['KICKBOXING', 'Cardio-kickboxing femmes'],
+  ['AUTRE', 'Autre / je ne sais pas encore'],
+];
+const idBase = `essai-${tag}`;
+---
+
+<form class="formulaire" method="post" novalidate data-provenance={provenance} data-tag={tag}>
+  <div class="champ">
+    <label for={`${idBase}-nom`}>Votre nom (parent ou athlète adulte)</label>
+    <input id={`${idBase}-nom`} name="name" type="text" autocomplete="name" required />
+  </div>
+  <div class="champ-rangee">
+    <div class="champ">
+      <label for={`${idBase}-tel`}>Téléphone</label>
+      <input id={`${idBase}-tel`} name="phone" type="tel" autocomplete="tel" inputmode="tel" required />
+    </div>
+    <div class="champ">
+      <label for={`${idBase}-courriel`}>Courriel</label>
+      <input id={`${idBase}-courriel`} name="email" type="email" autocomplete="email" required />
+    </div>
+  </div>
+  {sportVerrouille ? (
+    <input type="hidden" name="sport" value={sportInitial} />
+  ) : (
+    <div class="champ-rangee">
+      <div class="champ">
+        <label for={`${idBase}-sport`}>Activité</label>
+        <select id={`${idBase}-sport`} name="sport">
+          {sports.map(([valeur, etiquette]) => (
+            <option value={valeur} selected={valeur === sportInitial}>{etiquette}</option>
+          ))}
+        </select>
+      </div>
+      {avecAge && (
+        <div class="champ">
+          <label for={`${idBase}-age`}>Âge de l'enfant <span class="optionnel">(optionnel)</span></label>
+          <input id={`${idBase}-age`} name="age" type="text" inputmode="numeric" />
+        </div>
+      )}
+    </div>
+  )}
+  <div class="champ">
+    <label for={`${idBase}-message`}>Un mot sur vos objectifs <span class="optionnel">(optionnel)</span></label>
+    <textarea id={`${idBase}-message`} name="message" rows="3"></textarea>
+  </div>
+  <button type="submit" class="btn btn-rouge">{cta}</button>
+  <p class="statut" role="status" aria-live="polite"></p>
+  <p class="repli">
+    Un pépin avec le formulaire ? Appelez-nous au
+    <a href={`tel:${club.telephoneHref}`} class="tabulaire">{club.telephone}</a>, ça nous fera plaisir.
+  </p>
+</form>
+
+<script>
+  import club from '../data/club.json';
+
+  const utm = new URLSearchParams(window.location.search);
+  const marqueurs = ['utm_campaign', 'utm_content', 'utm_source']
+    .map((k) => (utm.get(k) ? `${k}=${utm.get(k)}` : ''))
+    .filter(Boolean)
+    .join(' ');
+
+  document.querySelectorAll<HTMLFormElement>('form.formulaire').forEach((form) => {
+    const statut = form.querySelector<HTMLParagraphElement>('.statut');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.reportValidity() || !statut) return;
+      const data = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
+      const tag = form.dataset.tag || 'accueil';
+      const message = [
+        tag !== 'accueil' ? `[${tag}]` : '',
+        marqueurs,
+        data.message,
+        data.age ? `Âge : ${data.age}` : '',
+      ]
+        .filter(Boolean)
+        .join(' | ');
+      statut.textContent = 'Envoi en cours…';
+      try {
+        const r = await fetch(club.apiLeads, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: data.name,
+            phone: data.phone,
+            email: data.email,
+            sport: data.sport,
+            message,
+            provenance: form.dataset.provenance || 'WEB',
+          }),
+        });
+        if (!r.ok) throw new Error(String(r.status));
+        statut.textContent = 'Merci ! Votre demande est bien reçue. On vous rappelle rapidement.';
+        form.reset();
+        (window as any).fbq?.('track', 'Lead', { content_name: tag });
+      } catch {
+        statut.textContent =
+          'Le formulaire ne répond pas pour le moment. Appelez-nous ou écrivez-nous, les coordonnées sont juste à côté.';
+      }
+    });
+  });
+</script>
+
+<style>
+  .formulaire { background: var(--papier); color: var(--encre); border-radius: var(--rayon); padding: clamp(22px, 3vw, 34px); }
+  .champ { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .champ-rangee { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  label { font-size: 13.5px; font-weight: 700; }
+  .optionnel { color: var(--sourdine); font-weight: 500; }
+  input, select, textarea {
+    font: inherit; color: var(--encre);
+    background: #fff; border: 1px solid var(--ligne); border-radius: var(--rayon);
+    padding: 11px 12px;
+  }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--rouge); outline-offset: 1px; border-color: var(--rouge); }
+  button.btn { width: 100%; margin-top: 4px; }
+  .statut { min-height: 1.4em; font-weight: 600; font-size: 14.5px; margin: 12px 0 0; color: var(--encre-2); }
+  .repli { font-size: 13.5px; color: var(--sourdine); margin: 10px 0 0; }
+  .repli a { color: var(--encre); }
+  @media (max-width: 560px) { .champ-rangee { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,25 @@
+---
+import Landing from '../layouts/Landing.astro';
+import LandingEssai from '../components/LandingEssai.astro';
+import photo from '../assets/photos/karate-cours.jpg';
+---
+
+<Landing
+  titre="Essai gratuit de karaté pour enfant à Montréal (Rosemont) | CSHP"
+  description="Offrez à votre enfant un premier cours de karaté gratuit au CSHP, école affiliée Karaté Québec à Rosemont, Montréal. Groupes par âge et par niveau dès 6 ans."
+>
+  <LandingEssai
+    kicker="Essai gratuit, sans engagement"
+    titreHtml="Un cours de karaté <em>gratuit</em> pour votre enfant"
+    arguments_={[
+      'Groupes par âge et par niveau, dès 6 ans, jusqu’à la compétition provinciale.',
+      'Coachs affiliés Karaté Québec, exigeants sur la technique et le respect.',
+      'Les mardis et jeudis en fin de journée, après l’école.',
+    ]}
+    sport="KARATE"
+    tag="karate-enfant"
+    disciplinesHoraire={['karate']}
+    photo={photo}
+    photoAlt="Cours de karaté au CSHP : démonstration de coup de pied devant les jeunes élèves assis sur le tatami"
+  />
+</Landing>

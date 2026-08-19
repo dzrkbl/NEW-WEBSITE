@@ -1,0 +1,25 @@
+---
+import Landing from '../layouts/Landing.astro';
+import LandingEssai from '../components/LandingEssai.astro';
+import photo from '../assets/photos/ninjas-agilite.jpg';
+---
+
+<Landing
+  titre="Programme Ninjas 4-8 ans, essai gratuit à Montréal (Rosemont) | CSHP"
+  description="Le programme Ninjas U8 du CSHP initie les 4 à 8 ans aux arts martiaux : motricité, discipline et plaisir. Premier cours gratuit à Rosemont, Montréal."
+>
+  <LandingEssai
+    kicker="Ninjas U8 · 4 à 8 ans"
+    titreHtml="Leur énergie a trouvé<br />son <em>dojo</em>"
+    arguments_={[
+      'Une initiation ludique et structurée aux arts martiaux, pensée pour les 4 à 8 ans.',
+      'Motricité, souplesse et discipline : des bases qui servent dans tous les sports.',
+      'Mercredi en fin de journée et samedi matin, deux groupes selon l’âge.',
+    ]}
+    sport="NINJAS"
+    tag="ninjas-4-8"
+    disciplinesHoraire={['ninjas']}
+    photo={photo}
+    photoAlt="Enfants du programme Ninjas franchissant une échelle d'agilité sous la supervision des coachs"
+  />
+</Landing>

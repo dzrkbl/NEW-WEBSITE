@@ -1,0 +1,91 @@
+---
+// Gabarit des landing pages publicitaires : en-tête minimal (logo + téléphone),
+// aucune navigation (une seule action possible : l'essai gratuit), pied allégé.
+// noindex : ces pages servent au trafic payant, le SEO organique vit sur l'accueil.
+import '../styles/global.css';
+import club from '../data/club.json';
+import logo from '../assets/logo-cshp.png';
+import { Image } from 'astro:assets';
+import MetaPixel from '../components/MetaPixel.astro';
+
+interface Props {
+  titre: string;
+  description: string;
+}
+const { titre, description } = Astro.props;
+const canonique = new URL(Astro.url.pathname, Astro.site);
+const annee = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="fr-CA">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titre}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={canonique} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_CA" />
+    <meta property="og:title" content={titre} />
+    <meta property="og:description" content={description} />
+    <link rel="preload" href="/fonts/BigShouldersDisplay-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/HankenGrotesk-400.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body>
+    <header class="entete-mini">
+      <div class="colonne entete-mini-int">
+        <span class="marque">
+          <Image src={logo} alt="" width="46" height="46" loading="eager" />
+          <span class="marque-txt">
+            <span class="marque-sigle">CSHP</span>
+            <span class="marque-nom">Centre Sportif de Haute-Performance</span>
+          </span>
+        </span>
+        <a href={`tel:${club.telephoneHref}`} class="entete-tel tabulaire">{club.telephone}</a>
+      </div>
+      <div class="ceintures" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="pied-mini bande-sombre">
+      <div class="colonne pied-mini-int">
+        <p>
+          <strong>{club.nom}</strong><br />
+          {club.adresse.rue}, {club.adresse.quartier}, {club.adresse.ville} ({club.adresse.province}) {club.adresse.codePostal}<br />
+          <a href={`tel:${club.telephoneHref}`} class="tabulaire">{club.telephone}</a> ·
+          <a href={`mailto:${club.courriel}`}>{club.courriel}</a>
+        </p>
+        <p class="pied-mini-legal">
+          © {annee} {club.nom} · <a href="/confidentialite/">Confidentialité</a> · <a href="/">Site complet</a>
+        </p>
+      </div>
+    </footer>
+
+    <MetaPixel />
+
+    <style>
+      .entete-mini { background: var(--sombre); color: var(--sur-sombre); }
+      .entete-mini-int { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-block: 12px; }
+      .marque { display: flex; align-items: center; gap: 12px; }
+      .marque-txt { display: flex; flex-direction: column; line-height: 1.05; }
+      .marque-sigle { font-weight: 700; font-size: 18px; letter-spacing: 0.16em; text-transform: uppercase; color: #fff; }
+      .marque-nom { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sur-sombre-sourdine); font-weight: 500; }
+      .entete-tel { color: #fff; font-weight: 700; font-size: 16px; text-decoration-color: rgba(245, 242, 236, 0.35); }
+      @media (max-width: 480px) { .marque-nom { display: none; } }
+
+      .pied-mini { padding-block: 30px; }
+      .pied-mini-int { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; font-size: 14px; }
+      .pied-mini p { margin: 0; line-height: 1.7; }
+      .pied-mini a { color: var(--sur-sombre); text-decoration-color: rgba(245, 242, 236, 0.35); }
+      .pied-mini-legal { color: var(--sur-sombre-sourdine); }
+    </style>
+  </body>
+</html>

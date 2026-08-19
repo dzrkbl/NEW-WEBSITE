@@ -45,13 +45,28 @@ répond à une erreur documentée de l'ancien site. Les lire avant de coder.
 
 ## Intégration avec l'app de gestion (CSHP Gestion)
 
-- Le formulaire d'essai poste vers `POST {club.apiLeads}` avec
-  `{ name, phone, email, sport, message, provenance: 'WEB' }`.
+- Le formulaire d'essai (`src/components/FormulaireEssai.astro`, partagé) poste vers
+  `POST {club.apiLeads}` avec `{ name, phone, email, sport, message, provenance }`.
 - ⚠️ **CORS à activer côté app** pour le domaine du site avant la mise en ligne
   (le formulaire affiche un repli téléphone/courriel en attendant).
-- Les landing pages publicitaires utiliseront des valeurs `provenance` distinctes
-  pour l'attribution Meta Ads.
+- **Attribution des landing pages** : `provenance: 'RESEAUX_SOCIAUX'` (valeur sûre de
+  l'enum de l'app) + le tag d'angle et les UTM joints au début du `message`
+  (ex. `[karate-enfant] utm_campaign=rentree2026 | …`). Si l'app ajoute un jour des
+  valeurs d'enum dédiées, changer la prop `provenance` des pages, rien d'autre.
 - Détails : `docs/contexte-club.md`.
+
+## Landing pages publicitaires et pixel Meta
+
+- Une landing = une page dans `src/pages/essai-gratuit-*.astro` qui remplit les props
+  de `LandingEssai.astro` (gabarit `Landing.astro` : pas de navigation, `noindex`).
+  Trois angles en place : `karate-enfant`, `ninjas-4-8`, `kickboxing-femmes`.
+- URLs de pub : ajouter les UTM (`?utm_campaign=…&utm_content=…`), capturés
+  automatiquement dans le message du lead.
+- **Pixel Meta** : `src/components/MetaPixel.astro`, activé en collant l'ID dans
+  `src/data/marketing.json` (`metaPixelId`). Vide = aucun script tiers, aucun bandeau.
+  Consentement préalable obligatoire (Loi 25) : bandeau Accepter/Refuser, choix
+  mémorisé ; `PageView` après consentement, `Lead` à la soumission réussie du
+  formulaire (`content_name` = tag de l'angle).
 
 ## Mise en ligne — checklist critique
 

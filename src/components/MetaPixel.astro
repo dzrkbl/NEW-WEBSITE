@@ -1,0 +1,83 @@
+---
+// Pixel Meta avec consentement préalable (Loi 25) :
+// - metaPixelId vide dans src/data/marketing.json => rien n'est rendu, aucun script tiers.
+// - Sinon : bandeau de consentement ; le pixel ne charge qu'après « Accepter ».
+// - Le choix est mémorisé (localStorage). L'événement Lead est envoyé par le
+//   formulaire d'essai via window.fbq quand le pixel est actif.
+import marketing from '../data/marketing.json';
+const pixelId = marketing.metaPixelId;
+---
+
+{pixelId && (
+  <div class="consentement" hidden>
+    <p>
+      Nous utilisons un témoin de mesure publicitaire (pixel Meta) pour savoir quelles
+      annonces vous ont amené ici. Aucune donnée n'est vendue.
+      <a href="/confidentialite/">En savoir plus</a>
+    </p>
+    <div class="consentement-actions">
+      <button type="button" class="btn btn-rouge c-accepter">Accepter</button>
+      <button type="button" class="btn btn-contour c-refuser">Refuser</button>
+    </div>
+  </div>
+)}
+
+{pixelId && (
+  <script is:inline define:vars={{ pixelId }}>
+    (function () {
+      var CLE = 'cshp-consentement-pub';
+      function chargerPixel() {
+        if (window.fbq) return;
+        !(function (f, b, e, v, n, t, s) {
+          if (f.fbq) return;
+          n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+          if (!f._fbq) f._fbq = n;
+          n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = [];
+          t = b.createElement(e); t.async = !0; t.src = v;
+          s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+        })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        window.fbq('init', pixelId);
+        window.fbq('track', 'PageView');
+      }
+      var choix = null;
+      try { choix = localStorage.getItem(CLE); } catch (e) {}
+      var bandeau = document.querySelector('.consentement');
+      if (choix === 'oui') {
+        chargerPixel();
+      } else if (choix !== 'non' && bandeau) {
+        bandeau.hidden = false;
+        bandeau.querySelector('.c-accepter').addEventListener('click', function () {
+          try { localStorage.setItem(CLE, 'oui'); } catch (e) {}
+          bandeau.hidden = true;
+          chargerPixel();
+        });
+        bandeau.querySelector('.c-refuser').addEventListener('click', function () {
+          try { localStorage.setItem(CLE, 'non'); } catch (e) {}
+          bandeau.hidden = true;
+        });
+      }
+    })();
+  </script>
+)}
+
+<style>
+  .consentement {
+    position: fixed;
+    left: 14px;
+    bottom: 14px;
+    z-index: 95;
+    max-width: 400px;
+    background: var(--papier);
+    color: var(--encre);
+    border: 1px solid var(--ligne);
+    border-top: 3px solid var(--rouge);
+    border-radius: var(--rayon);
+    box-shadow: 0 14px 40px rgba(23, 24, 28, 0.22);
+    padding: 16px 18px;
+  }
+  .consentement p { font-size: 13.5px; line-height: 1.55; margin: 0 0 12px; }
+  .consentement a { color: var(--rouge); }
+  .consentement-actions { display: flex; gap: 10px; }
+  .consentement .btn { padding: 9px 18px; font-size: 13.5px; }
+  @media (max-width: 480px) { .consentement { right: 14px; max-width: none; } }
+</style>
