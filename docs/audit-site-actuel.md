@@ -1,111 +1,154 @@
 # Audit du site actuel — centresportifhp.com
 
-**Date :** 19 août 2026
-**Méthode :** analyse par index de recherche (Google). L'accès HTTP direct au domaine est bloqué par la politique réseau de l'environnement d'exécution ; chaque constat cite donc les URLs indexées qui le prouvent. Un second passage (captures d'écran, PageSpeed, crawl complet) est possible en ouvrant l'accès réseau.
-**Objectif :** documenter les erreurs du site actuel pour ne pas les reproduire dans le nouveau site (ce dépôt).
+**Date :** 19 août 2026 — v2, après scrape complet (accès réseau ouvert).
+**Méthode :** téléchargement intégral (21 pages + 333 ressources + sitemaps), rendu dans Chromium via miroir local (la passerelle réseau de l'environnement rejette l'empreinte TLS des navigateurs — captures faites en local), mesures de poids sur les tailles compressées réelles. PageSpeed API saturée (429 sans clé) : chiffres mesurés directement.
+**Objectif :** documenter les erreurs du site actuel pour ne pas les reproduire dans le nouveau site.
+Compléments : `contenu-site-actuel.md` (texte réel des pages), `inventaire-images.md` (176 images classées), `contexte-club.md` (données du système de gestion), `assets/avant/` (captures de référence).
 
 ---
 
 ## Verdict
 
-Le site actuel est un thème WordPress payant (« F7 – Fitness Gym » de VamTam) dont **le contenu de démonstration n'a jamais été entièrement nettoyé** : blog de démo en anglais, faux témoignages, pages de services fictifs. Ce n'est pas de la négligence — c'est le symptôme d'une architecture où chaque modification coûte cher (admin WordPress + Elementor, peur de casser la mise en page). Le problème de maintenance est **structurel**, pas humain. Le nouveau site doit d'abord éliminer ce coût de modification.
+Le site est un thème WordPress payant (« F7 – Fitness Gym » de VamTam) **figé depuis février 2024** et dont le contenu de démonstration n'a jamais été entièrement nettoyé — jusqu'à une **boutique factice où l'on peut réellement mettre au panier des « protein shakes » inexistants**, et un **prix public (740 $/an) qui n'est pas le vrai prix (790 $)**. Ce n'est pas de la négligence : c'est le symptôme d'une architecture où chaque modification passe par l'admin WordPress et Elementor, donc coûte trop cher, donc ne se fait pas. Le problème de maintenance est structurel — et c'est lui que le nouveau site doit éliminer en premier.
 
-## La stack actuelle (identifiée)
+## Chiffres mesurés
 
-| Composant | Rôle | Coût de maintenance |
+| Mesure | Valeur | Repère sain |
 |---|---|---|
-| WordPress + MySQL + PHP | CMS, contenu en base de données | Mises à jour de sécurité constantes, rien n'est versionné |
-| Thème « F7 – Fitness Gym » (VamTam, ThemeForest, 89 $US) | Design | Mises à jour liées à la licence ; générique « gym », pas arts martiaux |
-| Elementor + Elementor Pro (requis par F7) | Éditeur visuel | Abonnement annuel ; contenu enfermé dans des blobs JSON en BD — inéditables hors admin |
-| WooCommerce (requis par F7) | Boutique | Plugin lourd installé même sans boutique active |
-| WPForms, Yoast SEO | Formulaires, SEO | Deux plugins de plus à tenir à jour |
+| Poids de la page d'accueil (compressé) | **6,42 MB** | < 1,5 MB |
+| Requêtes réseau (accueil) | **101** | < 40 |
+| HTML seul de l'accueil | **573 KB** | < 60 KB |
+| HTML de la politique de confidentialité | 505 KB | ~15 KB |
+| Dernière activité de mise à jour détectée | **février 2024** (timestamps de cache) | — |
+| WordPress | 6.4.10 (branche nov. 2023, exposée en meta generator) | version courante |
+| Elementor / Elementor Pro | 3.18.3 / 3.18.2 (déc. 2023) | version courante |
+| WooCommerce | 8.4.3 (déc. 2023) | — |
+| Police chargée | Kanit en **18 graisses** (100→900 + italiques) | 2-3 graisses |
+| Images dans la médiathèque référencée | 176 originaux (dont ~153 vraies photos) | — |
 
-**Preuve du thème :** la page « Personal Training » contient encore le texte de démo qui parle de « F7 », la marque fictive de la démo du thème (`/index.php/personal-training/`).
+## La stack (versions relevées)
+
+WordPress 6.4.10 + thème F7 (VamTam, 89 $US) + f7-child + Elementor 3.18.3 + **Elementor Pro** 3.18.2 (abonnement) + WooCommerce 8.4.3 + WP Rocket (licence) + vamtam-elementor-integration + Instagram Feed + Site Kit by Google + Yoast. Deux abonnements payants (Elementor Pro, WP Rocket) et une licence de thème financent un site que personne ne peut modifier sereinement. Les versions sont **publiquement exposées** dans le HTML ; Elementor 3.18.x a des vulnérabilités connues corrigées depuis.
 
 ## Constats
 
-### C1 — CRITIQUE · Le contenu de démonstration du thème est encore en ligne
-Le blog est celui de la démo F7, en anglais, avec des articles génériques de fitness dont un qui parle des effets de la **pandémie de COVID** sur la santé mentale (donc du contenu daté ~2020‑2021 encore publié en 2026). Catégories indexées : « Fitness », « Healthy Living », « Workout Routines » ; tag « Routine ».
-Preuves : `/index.php/blog/`, `/index.php/category/healthy-living/`, `/index.php/category/workout-routines/`, `/index.php/tag/routine/`.
+### C1 — CRITIQUE · Une boutique factice est en ligne et « achetable »
+Le WooCommerce de la démo F7 est actif : **14 faux produits** (« Protein Shake Vegan », « Kettlebells 20kg », « Sport Bottle »…) avec fiches, panier, checkout et compte client (`/shop/`, `/cart/`, `/checkout/`, `/my-account/`) et **boutons « ajouter au panier » fonctionnels** (16 `ajax_add_to_cart` relevés sur /shop/). Descriptions de démo (« YABBA DABBA DOO! »). Un parent peut tenter d'acheter un produit qui n'existe pas sur le site d'une école pour enfants.
 
-### C2 — CRITIQUE · Faux témoignages publiés
-La page « Reviews » affiche les témoignages de démonstration du thème, en anglais, attribués à des personnes fictives (ex. « Elva Daniels »). De faux avis clients sur un site commercial réel : risque de confiance et d'image majeur vis‑à‑vis des parents.
-Preuve : `/index.php/reviews/`.
+### C2 — CRITIQUE · Le prix affiché n'est pas le vrai prix
+La page `/abonnements/` affiche **« $740/an »** — le tarif réel est **790 $** (source : système de gestion). Le forfait trimestriel n'affiche **aucun montant** dans la page (seule la meta description dit « à partir de 250$ »). Prix en format anglais (« $740 » au lieu de « 740 $ »). C'est LE cas d'école de la source unique : un chiffre non mis à jour depuis une hausse de tarif = des conversations pénibles à l'accueil.
 
-### C3 — MAJEUR · Site franco-anglais par accident
-Le site vise des parents francophones mais les titres de pages indexés sont en anglais : « Team », « Classes », « Boxing », « Reviews », « Privacy Policy », « Personal Training »… et un hybride « Termes & Conditions ». Le funnel n'est cohérent dans aucune des deux langues.
-Preuves : titres Google de `/index.php/team/`, `/index.php/classes/`, `/index.php/terms-conditions/`, etc.
+### C3 — CRITIQUE · Le contenu de démonstration est encore publié
+- **Blog : 12 articles de démo sur 13**, en anglais (« Jump for Joy with this Leap Year HIIT Workout », « Muscle Confusion — Myth and Science », un article sur la santé mentale pendant la **pandémie de COVID**…). Un seul vrai article (kickboxing pour femmes, en français).
+- Pages « À venir » jamais remplies : `/taekwondo/` et `/cardio-kickboxing/` (meta description littérale : « À venir »).
+- Le **programme parascolaire vit sous l'URL de démo `/digital-coaching/`**.
+- Icône sociale **WordPress** encore dans la barre flottante de l'accueil ; « Generated by IcoMoon » visible dans le texte de la page ; le formulaire s'appelle « **New Form** » (nom par défaut).
+- Catégories/tags de démo indexés : Fitness, Healthy Living, Workout Routines, Group Exercise, Routine.
+- (Correction v1 : les pages « Reviews » à faux témoignages et « Boxing » ont été **supprimées** à un moment — le ménage a été commencé, voir C4.)
 
-### C4 — MAJEUR · URLs dégradées et contenu dupliqué (SEO)
-Toutes les URLs contiennent `/index.php/` (permaliens WordPress en mode dégradé). Pire : les deux variantes sont indexées en parallèle (`/category/fitness/` **et** `/index.php/category/fitness/`) — contenu dupliqué, autorité de lien diluée.
+### C4 — MAJEUR · SEO : 404 indexées sans redirections + tout en double
+Vérifié par requêtes :
+- Des pages supprimées restent **indexées par Google mais répondent 404 sans redirection** : `/index.php/blog/`, `/index.php/reviews/`, `/index.php/boxing/`, `/index.php/personal-training/`, `/index.php/classes/`, et surtout **`/index.php/landing-page/` — la page de destination des pubs est morte** (à vérifier côté Meta Ads : où pointent les campagnes ?).
+- Les pages survivantes répondent **200 sur les deux variantes** (`/team/` ET `/index.php/team/`) : contenu dupliqué systémique, autorité diluée.
+- Titres indexés en anglais (« Team », « Shop », « Privacy Policy », hybride « Termes & Conditions ») sur un site francophone.
 
-### C5 — MAJEUR · Ni horaires ni tarifs trouvables
-Aucune information d'horaire ou de tarif n'est visible dans l'index de recherche : tout passe par « remplissez le formulaire, on vous rappelle ». Un parent qui compare des clubs le soir ne peut pas s'auto‑renseigner. C'est aussi un symptôme : quand publier un horaire dans Elementor est pénible, on ne le publie pas.
+### C5 — MAJEUR · 6,4 MB, 101 requêtes : le poids structurel d'Elementor
+Mesuré sur l'accueil : 6,42 MB compressés en 101 requêtes, dont 573 KB de HTML seul (CSS inline massif d'Elementor). Chaque page embarque WooCommerce (CSS/JS) même sans boutique visible, Kanit en 18 graisses, sliders et animations. Sur mobile en 4G moyenne, c'est plusieurs secondes avant le premier contenu — pour des parents qui cherchent juste un horaire.
 
-### C6 — MAJEUR · Offre illisible
-Les pages réelles (karaté, judo, taekwondo, NINJAS 5‑8 ans, camp d'été, parascolaire) cohabitent avec les pages de démo du thème (« Boxing », « Personal Training » virtuel de F7, catégories fitness). Un visiteur ne peut pas distinguer l'offre réelle des restes de gabarit.
+### C6 — MAJEUR · Le contenu clé n'existe qu'à travers le JavaScript d'Elementor
+Rendu sans la pile JS complète (notre miroir) : les **cartes de tarifs sont un rectangle vide** et la page Équipe un **écran noir sans aucun coach** — tout le contenu décisif (prix, entraîneurs) est suspendu aux carrousels/animations d'Elementor Pro 2023. Fragile, lent, et invisible au moindre script bloqué.
 
-### C7 — MINEUR · Localisation incohérente
-Selon les pages, le club est « au cœur de Saint‑Léonard » ou « au cœur de Montréal » (et le quartier réel est Rosemont/Saint‑Léonard selon la source). À unifier — c'est aussi un facteur de SEO local.
+### C7 — MAJEUR · Identité visuelle incohérente
+Trois couleurs se battent : le **vert lime #39B54A de la démo F7** (10 occurrences relevées dans le kit), le **rouge CSHP #FF3131**, un bleu #003388 résiduel — sur noir #191919/blanc. Le kit Elementor n'a **aucune couleur globale définie** : tout est codé en dur widget par widget. Le hero d'accueil superpose des bandeaux rouges « COURS DE / GAGNEZ EN » qui masquent la photo (texte rotatif fragile), le logo du header est écrasé, et le bandeau-titre géant « CENTRE SPORTIF DE HAUTE-PERFORMANCE » se répète sur chaque page en Kanit ultra-gras avec césure « HAUTE- / PERFORMANCE ».
 
-### C8 — MINEUR · Une page publique s'appelle « Landing Page »
-`/index.php/landing-page/` est indexée dans Google sous le titre « Landing Page – Centre Sportif de Haute‑Performance ». C'est probablement la page de destination des pubs Meta : son nom technique est visible des visiteurs et de Google.
+### C8 — MAJEUR · Quatre formulations pour un seul CTA
+« REJOIGNEZ-NOUS », « ENTRAÎNEMENT GRATUIT », « essayer maintenant », « Essai Gratuit » coexistent (header, cartes, formulaire). Le bon réflexe (essai gratuit) existe mais n'est jamais dit deux fois pareil.
 
-### C9 — MINEUR · Archives de tags/catégories indexées
-Les pages d'archives (`/tag/routine/`, `/category/...`) sont indexées : du contenu maigre et dupliqué qui dilue la pertinence du site pour les vraies requêtes (« karaté enfant Montréal »).
+### C9 — MINEUR · Contenus périmés et incohérences
+- `/camp-de-jour/` : titre « Camp de Jour **2025** », meta description « Camp de Jour **2024** » — en 2026.
+- Localisation selon la page : « cœur de Saint-Léonard » / « cœur de Montréal ».
+- La page Équipe mentionne « le basketball » parmi les origines des coachs d'une école d'arts martiaux.
+- Une infolettre « Inscrivez-vous » dans le footer sans aucun outil d'envoi détecté dans la stack.
 
-### Performance — non mesurée, risque structurel
-PageSpeed n'a pas pu être exécuté depuis cet environnement (accès réseau restreint + quota API). Structurellement, la pile Elementor Pro + WooCommerce + thème premium charge plusieurs bundles CSS/JS, jQuery et bibliothèques de sliders : ce type de site dépasse rarement 50/100 en performance mobile. À mesurer au second passage.
+### C10 — MINEUR · Trois représentations des horaires
+Une vraie grille de cours sur `/horaire/` (bon contenu !), des heures d'ouverture différentes dans le footer, et des formats mélangés dans la même grille : « 9:00 AM », « 17:00 », « 19h30@20h30 », casse aléatoire (« NINJAS (u8) groupe 2 » / « NINJAS (U8) GROUPE 1 »).
 
-## Ce qui marche (à garder)
+## Ce qui marche — à garder pour la refonte
 
-- **Le titre SEO de l'accueil** : « Karaté, Judo, Taekwondo à Montréal | CSHP » — bien ciblé, à conserver.
-- **Le CTA « essai gratuit »** avec formulaire de rappel : le bon réflexe de conversion, à garder comme CTA principal unique.
-- **Le programme « NINJAS » (5‑8 ans)** : un vrai nom de marque interne, différenciant.
-- **L'offre réelle est claire une fois isolée** : karaté, judo, taekwondo, NINJAS, camp d'été, parascolaire, essai gratuit.
-- **~2 150 abonnés Facebook** : l'audience existe ; c'est le site qui ne suit pas.
+- **La grille d'horaire réelle** (`/horaire/`) : NINJAS U8 ×2 groupes, karaté intro/avancés, judo intro/intermédiaires/compétitifs, cardio kickboxing femmes, remise en forme hommes/mixte, entraînement privé. À normaliser dans `horaires.json`.
+- **~153 vraies photos** de qualité (séance février 2024 : dojo, tatamis rouge/bleu, groupes d'enfants) + 5 photos Facebook — largement assez pour tout le nouveau site. URLs dans `inventaire-images.md` (à récupérer avant de fermer le WordPress).
+- **La page À propos** : mission, histoire (fondé octobre 2019), valeurs, installations (3 400 pi², liste complète), **partenariats Judo/Karaté/Taekwondo Québec et Canada**, FAQ — du vrai contenu, bien écrit, à recycler.
+- **Les coachs nommés** : Anas Sghir, Ilyes Abdoun (karaté & kickboxing), Lyna Abdoun (Ninjas U8), Abdou Bouabdallah, et d'autres à confirmer.
+- **Heures d'ouverture** (footer) : semaine 16h30-21h, samedi 9h-15h, dimanche 10h-11h30.
+- **Le rouge CSHP sur fond sombre + le logo swoosh** : une base d'identité réelle (en retirant le vert de démo et le bleu résiduel).
+- **Les meta descriptions françaises soignées** des pages principales et le titre d'accueil « Karaté, Judo, Taekwondo à Montréal | CSHP ».
+- **Le seul vrai article** (kickboxing femmes Saint-Léonard) : l'angle marketing « femmes » est validé par la grille (2 créneaux réels).
+- Le CTA essai gratuit avec formulaire typé (essai/tarifs/rappel) — à unifier et brancher sur `POST /api/leads`.
 
 ## Leçons → règles pour le nouveau site
 
-| # | Erreur du site actuel | Règle pour le nouveau site |
+| # | Erreur constatée | Règle |
 |---|---|---|
-| 1 | Contenu en base de données, éditable seulement via admin/Elementor | Contenu = fichiers `.md`/`.json` dans git ; zéro base de données, zéro admin |
-| 2 | Contenu de démo publié faute de nettoyage | Aucun contenu placeholder ne sera jamais committé ; schémas Zod : un frontmatter invalide ou manquant = build cassé |
-| 3 | Faux témoignages du thème | Témoignages uniquement réels, avec consentement, en français |
-| 4 | Mélange FR/EN accidentel | FR partout par défaut (titres, slugs, pages légales) ; l'EN sera une décision explicite, jamais un reste |
-| 5 | Horaires/tarifs invisibles | `src/data/horaires.json` + `src/data/tarifs.json` en source unique, affichés publiquement |
-| 6 | URLs `/index.php/` + doublons indexés | Slugs propres et stables en français ; **table de redirections 301** depuis toutes les anciennes URLs (inventaire ci‑dessous) |
-| 7 | Pages fantômes (« Boxing ») et page « Landing Page » indexée | Chaque page publiée correspond à une offre réelle ; les landing pages pub ont des slugs parlants (`/essai-gratuit-karate-enfant`) et `noindex` si besoin |
-| 8 | Archives tags/catégories indexées | Pas d'archives auto‑générées indexables sans décision explicite |
-| 9 | Stack à abonnements (thème + Elementor Pro) et mises à jour perpétuelles | Site statique (Astro) sur hébergement gratuit (Cloudflare Pages) : rien à mettre à jour pour rester en ligne et sécurisé |
-| 10 | Localisation incohérente | Coordonnées et quartier définis une seule fois dans `src/data/` et réutilisés partout |
+| 1 | Contenu en BD, éditable seulement via admin/Elementor | Contenu = fichiers `.md`/`.json` dans git ; zéro base de données |
+| 2 | Démo publiée (boutique, blog, pages « À venir ») | Aucun placeholder committé ; schémas Zod ; pas de page sans contenu réel |
+| 3 | Prix public ≠ prix réel (740 vs 790) | `tarifs.json` = source unique, alignée sur le système de gestion |
+| 4 | 404 indexées sans 301, doublons `/index.php/` | Slugs français stables + **table de 301 exhaustive** (ci-dessous) dès la mise en ligne |
+| 5 | 6,4 MB / 101 requêtes / 573 KB HTML | Astro statique : budget < 500 KB/page, images WebP ≤ 1600px, 2-3 graisses de police max |
+| 6 | Contenu clé dépendant du JS | HTML statique d'abord ; le site doit être complet sans JavaScript |
+| 7 | 3 couleurs en conflit, zéro variable globale | Design tokens définis une fois (rouge CSHP + noir + neutres), appliqués partout |
+| 8 | 4 formulations de CTA | UN CTA canonique : « Essai gratuit », partout identique |
+| 9 | URL de démo recyclée (`/digital-coaching/` = parascolaire) | L'URL dit ce que la page contient (`/parascolaire/`) |
+| 10 | Stack à licences (thème + Elementor Pro + WP Rocket) et CVE non patchées | Site statique sur Cloudflare Pages : 0 $, pas de surface d'attaque, versions non exposées |
+| 11 | Horaires en 3 versions et 2 formats | `horaires.json` unique, format 24 h unique, propagé partout |
+| 12 | Landing page des pubs morte (404) | Landing pages = fichiers versionnés ; toute suppression passe par une redirection |
 
-## Inventaire des URLs indexées (pour la table de redirections 301)
+## Table de redirections 301 (statuts vérifiés le 2026-08-19)
 
 ```
-/                                           → conserver (accueil)
-/index.php/classes/                         → /cours/
-/index.php/judo/                            → /cours/judo/
-/index.php/boxing/                          → supprimer (démo) → 301 vers /cours/
-/index.php/personal-training/               → supprimer (démo) → 301 vers /cours/
-/index.php/team/                            → /coachs/
-/index.php/reviews/                         → /temoignages/ (contenu réel) ou 301 accueil
-/index.php/blog/                            → /articles/
-/index.php/landing-page/                    → /essai-gratuit/
-/index.php/contact/                         → /contact/
-/index.php/terms-conditions/                → /conditions/
-/index.php/privacy-policy/                  → /confidentialite/
-/index.php/category/fitness/                → 301 vers /articles/
-/category/fitness/                          → 301 vers /articles/ (doublon)
-/index.php/category/healthy-living/         → 301 vers /articles/
-/index.php/category/workout-routines/       → 301 vers /articles/
-/index.php/tag/routine/                     → 301 vers /articles/
+# Pages réelles (200 aujourd'hui) — rediriger vers leur équivalent
+/                                → accueil (conserver)
+/arts-martiaux/                  → /cours/
+/karate/            (+ doublon /index.php/karate/)      → /cours/karate/
+/judo/              (+ doublon /index.php/judo/)        → /cours/judo/
+/ninja/                          → /cours/ninjas/
+/taekwondo/         (coquille « À venir »)              → /cours/ (ou page réelle si offert)
+/cardio-kickboxing/ (coquille « À venir »)              → /cours/kickboxing-femmes/ (offre réelle à la grille)
+/digital-coaching/  (contenu = parascolaire)            → /parascolaire/
+/camp-de-jour/                   → /camp-de-jour/
+/horaire/                        → /horaire/
+/abonnements/                    → /tarifs/
+/a-propos/                       → /a-propos/
+/team/              (+ doublon /index.php/team/)        → /coachs/
+/contact/                        → /contact/
+/kickboxing-pour-femmes-a-montreal-…/                   → /articles/kickboxing-femmes-montreal/
+/privacy-policy/                 → /confidentialite/
+/terms-conditions/               → /conditions/
+
+# Boutique de démo (200 aujourd'hui) — supprimer et rediriger
+/shop/ /cart/ /checkout/ /my-account/ /product/* /product-category/*  → 301 /tarifs/
+
+# Déjà 404 mais encore indexées — rediriger quand même (301 depuis l'ancien chemin)
+/index.php/landing-page/         → /essai-gratuit/   ← VÉRIFIER LES PUBS META EN PRIORITÉ
+/index.php/blog/                 → /articles/
+/index.php/reviews/              → /temoignages/ (réels) ou /a-propos/
+/index.php/boxing/               → /cours/
+/index.php/personal-training/    → /cours/
+/index.php/classes/              → /cours/
+
+# Archives de démo (200 aujourd'hui)
+/category/* /index.php/category/* /tag/* /index.php/tag/*             → 301 /articles/
 ```
 
-*(Cibles proposées — à valider. Un crawl complet au second passage complétera la liste : pages karaté/taekwondo/camp/parascolaire probablement existantes mais non remontées par l'index.)*
+## Palette et matières observées (base de la refonte)
 
-## Limites de cet audit
+- **Rouge CSHP ≈ #FF3131** (à raffiner — vérifier contre `--color-cshp-red` de l'app de gestion et le logo), noir #191919, blanc.
+- **À éliminer** : vert F7 #39B54A (démo), bleu #003388 résiduel, gris Elementor par défaut.
+- Typo actuelle : Kanit (18 graisses). Le nouveau site en garde l'esprit « sport/impact » avec 2-3 graisses max, ou change de famille.
+- Logo : swoosh rouge `docs/assets/logo-cshp.png` (1125×1125, fond transparent) — le seul fichier de marque retrouvé ; nom d'origine « KARATE-2.png » (déc. 2020).
+- Captures de référence « avant » : `docs/assets/avant/`.
 
-1. **Pas d'accès HTTP direct** au domaine depuis cet environnement (politique réseau) : pas de captures d'écran, pas d'inspection du HTML rendu, pas de mesure PageSpeed. Les constats reposent sur le contenu indexé par Google — fiable pour l'existence et les titres des pages, partiel pour l'exhaustivité.
-2. **Pages potentiellement manquantes** à l'inventaire (karaté, taekwondo, camp, parascolaire, tarifs cachés derrière une image, etc.).
-3. Pour le second passage : autoriser `centresportifhp.com` (ou l'accès complet) dans la politique réseau de l'environnement — voir la configuration des environnements sur claude.ai/code.
+## Limites restantes
+
+1. PageSpeed API saturée (429 sans clé) — poids et requêtes mesurés localement sur tailles compressées réelles ; pas de score Lighthouse officiel ni de LCP terrain.
+2. Captures faites via miroir local (la passerelle réseau rejette l'empreinte TLS de Chromium) : les états dépendant du JS Elementor (carrousels, cartes de prix) y apparaissent vides — c'est documenté comme constat C6, et le contenu texte a été vérifié dans le HTML source.
+3. Le formulaire d'essai n'a pas été soumis (pour ne pas polluer la boîte de réception) : destinataire et fiabilité des envois non vérifiés.
