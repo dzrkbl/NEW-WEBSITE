@@ -1,0 +1,29 @@
+{
+  "devise": "$",
+  "taxesIncluses": true,
+  "plans": [
+    {
+      "id": "TRIMESTRIEL",
+      "nom": "Trimestriel",
+      "prix": 250,
+      "periode": "3 mois",
+      "description": "Accès complet aux cours de votre discipline pendant trois mois.",
+      "details": ["Payable en un versement", "Karaté, judo ou Ninjas U8", "Kimono non inclus"]
+    },
+    {
+      "id": "ANNUEL",
+      "nom": "Annuel",
+      "prix": 790,
+      "periode": "12 mois",
+      "populaire": true,
+      "description": "Une année complète d'entraînement — le rythme qui transforme.",
+      "details": ["Versements possibles", "Karaté, judo ou Ninjas U8", "Meilleur prix à la semaine"]
+    }
+  ],
+  "rabaisFamille": { "pct": 10, "texte": "Rabais famille : −10 % dès le 2e enfant inscrit." },
+  "notes": [
+    "Prix taxes incluses (TPS et TVQ).",
+    "Les 4 semaines de fermeture (2 l'hiver, 2 l'été) sont déjà comprises.",
+    "Premier versement à l'inscription. L'essai est gratuit — venez avant de décider."
+  ]
+}

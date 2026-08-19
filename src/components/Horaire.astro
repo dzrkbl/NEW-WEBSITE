@@ -1,0 +1,99 @@
+---
+import horaires from '../data/horaires.json';
+import club from '../data/club.json';
+
+type Cle = keyof typeof horaires.disciplines;
+const disciplines = horaires.disciplines as Record<Cle, { label: string; couleur: string }>;
+const legende = (['judo', 'karate', 'ninjas', 'kickboxing'] as Cle[]).map((k) => ({ cle: k, ...disciplines[k] }));
+---
+
+<section id="horaire" aria-labelledby="horaire-titre">
+  <div class="colonne">
+    <div class="entete-section revele">
+      <p class="kicker">Horaire de la semaine</p>
+      <h2 id="horaire-titre" class="display">Trouvez votre créneau</h2>
+      <p class="intro">
+        Soirs de semaine pour le karaté et le judo, samedi matin pour les Ninjas.
+        Arrivez 10&nbsp;minutes d'avance — le tatami n'attend pas.
+      </p>
+    </div>
+
+    <ul class="legende revele" role="list">
+      {legende.map((l) => (
+        <li><span class={`pastille ${l.couleur}`}></span>{l.label}</li>
+      ))}
+    </ul>
+
+    <div class="grille-horaire revele">
+      {horaires.jours.map((j) => (
+        <div class="jour">
+          <h3>{j.jour}</h3>
+          {j.cours.length === 0 && <p class="repos">Fermé</p>}
+          <ul role="list">
+            {j.cours.map((c) => {
+              const d = disciplines[c.discipline as Cle];
+              return (
+                <li class={`cours ${d.couleur}`}>
+                  <span class="heure tabulaire">{c.heure}</span>
+                  <span class="quoi">
+                    <span class="disc">{d.label}</span>
+                    <span class="niveau">{c.niveau}</span>
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <p class="note revele">
+      Heures d'ouverture : {club.heures.map((h, i) => `${h.jours.toLowerCase()} ${h.plage}`).join(' · ')}.
+      L'horaire peut changer selon la session — <a href="#essai">écrivez-nous</a> pour confirmer une place.
+    </p>
+  </div>
+</section>
+
+<style>
+  .legende { list-style: none; display: flex; flex-wrap: wrap; gap: 10px 24px; margin: 0 0 22px; padding: 0; font-size: 14px; font-weight: 600; color: var(--encre-2); }
+  .legende li { display: flex; align-items: center; gap: 8px; }
+  .pastille { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .pastille.bleu { background: var(--ceinture-bleue); }
+  .pastille.rouge { background: var(--rouge); }
+  .pastille.jaune { background: var(--ceinture-jaune); }
+  .pastille.encre { background: var(--encre-2); }
+
+  .grille-horaire {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 14px;
+  }
+  .jour h3 {
+    font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--sourdine); font-weight: 700;
+    padding-bottom: 10px; border-bottom: 2px solid var(--encre);
+    margin-bottom: 12px;
+  }
+  .jour ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .cours {
+    display: flex; flex-direction: column; gap: 2px;
+    background: #fff; border: 1px solid var(--ligne);
+    border-left: 4px solid var(--encre-2);
+    border-radius: var(--rayon);
+    padding: 10px 12px;
+  }
+  .cours.bleu { border-left-color: var(--ceinture-bleue); }
+  .cours.rouge { border-left-color: var(--rouge); }
+  .cours.jaune { border-left-color: var(--ceinture-jaune); }
+  .heure { font-size: 13px; font-weight: 700; color: var(--sourdine); }
+  .quoi { display: flex; flex-direction: column; }
+  .disc { font-weight: 700; font-size: 14.5px; line-height: 1.25; }
+  .niveau { font-size: 13px; color: var(--sourdine); }
+  .repos { color: var(--sourdine); font-size: 14px; }
+  .note { margin-top: 26px; font-size: 14px; color: var(--sourdine); max-width: none; }
+  .note a { color: var(--rouge); }
+
+  @media (max-width: 1100px) { .grille-horaire { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 760px) { .grille-horaire { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 460px) { .grille-horaire { grid-template-columns: 1fr; } }
+</style>

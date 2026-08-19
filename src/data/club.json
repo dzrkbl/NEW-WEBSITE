@@ -1,0 +1,31 @@
+{
+  "nom": "Centre Sportif de Haute-Performance",
+  "sigle": "CSHP",
+  "fondation": 2019,
+  "adresse": {
+    "rue": "6498 rue Beaubien Est",
+    "ville": "Montréal",
+    "province": "QC",
+    "codePostal": "H1M 1A9",
+    "quartier": "Saint-Léonard"
+  },
+  "telephone": "514 747-5865",
+  "telephoneHref": "+15147475865",
+  "courriel": "centrehp@outlook.com",
+  "heures": [
+    { "jours": "Lundi – vendredi", "plage": "16 h 30 – 21 h" },
+    { "jours": "Samedi", "plage": "9 h – 15 h" },
+    { "jours": "Dimanche", "plage": "10 h – 11 h 30" }
+  ],
+  "surface": "3 400 pi²",
+  "reseaux": {
+    "facebook": "https://www.facebook.com/Centrehp/",
+    "instagram": "https://www.instagram.com/centresportif_hp/"
+  },
+  "federations": [
+    "Karaté Québec", "Karaté Canada",
+    "Judo Québec", "Judo Canada",
+    "Taekwondo Québec", "Taekwondo Canada"
+  ],
+  "apiLeads": "https://cshp-backend.onrender.com/api/leads"
+}

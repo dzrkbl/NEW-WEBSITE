@@ -1,0 +1,220 @@
+---
+import '../styles/global.css';
+import club from '../data/club.json';
+import logo from '../assets/logo-cshp.png';
+import { Image } from 'astro:assets';
+
+interface Props {
+  titre: string;
+  description: string;
+  ogImage?: string;
+}
+const { titre, description, ogImage } = Astro.props;
+const canonique = new URL(Astro.url.pathname, Astro.site);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsActivityLocation',
+  name: club.nom,
+  alternateName: club.sigle,
+  description:
+    "École d'arts martiaux à Montréal (Saint-Léonard) : karaté, judo et programme Ninjas U8 pour enfants et adolescents, kickboxing et remise en forme pour adultes.",
+  url: Astro.site?.toString(),
+  telephone: `+1-${club.telephone.replace(/\s/g, '-')}`,
+  email: club.courriel,
+  foundingDate: String(club.fondation),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: club.adresse.rue,
+    addressLocality: club.adresse.ville,
+    addressRegion: club.adresse.province,
+    postalCode: club.adresse.codePostal,
+    addressCountry: 'CA',
+  },
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '16:30', closes: '21:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '09:00', closes: '15:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Sunday', opens: '10:00', closes: '11:30' },
+  ],
+  sameAs: [club.reseaux.facebook, club.reseaux.instagram],
+  priceRange: '$$',
+};
+const annee = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="fr-CA">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titre}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonique} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_CA" />
+    <meta property="og:title" content={titre} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonique} />
+    {ogImage && <meta property="og:image" content={new URL(ogImage, Astro.site)} />}
+    <link rel="preload" href="/fonts/BigShouldersDisplay-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/HankenGrotesk-400.woff2" as="font" type="font/woff2" crossorigin />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="saut" href="#contenu">Aller au contenu</a>
+
+    <header class="entete">
+      <div class="colonne entete-int">
+        <a href="/" class="marque" aria-label="CSHP — accueil">
+          <Image src={logo} alt="" width="52" height="52" loading="eager" />
+          <span class="marque-txt">
+            <span class="marque-sigle display">CSHP</span>
+            <span class="marque-nom">Centre Sportif de Haute-Performance</span>
+          </span>
+        </a>
+        <nav class="nav" aria-label="Navigation principale">
+          <a href="#programmes">Programmes</a>
+          <a href="#horaire">Horaire</a>
+          <a href="#tarifs">Tarifs</a>
+          <a href="#coachs">Coachs</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <a href="#essai" class="btn btn-rouge entete-cta">Essai gratuit</a>
+        <details class="burger">
+          <summary aria-label="Menu"><span></span><span></span><span></span></summary>
+          <nav class="burger-nav" aria-label="Navigation mobile">
+            <a href="#programmes">Programmes</a>
+            <a href="#horaire">Horaire</a>
+            <a href="#tarifs">Tarifs</a>
+            <a href="#coachs">Coachs</a>
+            <a href="#contact">Contact</a>
+            <a href="#essai" class="btn btn-rouge">Essai gratuit</a>
+          </nav>
+        </details>
+      </div>
+      <div class="ceintures" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </header>
+
+    <main id="contenu">
+      <slot />
+    </main>
+
+    <footer class="pied bande-sombre">
+      <div class="colonne pied-int">
+        <div class="pied-marque">
+          <Image src={logo} alt="" width="64" height="64" />
+          <p class="display pied-sigle">CSHP</p>
+          <p class="pied-tagline">La confiance s'apprend ici. Depuis {club.fondation}.</p>
+        </div>
+        <div class="pied-bloc">
+          <h2 class="pied-titre">Nous trouver</h2>
+          <address>
+            {club.adresse.rue}<br />
+            {club.adresse.quartier}, {club.adresse.ville} ({club.adresse.province}) {club.adresse.codePostal}<br />
+            <a href={`tel:${club.telephoneHref}`} class="tabulaire">{club.telephone}</a><br />
+            <a href={`mailto:${club.courriel}`}>{club.courriel}</a>
+          </address>
+        </div>
+        <div class="pied-bloc">
+          <h2 class="pied-titre">Heures d'ouverture</h2>
+          <ul class="pied-liste tabulaire">
+            {club.heures.map((h) => (
+              <li><span>{h.jours}</span><span>{h.plage}</span></li>
+            ))}
+          </ul>
+        </div>
+        <div class="pied-bloc">
+          <h2 class="pied-titre">Affiliations</h2>
+          <ul class="pied-liste simple">
+            {club.federations.map((f) => <li>{f}</li>)}
+          </ul>
+          <p class="pied-social">
+            <a href={club.reseaux.facebook} rel="me noopener" target="_blank">Facebook</a>
+            <a href={club.reseaux.instagram} rel="me noopener" target="_blank">Instagram</a>
+          </p>
+        </div>
+      </div>
+      <div class="colonne pied-bas">
+        <p>© {annee} {club.nom}. Tous droits réservés.</p>
+        <p><a href="/confidentialite/">Confidentialité</a> · <a href="/conditions/">Conditions</a></p>
+      </div>
+      <div class="ceintures" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </footer>
+
+    <script>
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add('visible')),
+        { threshold: 0.12 }
+      );
+      document.querySelectorAll('.revele').forEach((el) => io.observe(el));
+      document.querySelectorAll('.burger-nav a').forEach((a) =>
+        a.addEventListener('click', () => document.querySelector('.burger')?.removeAttribute('open'))
+      );
+    </script>
+
+    <style>
+      .saut {
+        position: absolute; left: -999px; top: 0; z-index: 100;
+        background: var(--encre); color: var(--papier); padding: 10px 16px;
+      }
+      .saut:focus { left: 0; }
+
+      /* ---- entête ---- */
+      .entete { position: sticky; top: 0; z-index: 50; background: var(--papier); border-bottom: 1px solid var(--ligne); }
+      .entete-int { display: flex; align-items: center; gap: 28px; padding-block: 12px; }
+      .marque { display: flex; align-items: center; gap: 12px; text-decoration: none; margin-right: auto; }
+      .marque-txt { display: flex; flex-direction: column; line-height: 1.05; }
+      .marque-sigle { font-size: 26px; letter-spacing: 0.04em; }
+      .marque-nom { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sourdine); font-weight: 500; }
+      .nav { display: flex; gap: 26px; }
+      .nav a { text-decoration: none; font-weight: 500; font-size: 15px; color: var(--encre-2); }
+      .nav a:hover { color: var(--rouge); }
+      .entete-cta { padding: 11px 20px; font-size: 14.5px; }
+      .burger { display: none; position: relative; }
+      .burger summary { list-style: none; display: flex; flex-direction: column; gap: 5px; padding: 10px; cursor: pointer; }
+      .burger summary::-webkit-details-marker { display: none; }
+      .burger summary span { width: 24px; height: 2.5px; background: var(--encre); }
+      .burger-nav {
+        position: absolute; right: 0; top: calc(100% + 10px);
+        background: var(--papier); border: 1px solid var(--ligne); border-radius: var(--rayon);
+        display: flex; flex-direction: column; gap: 4px; padding: 16px; min-width: 220px;
+        box-shadow: 0 12px 32px rgba(23, 24, 28, 0.14);
+      }
+      .burger-nav a { text-decoration: none; font-weight: 600; padding: 8px 6px; }
+      @media (max-width: 880px) {
+        .nav, .entete-cta { display: none; }
+        .burger { display: block; }
+      }
+
+      /* ---- pied ---- */
+      .pied { padding-top: clamp(48px, 7vw, 80px); }
+      .pied-int {
+        display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr;
+        gap: clamp(28px, 4vw, 56px); padding-bottom: 40px;
+      }
+      .pied-sigle { font-size: 34px; margin: 10px 0 4px; }
+      .pied-tagline { color: var(--sur-sombre-sourdine); font-size: 14.5px; }
+      .pied-titre { font-size: 12.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sur-sombre-sourdine); margin: 0 0 14px; font-weight: 700; }
+      address { font-style: normal; line-height: 1.75; }
+      .pied a { color: var(--sur-sombre); text-decoration-color: rgba(245, 242, 236, 0.35); }
+      .pied a:hover { color: #fff; }
+      .pied-liste { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+      .pied-liste li { display: flex; justify-content: space-between; gap: 14px; font-size: 15px; }
+      .pied-liste.simple li { display: block; color: var(--sur-sombre-sourdine); font-size: 14.5px; }
+      .pied-social { display: flex; gap: 16px; margin-top: 16px; }
+      .pied-bas {
+        display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+        border-top: 1px solid rgba(245, 242, 236, 0.14);
+        padding-block: 20px; font-size: 13.5px; color: var(--sur-sombre-sourdine);
+      }
+      .pied-bas p { margin: 0; }
+      @media (max-width: 880px) { .pied-int { grid-template-columns: 1fr 1fr; } }
+      @media (max-width: 540px) { .pied-int { grid-template-columns: 1fr; } }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,129 @@
+---
+import { Image } from 'astro:assets';
+import photoNinjas from '../assets/photos/ninjas-coach.jpg';
+import photoKarate from '../assets/photos/karate-kumite.jpg';
+import photoJudo from '../assets/photos/judo-projection.jpg';
+import photoKick from '../assets/photos/salle-entrainement.jpg';
+import photoAgilite from '../assets/photos/ninjas-agilite.jpg';
+
+const programmes = [
+  {
+    nom: 'Ninjas U8',
+    jp: '忍者',
+    ages: '4 – 8 ans',
+    photo: photoNinjas,
+    alt: 'Coach du CSHP guidant un jeune enfant portant des gants d’entraînement',
+    texte: 'Initiation ludique et structurée aux arts martiaux : motricité, souplesse, discipline — et beaucoup de plaisir.',
+  },
+  {
+    nom: 'Karaté',
+    jp: '空手',
+    ages: '6 ans et +',
+    photo: photoKarate,
+    alt: 'Deux jeunes karatékas en kumité sur les tatamis du CSHP',
+    texte: 'Technique, respect et dépassement de soi, de la ceinture blanche jusqu’à la compétition provinciale.',
+  },
+  {
+    nom: 'Judo',
+    jp: '柔道',
+    ages: '6 ans et +',
+    photo: photoJudo,
+    alt: 'Projection de judo entre deux athlètes en kimono blanc et bleu',
+    texte: 'Chutes, projections et contrôle : la voie de la souplesse, encadrée par des compétiteurs d’expérience.',
+  },
+  {
+    nom: 'Cardio-kickboxing femmes',
+    jp: null,
+    ages: 'Adultes',
+    photo: photoKick,
+    alt: 'Zone d’entraînement du CSHP avec sacs de frappe',
+    texte: 'Cardio, confiance et défoulement entre femmes — jeudi soir et dimanche matin.',
+  },
+];
+---
+
+<section id="programmes" aria-labelledby="programmes-titre">
+  <div class="colonne">
+    <div class="entete-section revele">
+      <p class="kicker">Nos programmes</p>
+      <h2 id="programmes-titre" class="display">Un tatami pour<br />chaque ambition</h2>
+      <p class="intro">
+        Loisir ou compétition, premier cours ou ceinture noire : chaque groupe est bâti
+        autour de l'âge et du niveau de votre enfant.
+      </p>
+    </div>
+
+    <div class="grille">
+      {programmes.map((p) => (
+        <article class="carte revele">
+          <div class="carte-photo cadre">
+            <Image src={p.photo} alt={p.alt} widths={[420, 760]} sizes="(max-width: 700px) 92vw, 24vw" />
+          </div>
+          <div class="carte-corps">
+            <p class="carte-meta">
+              <span class="carte-ages">{p.ages}</span>
+              {p.jp && <span class="jp" aria-hidden="true">{p.jp}</span>}
+            </p>
+            <h3 class="display carte-nom">{p.nom}</h3>
+            <p class="carte-texte">{p.texte}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="bandeau revele">
+      <div class="bandeau-photo cadre">
+        <Image
+          src={photoAgilite}
+          alt="Enfants du programme parascolaire franchissant une échelle d'agilité au dojo"
+          widths={[640, 1100]}
+          sizes="(max-width: 900px) 92vw, 46vw"
+        />
+      </div>
+      <div class="bandeau-corps">
+        <p class="kicker">Après l'école &amp; l'été</p>
+        <h3 class="display bandeau-titre">Parascolaire<br />et camp de jour</h3>
+        <p>
+          Un service de garde actif, encadré par nos coachs : les jeunes bougent, apprennent
+          les arts martiaux et développent leur discipline — pendant que vous terminez votre journée.
+          L'été, le camp de jour prend le relais.
+        </p>
+        <a href="#essai" class="btn btn-contour">Demander les détails</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grille {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+  }
+  .carte { display: flex; flex-direction: column; background: transparent; }
+  .carte-photo img { aspect-ratio: 3 / 4; object-fit: cover; width: 100%; }
+  .carte-corps { padding: 18px 2px 0; }
+  .carte-meta { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 6px; }
+  .carte-ages {
+    font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--rouge);
+  }
+  .carte-nom { font-size: 27px; line-height: 1; margin-bottom: 8px; }
+  .carte-texte { font-size: 15px; color: var(--encre-2); margin: 0; }
+
+  .bandeau {
+    margin-top: clamp(40px, 6vw, 72px);
+    display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 4vw, 56px);
+    background: var(--papier-2); border-radius: var(--rayon);
+    padding: clamp(20px, 3vw, 36px);
+    align-items: center;
+  }
+  .bandeau-photo img { aspect-ratio: 16 / 11; object-fit: cover; width: 100%; }
+  .bandeau-titre { font-size: clamp(30px, 3.6vw, 44px); margin: 12px 0 14px; }
+  .bandeau-corps p { color: var(--encre-2); }
+  .bandeau-corps .btn { margin-top: 6px; }
+
+  @media (max-width: 1000px) { .grille { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 900px) { .bandeau { grid-template-columns: 1fr; } }
+  @media (max-width: 520px) { .grille { grid-template-columns: 1fr; } .carte-photo img { aspect-ratio: 4 / 3; } }
+</style>

@@ -1,0 +1,57 @@
+---
+const coachs = [
+  { nom: 'Ilyes Abdoun', role: 'Karaté & kickboxing · entraînement privé' },
+  { nom: 'Abdou Bouabdallah', role: 'Judo' },
+  { nom: 'Lyna Abdoun', role: 'Ninjas U8' },
+  { nom: 'Anas Sghir', role: 'Taekwondo' },
+];
+const initiales = (nom: string) =>
+  nom.split(' ').map((p) => p[0]).join('');
+---
+
+<section id="coachs" aria-labelledby="coachs-titre">
+  <div class="colonne">
+    <div class="entete-section revele">
+      <p class="kicker">L'équipe</p>
+      <h2 id="coachs-titre" class="display">Des coachs qui ont<br />porté les couleurs</h2>
+      <p class="intro">
+        Nos entraîneurs ont performé au plus haut niveau de leurs disciplines.
+        Leur exigence est celle de la compétition ; leur patience, celle d'une entreprise familiale.
+      </p>
+    </div>
+    <ul class="liste" role="list">
+      {coachs.map((c) => (
+        <li class="coach revele">
+          <span class="monogramme display" aria-hidden="true">{initiales(c.nom)}</span>
+          <span class="infos">
+            <span class="nom">{c.nom}</span>
+            <span class="role">{c.role}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+    <p class="note revele">…et toute l'équipe d'assistants qui encadre les groupes, saison après saison.</p>
+  </div>
+</section>
+
+<style>
+  .liste { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .coach {
+    display: flex; align-items: center; gap: 16px;
+    background: #fff; border: 1px solid var(--ligne); border-radius: var(--rayon);
+    padding: 18px;
+  }
+  .monogramme {
+    width: 60px; height: 60px; flex: 0 0 auto;
+    display: grid; place-items: center;
+    background: var(--encre); color: var(--papier);
+    font-size: 24px; border-radius: var(--rayon);
+    border-bottom: 3px solid var(--rouge);
+  }
+  .infos { display: flex; flex-direction: column; gap: 2px; }
+  .nom { font-weight: 700; font-size: 16.5px; line-height: 1.2; }
+  .role { font-size: 13.5px; color: var(--sourdine); }
+  .note { margin-top: 18px; font-size: 14px; color: var(--sourdine); }
+  @media (max-width: 1000px) { .liste { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .liste { grid-template-columns: 1fr; } }
+</style>

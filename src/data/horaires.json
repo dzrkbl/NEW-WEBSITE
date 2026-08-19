@@ -1,0 +1,47 @@
+{
+  "misAJour": "2026-08-19",
+  "disciplines": {
+    "judo": { "label": "Judo", "couleur": "bleu" },
+    "karate": { "label": "Karaté", "couleur": "rouge" },
+    "ninjas": { "label": "Ninjas U8", "couleur": "jaune" },
+    "kickboxing": { "label": "Cardio-kickboxing femmes", "couleur": "encre" },
+    "forme": { "label": "Remise en forme", "couleur": "encre" },
+    "prive": { "label": "Entraînement privé", "couleur": "encre" }
+  },
+  "jours": [
+    { "jour": "Lundi", "cours": [
+      { "heure": "17:00", "discipline": "judo", "niveau": "Introduction" },
+      { "heure": "18:00", "discipline": "judo", "niveau": "Intermédiaires" },
+      { "heure": "19:00", "discipline": "judo", "niveau": "Compétitifs" }
+    ]},
+    { "jour": "Mardi", "cours": [
+      { "heure": "17:00", "discipline": "karate", "niveau": "Introduction" },
+      { "heure": "18:00", "discipline": "karate", "niveau": "Avancés" }
+    ]},
+    { "jour": "Mercredi", "cours": [
+      { "heure": "17:00", "discipline": "ninjas", "niveau": "Groupe 1" },
+      { "heure": "18:00", "discipline": "ninjas", "niveau": "Groupe 2" },
+      { "heure": "19:00", "discipline": "judo", "niveau": "Compétitifs" }
+    ]},
+    { "jour": "Jeudi", "cours": [
+      { "heure": "17:00", "discipline": "karate", "niveau": "Introduction" },
+      { "heure": "18:00", "discipline": "karate", "niveau": "Avancés" },
+      { "heure": "19:30", "discipline": "kickboxing", "niveau": "19 h 30 – 20 h 30" }
+    ]},
+    { "jour": "Vendredi", "cours": [
+      { "heure": "17:00", "discipline": "judo", "niveau": "Introduction" },
+      { "heure": "18:00", "discipline": "judo", "niveau": "Intermédiaires" },
+      { "heure": "19:00", "discipline": "judo", "niveau": "Compétitifs" }
+    ]},
+    { "jour": "Samedi", "cours": [
+      { "heure": "9:00", "discipline": "ninjas", "niveau": "Groupe 2" },
+      { "heure": "10:00", "discipline": "ninjas", "niveau": "Groupe 1" },
+      { "heure": "11:30", "discipline": "forme", "niveau": "Hommes" },
+      { "heure": "12:30", "discipline": "forme", "niveau": "Mixte" }
+    ]},
+    { "jour": "Dimanche", "cours": [
+      { "heure": "9:00", "discipline": "prive", "niveau": "Sur rendez-vous" },
+      { "heure": "10:00", "discipline": "kickboxing", "niveau": "Femmes" }
+    ]}
+  ]
+}

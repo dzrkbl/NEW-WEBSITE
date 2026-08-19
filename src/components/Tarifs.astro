@@ -1,0 +1,76 @@
+---
+import tarifs from '../data/tarifs.json';
+---
+
+<section id="tarifs" aria-labelledby="tarifs-titre">
+  <div class="colonne">
+    <div class="entete-section revele">
+      <p class="kicker">Tarifs</p>
+      <h2 id="tarifs-titre" class="display">Simples et sans surprise</h2>
+      <p class="intro">
+        Deux formules, taxes incluses. Et avant de choisir&nbsp;: un cours d'essai gratuit,
+        sans engagement — c'est toujours par là qu'on commence.
+      </p>
+    </div>
+
+    <div class="cartes revele">
+      {tarifs.plans.map((p) => (
+        <article class={`carte ${p.populaire ? 'populaire' : ''}`}>
+          {p.populaire && <p class="badge">Le choix des familles</p>}
+          <h3 class="display nom">{p.nom}</h3>
+          <p class="prix tabulaire">
+            <span class="montant">{p.prix}&nbsp;$</span>
+            <span class="periode">/ {p.periode}, taxes incluses</span>
+          </p>
+          <p class="desc">{p.description}</p>
+          <ul role="list">
+            {p.details.map((d) => <li>{d}</li>)}
+          </ul>
+          <a href="#essai" class={`btn ${p.populaire ? 'btn-rouge' : 'btn-contour'}`}>Commencer par un essai</a>
+        </article>
+      ))}
+      <aside class="famille revele">
+        <p class="display famille-pct">−{tarifs.rabaisFamille.pct}&nbsp;%</p>
+        <p class="famille-texte">{tarifs.rabaisFamille.texte}</p>
+        <ul role="list">
+          {tarifs.notes.map((n) => <li>{n}</li>)}
+        </ul>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  section { background: var(--papier-2); }
+  .cartes { display: grid; grid-template-columns: 1fr 1fr 0.9fr; gap: 22px; align-items: stretch; }
+  .carte {
+    background: #fff; border: 1px solid var(--ligne); border-radius: var(--rayon);
+    padding: 30px 28px; display: flex; flex-direction: column; position: relative;
+  }
+  .carte.populaire { border-top: 4px solid var(--rouge); }
+  .badge {
+    position: absolute; top: -13px; left: 24px;
+    background: var(--rouge); color: #fff;
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: var(--rayon); margin: 0;
+  }
+  .nom { font-size: 30px; margin-bottom: 6px; }
+  .prix { display: flex; align-items: baseline; gap: 10px; margin: 0 0 12px; }
+  .montant { font-family: var(--display); font-weight: 800; font-size: 52px; line-height: 1; color: var(--encre); }
+  .periode { font-size: 14px; color: var(--sourdine); }
+  .desc { color: var(--encre-2); font-size: 15px; }
+  .carte ul { list-style: none; margin: 0 0 22px; padding: 0; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .carte li { display: flex; gap: 10px; font-size: 14.5px; color: var(--encre-2); }
+  .carte li::before { content: "—"; color: var(--rouge); font-weight: 700; }
+  .famille {
+    background: var(--encre); color: var(--sur-sombre);
+    border-radius: var(--rayon); padding: 30px 28px;
+    display: flex; flex-direction: column;
+  }
+  .famille-pct { font-size: 62px; color: var(--rouge-vif); line-height: 1; }
+  .famille-texte { font-weight: 700; font-size: 16.5px; margin: 10px 0 18px; }
+  .famille ul { list-style: none; margin: auto 0 0; padding: 18px 0 0; border-top: 1px solid rgba(245,242,236,0.18); display: flex; flex-direction: column; gap: 10px; }
+  .famille li { font-size: 13.5px; color: var(--sur-sombre-sourdine); }
+  @media (max-width: 960px) { .cartes { grid-template-columns: 1fr 1fr; } .famille { grid-column: 1 / -1; } }
+  @media (max-width: 620px) { .cartes { grid-template-columns: 1fr; } .famille { grid-column: auto; } }
+</style>

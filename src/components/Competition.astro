@@ -1,0 +1,65 @@
+---
+import { Image } from 'astro:assets';
+import club from '../data/club.json';
+import photoCompet from '../assets/photos/competition-projection.jpg';
+import photoGroupe from '../assets/photos/groupe-equipe.jpg';
+---
+
+<section class="bande-sombre" aria-labelledby="compet-titre">
+  <div class="colonne compet-grille">
+    <div class="compet-photos revele">
+      <div class="cadre grande">
+        <Image
+          src={photoGroupe}
+          alt="Photo de groupe des athlètes et coachs du CSHP devant le mur du dojo"
+          widths={[640, 1100]}
+          sizes="(max-width: 900px) 92vw, 44vw"
+        />
+      </div>
+      <div class="cadre haute">
+        <Image
+          src={photoCompet}
+          alt="Projection spectaculaire lors d'un entraînement des groupes compétitifs"
+          widths={[420, 760]}
+          sizes="(max-width: 900px) 60vw, 20vw"
+        />
+      </div>
+    </div>
+    <div class="compet-texte revele">
+      <p class="kicker">La filière compétitive</p>
+      <h2 id="compet-titre" class="display compet-titre">De l'initiation<br />au podium</h2>
+      <p>
+        Le CSHP est affilié aux fédérations provinciales et nationales — vos enfants
+        peuvent viser les circuits officiels dès que leur niveau le permet. Notre objectif
+        à long terme : placer des athlètes sur les équipes nationales, dans chaque discipline.
+      </p>
+      <ul class="federations" role="list">
+        {club.federations.map((f) => <li>{f}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .compet-grille { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .compet-photos { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; align-items: end; }
+  .grande img { aspect-ratio: 4 / 3; object-fit: cover; }
+  .haute { margin-bottom: 36px; }
+  .haute img { aspect-ratio: 3 / 5; object-fit: cover; }
+  .compet-titre { font-size: clamp(34px, 4.8vw, 56px); margin: 14px 0 18px; }
+  .compet-texte p { color: var(--sur-sombre-sourdine); }
+  .federations {
+    list-style: none; margin: 24px 0 0; padding: 0;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px;
+  }
+  .federations li {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 600; font-size: 15px; color: var(--sur-sombre);
+  }
+  .federations li::before { content: ""; width: 14px; height: 2px; background: var(--rouge-vif); flex: 0 0 auto; }
+  @media (max-width: 900px) {
+    .compet-grille { grid-template-columns: 1fr; }
+    .haute { margin-bottom: 0; }
+  }
+  @media (max-width: 460px) { .federations { grid-template-columns: 1fr; } }
+</style>
