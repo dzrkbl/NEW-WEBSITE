@@ -26,7 +26,7 @@
     { "jour": "Jeudi", "cours": [
       { "heure": "17:00", "discipline": "karate", "niveau": "Introduction" },
       { "heure": "18:00", "discipline": "karate", "niveau": "Avancés" },
-      { "heure": "19:30", "discipline": "kickboxing", "niveau": "19 h 30 – 20 h 30" }
+      { "heure": "19:30", "discipline": "kickboxing", "niveau": "19 h 30 à 20 h 30" }
     ]},
     { "jour": "Vendredi", "cours": [
       { "heure": "17:00", "discipline": "judo", "niveau": "Introduction" },

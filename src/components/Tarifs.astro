@@ -9,7 +9,7 @@ import tarifs from '../data/tarifs.json';
       <h2 id="tarifs-titre" class="display">Simples et sans surprise</h2>
       <p class="intro">
         Deux formules, taxes incluses. Et avant de choisir&nbsp;: un cours d'essai gratuit,
-        sans engagement — c'est toujours par là qu'on commence.
+        sans engagement. C'est toujours par là qu'on commence.
       </p>
     </div>
 
@@ -30,7 +30,7 @@ import tarifs from '../data/tarifs.json';
         </article>
       ))}
       <aside class="famille revele">
-        <p class="display famille-pct">−{tarifs.rabaisFamille.pct}&nbsp;%</p>
+        <p class="display famille-pct">-{tarifs.rabaisFamille.pct}&nbsp;%</p>
         <p class="famille-texte">{tarifs.rabaisFamille.texte}</p>
         <ul role="list">
           {tarifs.notes.map((n) => <li>{n}</li>)}
@@ -61,7 +61,7 @@ import tarifs from '../data/tarifs.json';
   .desc { color: var(--encre-2); font-size: 15px; }
   .carte ul { list-style: none; margin: 0 0 22px; padding: 0; display: flex; flex-direction: column; gap: 8px; flex: 1; }
   .carte li { display: flex; gap: 10px; font-size: 14.5px; color: var(--encre-2); }
-  .carte li::before { content: "—"; color: var(--rouge); font-weight: 700; }
+  .carte li::before { content: ""; width: 7px; height: 7px; background: var(--rouge); border-radius: 1px; flex: 0 0 auto; margin-top: 7px; }
   .famille {
     background: var(--encre); color: var(--sur-sombre);
     border-radius: var(--rayon); padding: 30px 28px;

@@ -66,10 +66,10 @@ const annee = new Date().getFullYear();
 
     <header class="entete">
       <div class="colonne entete-int">
-        <a href="/" class="marque" aria-label="CSHP — accueil">
+        <a href="/" class="marque" aria-label="CSHP, retour à l'accueil">
           <Image src={logo} alt="" width="52" height="52" loading="eager" />
           <span class="marque-txt">
-            <span class="marque-sigle display">CSHP</span>
+            <span class="marque-sigle">CSHP</span>
             <span class="marque-nom">Centre Sportif de Haute-Performance</span>
           </span>
         </a>
@@ -106,7 +106,7 @@ const annee = new Date().getFullYear();
       <div class="colonne pied-int">
         <div class="pied-marque">
           <Image src={logo} alt="" width="64" height="64" />
-          <p class="display pied-sigle">CSHP</p>
+          <p class="pied-sigle">CSHP</p>
           <p class="pied-tagline">La confiance s'apprend ici. Depuis {club.fondation}.</p>
         </div>
         <div class="pied-bloc">
@@ -169,7 +169,7 @@ const annee = new Date().getFullYear();
       .entete-int { display: flex; align-items: center; gap: 28px; padding-block: 12px; }
       .marque { display: flex; align-items: center; gap: 12px; text-decoration: none; margin-right: auto; }
       .marque-txt { display: flex; flex-direction: column; line-height: 1.05; }
-      .marque-sigle { font-size: 26px; letter-spacing: 0.04em; color: #fff; }
+      .marque-sigle { font-family: var(--texte); font-weight: 700; font-size: 19px; letter-spacing: 0.16em; text-transform: uppercase; color: #fff; }
       .marque-nom { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sur-sombre-sourdine); font-weight: 500; }
       .nav { display: flex; gap: 26px; }
       .nav a { text-decoration: none; font-weight: 500; font-size: 15px; color: var(--sur-sombre); }
@@ -197,7 +197,7 @@ const annee = new Date().getFullYear();
         display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr;
         gap: clamp(28px, 4vw, 56px); padding-bottom: 40px;
       }
-      .pied-sigle { font-size: 34px; margin: 10px 0 4px; }
+      .pied-sigle { font-family: var(--texte); font-weight: 700; font-size: 22px; letter-spacing: 0.16em; text-transform: uppercase; margin: 10px 0 4px; }
       .pied-tagline { color: var(--sur-sombre-sourdine); font-size: 14.5px; }
       .pied-titre { font-size: 12.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sur-sombre-sourdine); margin: 0 0 14px; font-weight: 700; }
       address { font-style: normal; line-height: 1.75; }

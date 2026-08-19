@@ -13,9 +13,9 @@
   "telephoneHref": "+15147475865",
   "courriel": "centrehp@outlook.com",
   "heures": [
-    { "jours": "Lundi – vendredi", "plage": "16 h 30 – 21 h" },
-    { "jours": "Samedi", "plage": "9 h – 15 h" },
-    { "jours": "Dimanche", "plage": "10 h – 11 h 30" }
+    { "jours": "Lundi au vendredi", "plage": "16 h 30 à 21 h" },
+    { "jours": "Samedi", "plage": "9 h à 15 h" },
+    { "jours": "Dimanche", "plage": "10 h à 11 h 30" }
   ],
   "surface": "3 400 pi²",
   "reseaux": {
