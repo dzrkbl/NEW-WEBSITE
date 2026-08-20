@@ -1,0 +1,46 @@
+# CSHP, site statique Astro sur Hostinger (Apache/LiteSpeed).
+# Redirections 301 depuis l'ancien WordPress + HTTPS + cache.
+# Table source : docs/audit-site-actuel.md (statuts vérifiés 2026-08-19).
+
+RewriteEngine On
+
+# HTTPS obligatoire et domaine canonique sans www
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} ^www\.centresportifhp\.com$ [NC]
+RewriteRule ^(.*)$ https://centresportifhp.com/$1 [R=301,L]
+
+# Ancienne landing des pubs (404 indexée) vers la nouvelle landing
+RewriteRule ^index\.php/landing-page/?$ /essai-gratuit-karate-enfant/ [R=301,L]
+
+# Pages légales
+RewriteRule ^(index\.php/)?privacy-policy/?$ /confidentialite/ [R=301,L]
+RewriteRule ^(index\.php/)?terms-conditions/?$ /confidentialite/ [R=301,L]
+
+# Pages réelles de l'ancien site vers les sections de l'accueil
+RewriteRule ^horaire/?$ "/#horaire" [R=301,NE,L]
+RewriteRule ^abonnements/?$ "/#tarifs" [R=301,NE,L]
+RewriteRule ^a-propos/?$ "/#club" [R=301,NE,L]
+RewriteRule ^team/?$ "/#coachs" [R=301,NE,L]
+RewriteRule ^contact/?$ "/#essai" [R=301,NE,L]
+RewriteRule ^(arts-martiaux|karate|judo|ninja|taekwondo|cardio-kickboxing|digital-coaching|camp-de-jour)/?$ "/#programmes" [R=301,NE,L]
+RewriteRule ^kickboxing-pour-femmes-.* / [R=301,L]
+
+# Boutique de démo WooCommerce et archives de blog
+RewriteRule ^(shop|cart|checkout|my-account)/?$ / [R=301,L]
+RewriteRule ^(product|product-category|category|tag)(/.*)?$ / [R=301,L]
+
+# Tout le reste du préfixe WordPress dégradé
+RewriteRule ^index\.php(/.*)?$ / [R=301,L]
+
+# Page 404 du site
+ErrorDocument 404 /404.html
+
+# Cache : longue durée pour les ressources empreintées, HTML toujours frais
+<IfModule mod_headers.c>
+  <FilesMatch "\.(webp|avif|jpg|jpeg|png|svg|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

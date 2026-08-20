@@ -10,7 +10,11 @@ répond à une erreur documentée de l'ancien site. Les lire avant de coder.
 - **Astro 5**, zéro framework front, CSS vanille avec design tokens (`src/styles/global.css`).
 - Polices auto-hébergées (`public/fonts/`), images optimisées par `astro:assets` (WebP responsive).
 - `npm run dev` · `npm run build` (obligatoire avant tout commit) · `npm run preview`.
-- Déploiement cible : Cloudflare Pages. Aucune base de données, aucun backend, aucun abonnement.
+- **Déploiement : Hostinger** (hébergement existant du club — domaine, DNS et ancien
+  WordPress y sont déjà, voir `docs/dns-centresportifhp.md`). Redirections via
+  `public/.htaccess` ; auto-déploiement FTPS par GitHub Actions
+  (`.github/workflows/deploiement-hostinger.yml`, 3 secrets à configurer).
+  Procédure complète : `docs/deploiement.md`. Aucune base de données, aucun backend.
 
 ## Règles absolues (héritées de l'audit)
 
@@ -80,13 +84,14 @@ répond à une erreur documentée de l'ancien site. Les lire avant de coder.
 
 ## Mise en ligne — checklist critique
 
-1. Inventorier les DNS actuels AVANT tout changement : les enregistrements
-   **Resend** (SPF/DKIM) du domaine servent les courriels transactionnels du club
-   (reçus, rappels de paiement). Les casser = paiements manqués.
-2. Implémenter la table de 301 (audit §Redirections).
+1. ~~Inventorier les DNS actuels~~ **FAIT** (2026-08-20, `docs/dns-centresportifhp.md`) :
+   tout est chez Hostinger ; ne JAMAIS supprimer les MX Titan ni les 3
+   enregistrements Resend (`resend._domainkey` TXT, `send` TXT, `send` MX).
+2. ~~Implémenter la table de 301~~ **FAIT** (`public/.htaccess`).
 3. Vérifier la cible des pubs Meta (l'ancienne landing est déjà une 404).
-4. Récupérer les photos restantes listées dans `docs/inventaire-images.md`
-   avant de résilier l'hébergement WordPress.
+4. ~~Récupérer les photos~~ **FAIT** (2026-08-20, `archives/photos-site-2026/`,
+   98 fichiers). La sauvegarde complète WordPress (fichiers + BD) reste à
+   télécharger depuis le hPanel avant l'écrasement.
 
 ## Contenu et matériaux
 

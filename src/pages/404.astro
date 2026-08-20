@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  titre="Page introuvable | CSHP"
+  description="Cette page n'existe pas ou plus. Retrouvez l'horaire, les tarifs et l'essai gratuit du CSHP sur la page d'accueil."
+>
+  <section>
+    <div class="colonne q">
+      <p class="kicker">Erreur 404</p>
+      <h1 class="display q-titre">Cette page a quitté le tatami</h1>
+      <p>
+        L'adresse demandée n'existe pas ou plus. Tout ce que vous cherchez vit
+        maintenant sur la page d'accueil : programmes, horaire, tarifs et essai gratuit.
+      </p>
+      <div class="q-actions">
+        <a href="/" class="btn btn-rouge">Retour à l'accueil</a>
+        <a href="/#essai" class="btn btn-contour">Réserver un essai gratuit</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .q { max-width: 680px; }
+  .q-titre { font-size: clamp(36px, 5vw, 56px); margin: 12px 0 16px; }
+  .q p { color: var(--encre-2); }
+  .q-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
+</style>
