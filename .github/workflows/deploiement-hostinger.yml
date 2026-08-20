@@ -32,6 +32,9 @@ jobs:
           npm ci
           npm run build
 
+      - name: Estampiller la version déployée
+        run: echo "commit ${GITHUB_SHA::7} construit le $(date -u '+%Y-%m-%d %H:%M UTC')" > dist/version.txt
+
       - name: Déployer vers public_html (FTPS)
         if: env.FTP_PRET == 'true'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
