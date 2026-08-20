@@ -1,0 +1,44 @@
+# Redirections 301 depuis les URLs de l'ancien site WordPress (Cloudflare Pages).
+# Version intérimaire : le site v1 est une page d'accueil à sections + landings.
+# Quand les pages dédiées existeront (/cours/karate/ etc.), raffiner ces cibles.
+# Source de la table : docs/audit-site-actuel.md (statuts HTTP vérifiés 2026-08-19).
+
+# Ancienne landing des pubs (déjà 404 chez Google) vers la nouvelle landing
+/index.php/landing-page/ /essai-gratuit-karate-enfant/ 301
+
+# Pages légales
+/privacy-policy/ /confidentialite/ 301
+/terms-conditions/ /confidentialite/ 301
+/index.php/privacy-policy/ /confidentialite/ 301
+/index.php/terms-conditions/ /confidentialite/ 301
+
+# Pages réelles de l'ancien site vers les sections de l'accueil
+/horaire/ /#horaire 301
+/abonnements/ /#tarifs 301
+/a-propos/ /#club 301
+/team/ /#coachs 301
+/contact/ /#essai 301
+/arts-martiaux/ /#programmes 301
+/karate/ /#programmes 301
+/judo/ /#programmes 301
+/ninja/ /#programmes 301
+/taekwondo/ /#programmes 301
+/cardio-kickboxing/ /#programmes 301
+/digital-coaching/ /#programmes 301
+/camp-de-jour/ /#programmes 301
+/kickboxing-pour-femmes-a-montreal-renforcez-votre-confiance-et-securite/ / 301
+
+# Boutique de démo WooCommerce
+/shop/ / 301
+/cart/ / 301
+/checkout/ / 301
+/my-account/ / 301
+/product/* / 301
+/product-category/* / 301
+
+# Archives de blog de démo
+/category/* / 301
+/tag/* / 301
+
+# Tout le reste du préfixe WordPress dégradé
+/index.php/* / 301
