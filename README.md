@@ -2,8 +2,8 @@
 
 Site vitrine statique du Centre Sportif de Haute-Performance (école de karaté,
 judo et Ninjas U8 à Rosemont, Montréal). Astro 5, CSS vanille, aucune base de
-données. Les règles du projet vivent dans `CLAUDE.md`, la documentation dans
-`docs/`.
+données. Les règles du projet vivent dans `CLAUDE.md` ; le contexte complet de
+reprise (historique, décisions, débogage) dans `docs/passation.md`.
 
 ## Commandes
 

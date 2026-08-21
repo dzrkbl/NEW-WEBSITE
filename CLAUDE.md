@@ -93,6 +93,11 @@ répond à une erreur documentée de l'ancien site. Les lire avant de coder.
    98 fichiers). La sauvegarde complète WordPress (fichiers + BD) reste à
    télécharger depuis le hPanel avant l'écrasement.
 
+## Passation
+
+Historique complet, décisions, incidents résolus, débogage et tâches en cours :
+`docs/passation.md`. C'est le premier fichier à lire pour reprendre le projet.
+
 ## Contenu et matériaux
 
 - Texte réel de l'ancien site (à recycler, jamais à inventer) : `docs/contenu-site-actuel.md`.
