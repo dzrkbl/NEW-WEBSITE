@@ -35,6 +35,7 @@ coder ; ce fichier-ci donne le POURQUOI et l'historique.
 | 20 août | Découverte : domaine, DNS et ancien site déjà chez Hostinger. Archive des 98 photos. `.htaccess`, page 404, workflow FTPS. |
 | 20 août | Écrasement de l'ancien WordPress par le propriétaire (zip fourni). Incidents 403 et FTP résolus (voir §9). Site en production, toutes les vérifications passées. |
 | 21 août | Déploiement automatique prouvé de bout en bout (`/version.txt`). |
+| 21 août | PR #7 de GYM-MANAGEMENT fusionnée (2 conflits résolus dans `reminders.ts` et `leads.ts` en gardant les deux côtés). Attribution des leads vérifiée de bout en bout dans Prospects. Création de `docs/liens-marketing.md` (référence unique des liens publiés). |
 
 ## 3. Architecture du site
 
@@ -128,13 +129,15 @@ accepte UNIQUEMENT `firstName`* `lastName`* `gender` `phone` `email` `sport`
 vide, champ caché dans le formulaire)**. La validation zod SUPPRIME
 silencieusement tout champ inconnu (elle ne rejette pas).
 
-**Contrat CIBLE** (chantier côté app, PR #7 de leur dépôt) : `source`,
-`utmSource`, `utmCampaign`, `utmContent`, `note`. Le formulaire du site envoie
-DÉJÀ ces champs en plus du contrat réel : ils sont jetés par zod aujourd'hui et
-seront captés automatiquement dès la fusion de la PR #7 côté app. **Aucun
-changement à faire côté site à ce moment-là.** Valeurs de `source` :
-`site-accueil`, `landing-karate-enfant`, `landing-ninjas-4-8`. Les UTM de l'URL
-de la page sont capturés automatiquement par le script du formulaire.
+**Contrat CIBLE : ACTIF depuis le 21 août 2026** (PR #7 fusionnée côté
+GYM-MANAGEMENT) : `source`, `utmSource`, `utmCampaign`, `utmContent`, `note`
+sont maintenant persistés par l'app et visibles dans Prospects, dans les
+relances automatiques (« Provenance : source · utmContent ») et dans les notes
+du membre à la conversion. Vérifié de bout en bout le 21 août avec un lead de
+test porteur d'UTM. Valeurs de `source` : `site-accueil`,
+`landing-karate-enfant`, `landing-ninjas-4-8`. Les UTM de l'URL de la page sont
+capturés automatiquement par le script du formulaire ; la référence de tous les
+liens publiés est `docs/liens-marketing.md`.
 
 **Test réalisé** : POST réel accepté (HTTP 201), lead créé avec
 l'id `00db09ea-e95f-4e20-b7e7-cacb6a4168b7` (prénom TEST ; à supprimer de
@@ -157,9 +160,9 @@ activer. Chantier optionnel de sécurité côté app : le restreindre aux deux d
   15 minutes si le programme est décidé (le composant supporte
   `sportVerrouille` et `avecAge`).
 - **URLs de pub** : ajouter `?utm_source=…&utm_campaign=…&utm_content=…`.
-  Exemple bio TikTok :
-  `https://centresportifhp.com/essai-gratuit-ninjas/?utm_source=tiktok&utm_campaign=rentree2026&utm_content=bio-tiktok`.
-  Même vidéo republiée en Reel/Short : changer `utm_source` (instagram, youtube).
+  **Tous les liens prêts à copier (bios, fiche Google, QR, SMS, signature) et
+  la convention de nommage vivent dans `docs/liens-marketing.md`** : c'est la
+  seule source, ne pas improviser de lien ailleurs.
 - **Pixel Meta** (`MetaPixel.astro`) : DORMANT tant que `metaPixelId` est vide
   dans `src/data/marketing.json`. Une fois l'ID collé : bandeau de consentement
   Loi 25 (Accepter/Refuser, mémorisé en localStorage, retrait possible sur
@@ -206,7 +209,9 @@ activer. Chantier optionnel de sécurité côté app : le restreindre aux deux d
 | GitHub Actions : `FTPError: 530 Login incorrect` | Le mot de passe FTP n'est pas le mot de passe hPanel ; il faut le définir dans hPanel → Comptes FTP | Définir le mot de passe FTP et mettre à jour le secret |
 | Run vert mais changements absents du site | `server-dir: public_html/` créait `public_html/public_html/` (la racine FTP EST public_html) | `server-dir: ./` (corrigé, commit `cedaf9d`) |
 | Une ressource nouvellement déployée renvoie 404 | Cache du CDN Hostinger (il cache aussi les 404) | Attendre quelques minutes ou vider le cache dans le hPanel |
-| Leads sans attribution dans Prospects | La PR #7 de l'app (contrat cible) n'est pas fusionnée | Fusionner la PR #7 côté GYM-MANAGEMENT |
+| Leads sans attribution dans Prospects | La PR #7 de l'app (contrat cible) n'était pas fusionnée | Résolu le 21 août 2026 (PR #7 fusionnée). Si ça régresse : vérifier le déploiement Render (branche `main`, auto-deploy) |
+| « Render n'a rien redéployé » après résolution des conflits d'un PR | Résoudre les conflits (« Commit merge ») ne fusionne PAS le PR ; Render surveille `main` | Cliquer « Merge pull request » puis « Confirm merge » ; au besoin, Render → Manual Deploy → Deploy latest commit |
+| `prisma:error ... 57P01 terminating connection due to administrator command` dans les logs Render | Neon (Postgres serverless) endort la base au repos et coupe les connexions : bruit normal documenté par l'app | Aucune action, Prisma se reconnecte seul à la requête suivante |
 | Formulaire : message de repli téléphone | L'API Render ne répond pas (plan gratuit endormi si UptimeRobot est cassé) ou payload invalide | Tester `curl -X POST .../api/leads` avec le contrat du §6 |
 | `avertissement Node.js 20 deprecated` dans Actions | Avertissement GitHub sans conséquence | Ignorer (ou monter les versions d'actions un jour) |
 
@@ -217,19 +222,23 @@ servir le build en localhost et capturer là.
 
 ## 10. À faire (état au 21 août 2026)
 
-1. **Fusionner la PR #7** du dépôt GYM-MANAGEMENT (attribution des leads).
-   Ensuite, faire une soumission de test depuis une landing avec des UTM et
-   vérifier que `source` et les UTM apparaissent dans Prospects.
-2. **Supprimer le lead TEST** (`00db09ea…`, prénom TEST) de Prospects s'il y est encore.
+1. ~~Fusionner la PR #7~~ **FAIT** (21 août 2026, attribution vérifiée dans
+   Prospects avec un lead de test porteur d'UTM).
+2. **Supprimer les leads TEST** de Prospects s'ils y sont encore : celui du
+   19 août (`00db09ea…`, prénom TEST) et celui de la vérification du 21 août.
 3. **Pixel Meta** : créer le pixel (Gestionnaire d'événements Meta → Connecter
    des données → Web), coller l'ID dans `src/data/marketing.json`, pousser.
-4. **Fiche Google Business** : mettre le lien du site (ou d'une landing avec
-   `utm_source=google-fiche`), demander des avis aux familles fidèles.
+   À faire tôt : les audiences se construisent dès maintenant pour le
+   retargeting de janvier.
+4. **Fiche Google Business** : mettre les deux liens (champ « Site Web » et
+   lien de rendez-vous, voir `docs/liens-marketing.md`), demander des avis aux
+   familles fidèles (le plus gros levier de SEO local).
 5. **Search Console** (déjà vérifiée via TXT) : demander l'indexation de
    l'accueil. Un sitemap n'est PAS encore généré (une page indexable + landings
    noindex : faible priorité ; ajouter `@astrojs/sitemap` quand des pages
    dédiées existeront).
-6. **Vidéo TikTok** : compte Entreprise requis pour le lien en bio ; lien du §7.
+6. **Vidéo TikTok** : compte Entreprise requis pour le lien en bio ; lien dans
+   `docs/liens-marketing.md`.
 7. Vérifier que la **sauvegarde complète WordPress** (fichiers + BD) a bien été
    téléchargée depuis le hPanel avant l'écrasement (le propriétaire a dit avoir
    fait la sauvegarde ; confirmer qu'elle est stockée quelque part de sûr).

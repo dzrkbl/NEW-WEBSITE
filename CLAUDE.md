@@ -54,10 +54,10 @@ répond à une erreur documentée de l'ancien site. Les lire avant de coder.
   `sport` `requestType` (ESSAI|RAPPEL|TARIFS|AUTRE) et le honeypot **`website`
   (présent et vide)**. Zod supprime silencieusement tout champ inconnu.
 - Le formulaire (`src/components/FormulaireEssai.astro`, partagé) envoie ce contrat
-  PLUS le **contrat cible** en préparation côté app : `source`
-  (`site-accueil` / `landing-<tag>`), `utmSource`, `utmCampaign`, `utmContent`, `note`
-  (âge + message). Ignorés aujourd'hui, captés automatiquement dès le déploiement
-  côté app. Ne rien changer au site à ce moment-là.
+  PLUS le **contrat cible, ACTIF depuis le 2026-08-21** (PR #7 fusionnée côté app) :
+  `source` (`site-accueil` / `landing-<tag>`), `utmSource`, `utmCampaign`,
+  `utmContent`, `note` (âge + message). Persistés et affichés dans Prospects ;
+  vérifié de bout en bout.
 - **CORS : déjà ouvert côté app** (`app.use(cors())` sans restriction). Rien à activer ;
   le chantier éventuel (sécurité) serait de le restreindre aux deux domaines.
 - Détails : `docs/contexte-club.md`.
@@ -70,8 +70,10 @@ répond à une erreur documentée de l'ancien site. Les lire avant de coder.
   (2026-08-19) : le programme n'est pas confirmé dans l'offre actuelle ; ne jamais
   envoyer de pub vers un cours qui n'existe pas. À recréer si le programme est décidé
   (le composant supporte déjà `sportVerrouille`/`avecAge`).
-- URLs de pub : ajouter les UTM (`?utm_campaign=…&utm_content=…`), envoyés avec le lead
-  (contrat cible) dès que l'app les accepte.
+- URLs de pub : ajouter les UTM (`?utm_source=…&utm_campaign=…&utm_content=…`),
+  captés avec le lead et visibles dans Prospects. **Tous les liens publiés
+  (bios, fiche Google, QR, SMS) vivent dans `docs/liens-marketing.md`** : source
+  unique, ne pas improviser de lien ailleurs.
 - **Pixel Meta** : `src/components/MetaPixel.astro`, activé en collant l'ID dans
   `src/data/marketing.json` (`metaPixelId`). Vide = aucun script tiers, aucun bandeau.
   Consentement préalable obligatoire (Loi 25) : bandeau Accepter/Refuser, choix
