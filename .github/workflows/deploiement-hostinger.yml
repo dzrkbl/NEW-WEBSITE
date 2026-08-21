@@ -44,7 +44,9 @@ jobs:
           password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
           protocol: ftps
           local-dir: dist/
-          server-dir: public_html/
+          # La racine de connexion du compte FTP principal Hostinger EST déjà
+          # public_html : déployer à la racine, sinon on crée public_html/public_html/.
+          server-dir: ./
 
       - name: Secrets FTP absents
         if: env.FTP_PRET != 'true'

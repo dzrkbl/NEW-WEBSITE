@@ -34,8 +34,11 @@ les courriels Titan/Resend.**
 Le workflow `.github/workflows/deploiement-hostinger.yml` construit le site et le
 téléverse par FTPS à chaque push. À configurer une seule fois :
 
-1. hPanel → Fichiers → Comptes FTP : noter l'hôte, l'utilisateur, le mot de passe
-   (ou créer un compte FTP dédié pointant sur `public_html`).
+1. hPanel → Fichiers → Comptes FTP : noter l'hôte (utiliser l'adresse IP, le nom
+   de domaine résout vers le CDN qui ne sert pas le FTP), l'utilisateur et le mot
+   de passe (bouton « Changer le mot de passe FTP » si inconnu).
+   ⚠️ La racine de connexion du compte principal est DÉJÀ `public_html` : le
+   workflow déploie donc vers `./`, jamais vers `public_html/`.
 2. GitHub → dépôt NEW-WEBSITE → Settings → Secrets and variables → Actions →
    New repository secret, trois fois :
    - `HOSTINGER_FTP_SERVER`
