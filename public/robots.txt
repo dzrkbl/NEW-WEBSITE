@@ -1,0 +1,14 @@
+# CSHP — https://centresportifhp.com
+# Les landing pages publicitaires portent une balise noindex : elles ne sont pas
+# bloquées ici, sinon Google ne pourrait pas lire cette balise.
+
+User-agent: *
+Allow: /
+
+# Résidus de l'ancien WordPress (servis en 410, inutile de les explorer)
+Disallow: /wp-admin/
+Disallow: /wp-includes/
+Disallow: /wp-json/
+Disallow: /*?utm_
+
+Sitemap: https://centresportifhp.com/sitemap-index.xml

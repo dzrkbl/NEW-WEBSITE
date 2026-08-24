@@ -1,35 +1,68 @@
 # CSHP, site statique Astro sur Hostinger (Apache/LiteSpeed).
 # Redirections 301 depuis l'ancien WordPress + HTTPS + cache.
-# Table source : docs/audit-site-actuel.md (statuts vérifiés 2026-08-19).
+#
+# Table source : docs/audit-site-actuel.md, corrigée le 2026-08-24 avec les
+# données réelles de la Search Console (34 anciennes URL, 5 665 impressions
+# sur 12 mois). Le crawl d'audit ne voyait pas les adresses en /index.php/ :
+# aucun lien interne n'y menait, mais Google les a indexées pendant des années.
+#
+# RÈGLE DE LECTURE : l'ancien WordPress servait CHAQUE page à deux adresses,
+# /judo/ et /index.php/judo/. Chaque règle accepte donc le préfixe en option,
+# ce qui garantit UNE SEULE redirection par URL. Ne jamais rétablir un
+# fourre-tout ^index\.php(/.*)?$ au-dessus de cette table : il renvoie tout
+# vers l'accueil, Google lit ça comme un soft-404 et la pertinence est perdue.
 
 RewriteEngine On
 
-# HTTPS obligatoire et domaine canonique sans www
-RewriteCond %{HTTPS} !=on [OR]
+# --- Domaine canonique --------------------------------------------------
+# www vers apex.
 RewriteCond %{HTTP_HOST} ^www\.centresportifhp\.com$ [NC]
 RewriteRule ^(.*)$ https://centresportifhp.com/$1 [R=301,L]
 
-# Ancienne landing des pubs (404 indexée) vers la nouvelle landing
-RewriteRule ^index\.php/landing-page/?$ /essai-gratuit-karate-enfant/ [R=301,L]
+# HTTP vers HTTPS. La 2e condition couvre le cas où Hostinger termine TLS en
+# amont et ne renseigne pas %{HTTPS} ; sans elle, la règle boucle.
+# (54 % des impressions de l'ancien site étaient encore en http://.)
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+RewriteRule ^(.*)$ https://centresportifhp.com/$1 [R=301,L]
 
-# Pages légales
-RewriteRule ^(index\.php/)?privacy-policy/?$ /confidentialite/ [R=301,L]
-RewriteRule ^(index\.php/)?terms-conditions/?$ /confidentialite/ [R=301,L]
+# --- Pages légales ------------------------------------------------------
+RewriteRule ^(index\.php/)?(privacy-policy|terms-conditions)/?$ /confidentialite/ [R=301,L]
 
-# Pages réelles de l'ancien site vers les sections de l'accueil
-RewriteRule ^horaire/?$ "/#horaire" [R=301,NE,L]
-RewriteRule ^abonnements/?$ "/#tarifs" [R=301,NE,L]
-RewriteRule ^a-propos/?$ "/#club" [R=301,NE,L]
-RewriteRule ^team/?$ "/#coachs" [R=301,NE,L]
-RewriteRule ^contact/?$ "/#essai" [R=301,NE,L]
-RewriteRule ^(arts-martiaux|karate|judo|ninja|taekwondo|cardio-kickboxing|digital-coaching|camp-de-jour)/?$ "/#programmes" [R=301,NE,L]
-RewriteRule ^kickboxing-pour-femmes-.* / [R=301,L]
+# --- Ancienne landing des pubs -----------------------------------------
+RewriteRule ^(index\.php/)?landing-page/?$ /essai-gratuit-karate-enfant/ [R=301,L]
 
-# Boutique de démo WooCommerce et archives de blog
-RewriteRule ^(shop|cart|checkout|my-account)/?$ / [R=301,L]
-RewriteRule ^(product|product-category|category|tag)(/.*)?$ / [R=301,L]
+# --- Anciennes pages vers les sections de l'accueil ---------------------
+# Les slugs anglais (about, team, classes, membership…) viennent de la Search
+# Console : ils portent l'essentiel de l'historique et manquaient à la table.
+RewriteRule ^(index\.php/)?(horaire|schedule)/?$ "/#horaire" [R=301,NE,L]
+RewriteRule ^(index\.php/)?(abonnements|membership|pricing)/?$ "/#tarifs" [R=301,NE,L]
+RewriteRule ^(index\.php/)?(a-propos|about|about-us)/?$ "/#club" [R=301,NE,L]
+RewriteRule ^(index\.php/)?(team|equipe|coachs)/?$ "/#coachs" [R=301,NE,L]
+RewriteRule ^(index\.php/)?contact/?$ "/#essai" [R=301,NE,L]
+# Le camp de jour et le parascolaire ont leur propre bloc : 293 impressions
+# atterrissaient en haut des programmes, loin du contenu qu'elles cherchaient.
+RewriteRule ^(index\.php/)?(camp-de-jour|camp|parascolaire)/?$ "/#parascolaire" [R=301,NE,L]
+RewriteRule ^(index\.php/)?(arts-martiaux|karate|judo|ninja|taekwondo|cardio-kickboxing|digital-coaching|classes|personal-training|group-training)/?$ "/#programmes" [R=301,NE,L]
+RewriteRule ^(index\.php/)?kickboxing-pour-femmes-.* / [R=301,L]
 
-# Tout le reste du préfixe WordPress dégradé
+# --- Contenus sans équivalent : vers l'accueil --------------------------
+# Blogue, avis, boutique de démo WooCommerce, archives de catégories/étiquettes.
+RewriteRule ^(index\.php/)?(blog|reviews|stories|shop-2)/?$ / [R=301,L]
+RewriteRule ^(index\.php/)?(shop|cart|checkout|my-account)/?$ / [R=301,L]
+RewriteRule ^(index\.php/)?(product|product-category|category|tag)(/.*)?$ / [R=301,L]
+
+# --- Résidus techniques WordPress : disparus, pas redirigés -------------
+# 410 Gone et non 301 : rediriger un fichier média ou une route d'admin vers
+# une page HTML brouille l'index. Le 410 fait sortir l'URL proprement.
+RewriteRule ^wp-content/ - [G,L]
+RewriteRule ^wp-includes/ - [G,L]
+RewriteRule ^wp-json(/.*)?$ - [G,L]
+RewriteRule ^(wp-admin|wp-login\.php|xmlrpc\.php|wp-cron\.php) - [G,L]
+RewriteRule ^(.*/)?feed/?$ - [G,L]
+
+# --- Filet de sécurité --------------------------------------------------
+# Doit rester la DERNIÈRE règle : tout /index.php/... non listé ci-dessus.
 RewriteRule ^index\.php(/.*)?$ / [R=301,L]
 
 # Page 404 du site
