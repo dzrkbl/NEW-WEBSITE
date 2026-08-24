@@ -42,18 +42,21 @@ const pixelId = marketing.metaPixelId;
       var choix = null;
       try { choix = localStorage.getItem(CLE); } catch (e) {}
       var bandeau = document.querySelector('.consentement');
+      function masquer() {
+        bandeau.hidden = true;
+      }
       if (choix === 'oui') {
         chargerPixel();
       } else if (choix !== 'non' && bandeau) {
         bandeau.hidden = false;
         bandeau.querySelector('.c-accepter').addEventListener('click', function () {
           try { localStorage.setItem(CLE, 'oui'); } catch (e) {}
-          bandeau.hidden = true;
+          masquer();
           chargerPixel();
         });
         bandeau.querySelector('.c-refuser').addEventListener('click', function () {
           try { localStorage.setItem(CLE, 'non'); } catch (e) {}
-          bandeau.hidden = true;
+          masquer();
         });
       }
     })();
@@ -63,7 +66,7 @@ const pixelId = marketing.metaPixelId;
 <style>
   .consentement {
     position: fixed;
-    left: 14px;
+    right: 14px;
     bottom: 14px;
     z-index: 95;
     max-width: 400px;
@@ -79,5 +82,17 @@ const pixelId = marketing.metaPixelId;
   .consentement a { color: var(--rouge); }
   .consentement-actions { display: flex; gap: 10px; }
   .consentement .btn { padding: 9px 18px; font-size: 13.5px; }
-  @media (max-width: 480px) { .consentement { right: 14px; max-width: none; } }
+  /* Mobile : barre compacte sur une seule rangee (texte a gauche, boutons a
+     droite) plutot qu'un pave empile. Le bandeau passait de 127 px a ~85 px,
+     ce qui reduit d'autant la place que le hero doit lui reserver. */
+  @media (max-width: 640px) {
+    .consentement {
+      left: 10px; right: 10px; bottom: 10px; max-width: none;
+      padding: 11px 13px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .consentement p { font-size: 12px; line-height: 1.4; margin: 0; flex: 1 1 auto; }
+    .consentement-actions { flex: 0 0 auto; flex-direction: column; gap: 6px; }
+    .consentement .btn { padding: 7px 14px; font-size: 12.5px; width: 100%; }
+  }
 </style>

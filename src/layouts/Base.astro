@@ -98,7 +98,6 @@ const annee = new Date().getFullYear();
             <a href="/#tarifs">Tarifs</a>
             <a href="/#coachs">Coachs</a>
             <a href="/#contact">Contact</a>
-            <a href="/#essai" class="btn btn-rouge">Essai gratuit</a>
           </nav>
         </details>
       </div>
@@ -206,9 +205,19 @@ const annee = new Date().getFullYear();
         box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
       }
       .burger-nav a { text-decoration: none; font-weight: 600; padding: 8px 6px; color: var(--sur-sombre); }
+      /* Sous 880 px, seule la navigation passe dans le burger : le CTA canonique
+         reste visible. 666 des 987 clics du site viennent du mobile ; l'enterrer
+         dans un menu coutait la moitie du trafic. */
       @media (max-width: 880px) {
-        .nav, .entete-cta { display: none; }
+        .nav { display: none; }
         .burger { display: block; }
+        .entete-int { gap: 10px; }
+        .entete-cta { padding: 10px 16px; font-size: 13.5px; }
+      }
+      @media (max-width: 560px) {
+        .marque-nom { display: none; }
+        .marque img { width: 42px; height: 42px; }
+        .entete-cta { padding: 9px 13px; font-size: 12.5px; }
       }
 
       /* ---- pied ---- */
