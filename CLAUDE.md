@@ -66,10 +66,12 @@ répond à une erreur documentée de l'ancien site. Les lire avant de coder.
 
 - Une landing = une page dans `src/pages/essai-gratuit-*.astro` qui remplit les props
   de `LandingEssai.astro` (gabarit `Landing.astro` : pas de navigation, `noindex`).
-  Angles en place : `karate-enfant`, `ninjas-4-8`. **`kickboxing-femmes` retirée**
-  (2026-08-19) : le programme n'est pas confirmé dans l'offre actuelle ; ne jamais
-  envoyer de pub vers un cours qui n'existe pas. À recréer si le programme est décidé
-  (le composant supporte déjà `sportVerrouille`/`avecAge`).
+  Angles en place : `karate-enfant`, `ninjas-4-8`. **`kickboxing-femmes` : le
+  programme est confirmé par le propriétaire (2026-08-24)**, l'interdiction du
+  2026-08-19 est levée. Le cours figure à l'horaire (jeudi 19 h 30, dimanche 10 h)
+  et sur l'accueil ; la landing reste à recréer si un besoin de pub apparaît
+  (le composant supporte déjà `sportVerrouille`/`avecAge`). La règle de fond ne
+  change pas : ne jamais envoyer de pub vers un cours qui n'existe pas.
 - URLs de pub : ajouter les UTM (`?utm_source=…&utm_campaign=…&utm_content=…`),
   captés avec le lead et visibles dans Prospects. **Tous les liens publiés
   (bios, fiche Google, QR, SMS) vivent dans `docs/liens-marketing.md`** : source
