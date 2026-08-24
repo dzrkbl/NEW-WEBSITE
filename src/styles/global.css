@@ -201,8 +201,11 @@ section { padding-block: clamp(56px, 9vw, 104px); }
   clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
-/* Apparition douce au défilement (progressif, sans lib) */
+/* Apparition douce au défilement (progressif, sans lib).
+   Le masquage est conditionné à `.js`, posée dans le <head> par Base.astro.
+   Sans JavaScript la classe n'existe pas, donc rien n'est masqué : la page
+   se lit entièrement (règle 5 du projet). Ne jamais cibler `.revele` seul. */
 @media (prefers-reduced-motion: no-preference) {
-  .revele { opacity: 0; transform: translateY(14px); transition: opacity 480ms ease, transform 480ms ease; }
-  .revele.visible { opacity: 1; transform: none; }
+  .js .revele { opacity: 0; transform: translateY(14px); transition: opacity 480ms ease, transform 480ms ease; }
+  .js .revele.visible { opacity: 1; transform: none; }
 }
