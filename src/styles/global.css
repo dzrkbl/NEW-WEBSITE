@@ -230,6 +230,22 @@ section { padding-block: clamp(56px, 9vw, 104px); }
 .btn-contour-clair { background: transparent; color: var(--sur-sombre); border-color: var(--sur-sombre); }
 .btn-contour-clair:hover { background: var(--sur-sombre); color: var(--encre); }
 
+/* --- Entête sur petit écran --------------------------------------------
+   Le CTA reste visible en tout temps sur téléphone : c'est l'action principale,
+   elle ne doit pas se cacher dans le menu. Le préfixe `header.entete` donne la
+   priorité sur les styles de base de l'entête (Base.astro). */
+@media (max-width: 880px) {
+  header.entete .entete-int { gap: 12px; }
+  header.entete .entete-cta { padding: 10px 14px; font-size: 13.5px; white-space: nowrap; }
+  header.entete .burger-nav .btn { display: none; }
+}
+@media (max-width: 560px) {
+  header.entete .marque { gap: 10px; }
+  header.entete .marque img { width: 44px; height: 44px; }
+  header.entete .marque-nom { display: none; }
+}
+@media (max-width: 360px) { header.entete .marque-txt { display: none; } }
+
 /* --- Bandes sombres ---------------------------------------------------- */
 .bande-sombre { background: var(--sombre); color: var(--sur-sombre); }
 .bande-sombre .kicker { color: var(--rouge-vif); }

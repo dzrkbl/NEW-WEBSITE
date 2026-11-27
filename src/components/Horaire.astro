@@ -5,6 +5,23 @@ import club from '../data/club.json';
 type Cle = keyof typeof horaires.disciplines;
 const disciplines = horaires.disciplines as Record<Cle, { label: string; couleur: string }>;
 const legende = (['judo', 'karate', 'ninjas', 'kickboxing'] as Cle[]).map((k) => ({ cle: k, ...disciplines[k] }));
+
+// Filtre par programme, 100 % CSS (boutons radio + :has), aucun JavaScript.
+// Les règles sont générées à partir de la légende : ajouter une discipline à
+// la légende suffit, rien à maintenir à la main. Écran large (semaine entière
+// visible) : les autres cours s'estompent, la forme de la semaine reste lisible.
+// Écran étroit (liste verticale) : ils disparaissent, la liste raccourcit.
+const cssFiltre = legende
+  .map((l) => {
+    const actif = `#horaire:has(#filtre-${l.cle}:checked)`;
+    const autresCours = `${actif} .cours:not([data-d="${l.cle}"])`;
+    const joursVides = `${actif} .jour:not(:has([data-d="${l.cle}"]))`;
+    return (
+      `@media (min-width:1101px){${autresCours},${joursVides}{opacity:.2}}` +
+      `@media (max-width:1100px){${autresCours},${joursVides}{display:none}}`
+    );
+  })
+  .join('');
 ---
 
 <section id="horaire" aria-labelledby="horaire-titre">
@@ -18,11 +35,18 @@ const legende = (['judo', 'karate', 'ninjas', 'kickboxing'] as Cle[]).map((k) =>
       </p>
     </div>
 
-    <ul class="legende revele" role="list">
+    <fieldset class="filtres revele">
+      <legend class="visually-hidden">Filtrer l'horaire par programme</legend>
+      <input type="radio" name="filtre-horaire" id="filtre-tous" class="visually-hidden" checked />
+      <label for="filtre-tous">Tous les cours</label>
       {legende.map((l) => (
-        <li><span class={`pastille ${l.couleur}`}></span>{l.label}</li>
+        <>
+          <input type="radio" name="filtre-horaire" id={`filtre-${l.cle}`} class="visually-hidden" />
+          <label for={`filtre-${l.cle}`}><span class={`pastille ${l.couleur}`}></span>{l.label}</label>
+        </>
       ))}
-    </ul>
+    </fieldset>
+    <style is:inline set:html={cssFiltre}></style>
 
     <div class="grille-horaire revele">
       {horaires.jours.map((j) => (
@@ -33,7 +57,7 @@ const legende = (['judo', 'karate', 'ninjas', 'kickboxing'] as Cle[]).map((k) =>
             {j.cours.map((c) => {
               const d = disciplines[c.discipline as Cle];
               return (
-                <li class={`cours ${d.couleur}`}>
+                <li class={`cours ${d.couleur}`} data-d={c.discipline}>
                   <span class="heure tabulaire">{c.heure}</span>
                   <span class="quoi">
                     <span class="disc">{d.label}</span>
@@ -55,8 +79,28 @@ const legende = (['judo', 'karate', 'ninjas', 'kickboxing'] as Cle[]).map((k) =>
 </section>
 
 <style>
-  .legende { list-style: none; display: flex; flex-wrap: wrap; gap: 10px 24px; margin: 0 0 22px; padding: 0; font-size: 14px; font-weight: 600; color: var(--encre-2); }
-  .legende li { display: flex; align-items: center; gap: 8px; }
+  /* Légende cliquable : chaque pastille filtre l'horaire. */
+  .filtres {
+    position: relative; border: 0; min-width: 0;
+    display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; padding: 0;
+    font-size: 14px; font-weight: 600; color: var(--encre-2);
+  }
+  .filtres label {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 44px; padding: 0 16px;
+    background: #fff; border: 1px solid var(--ligne); border-radius: 999px;
+    cursor: pointer; user-select: none;
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+  }
+  .filtres label:hover { border-color: var(--encre); }
+  .filtres input:checked + label { background: var(--encre); border-color: var(--encre); color: var(--papier); }
+  .filtres input:focus-visible + label { outline: 3px solid var(--rouge); outline-offset: 2px; }
+  /* Navigateur sans :has : le filtre ne peut pas agir, on retombe sur une simple légende. */
+  @supports not selector(:has(*)) {
+    .filtres { gap: 10px 24px; }
+    .filtres input, .filtres label[for="filtre-tous"] { display: none; }
+    .filtres label { min-height: 0; padding: 0; background: none; border: 0; border-radius: 0; cursor: default; }
+  }
   .pastille { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
   .pastille.bleu { background: var(--ceinture-bleue); }
   .pastille.rouge { background: var(--rouge); }
@@ -81,7 +125,9 @@ const legende = (['judo', 'karate', 'ninjas', 'kickboxing'] as Cle[]).map((k) =>
     border-left: 4px solid var(--encre-2);
     border-radius: var(--rayon);
     padding: 10px 12px;
+    transition: opacity 220ms var(--sortie);
   }
+  .jour { transition: opacity 220ms var(--sortie); }
   .cours.bleu { border-left-color: var(--ceinture-bleue); }
   .cours.rouge { border-left-color: var(--rouge); }
   .cours.jaune { border-left-color: var(--ceinture-jaune); }

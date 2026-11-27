@@ -71,6 +71,12 @@ coder ; ce fichier-ci donne le POURQUOI et l'historique.
   après l'autre ; le bouton rouge a son balayage au survol ; fondu natif entre
   les pages (`@view-transition`). Tout est un rehaussement : sans prise en
   charge, sans JS ou avec « mouvement réduit », le site s'affiche comme avant.
+- **Clarté mobile** : le bouton « Essai gratuit » reste visible dans l'entête
+  collante à toutes les largeurs (il n'est plus caché dans le menu burger).
+  L'horaire se filtre par programme : la légende est un groupe de boutons radio
+  et le filtrage est en CSS pur (`:has`), généré à partir de la légende dans
+  `Horaire.astro`. Aucun JS : le filtre marche même JavaScript désactivé ; sans
+  `:has`, on retombe sur une légende simple et l'horaire complet.
 - **Photos** : `src/assets/photos/` (12 retenues, optimisées par `astro:assets`
   en WebP responsive). Banque complète de l'ancien site : `archives/photos-site-2026/`
   (98 fichiers, sauvegardés avant l'écrasement du WordPress).

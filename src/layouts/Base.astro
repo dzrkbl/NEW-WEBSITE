@@ -206,8 +206,10 @@ const annee = new Date().getFullYear();
         box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
       }
       .burger-nav a { text-decoration: none; font-weight: 600; padding: 8px 6px; color: var(--sur-sombre); }
+      /* Le CTA reste visible sur téléphone : voir « Entête sur petit écran »
+         dans global.css (placé là pour garder ce bloc sous le seuil d'inclusion). */
       @media (max-width: 880px) {
-        .nav, .entete-cta { display: none; }
+        .nav { display: none; }
         .burger { display: block; }
       }
 
