@@ -63,7 +63,7 @@ const annee = new Date().getFullYear();
     <meta property="og:image:alt" content="Deux enfants du CSHP en plein combat de judo sur les tatamis du dojo" />
     <meta property="og:site_name" content={club.nom} />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preload" href="/fonts/BigShouldersDisplay-800.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/DelaGothicOne-400.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/HankenGrotesk-400.woff2" as="font" type="font/woff2" crossorigin />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <!-- Marque le document avant le premier rendu : les revelations au defilement
@@ -111,7 +111,7 @@ const annee = new Date().getFullYear();
       <slot />
     </main>
 
-    <footer class="pied bande-sombre">
+    <footer class="pied fond-nuit dents">
       <div class="colonne pied-int">
         <div class="pied-marque">
           <Image src={logo} alt="" width="64" height="64" />
@@ -185,25 +185,25 @@ const annee = new Date().getFullYear();
       .saut:focus { left: 0; }
 
       /* ---- entête (sombre : le logo est conçu pour fond foncé) ---- */
-      .entete { position: sticky; top: 0; z-index: 50; background: var(--sombre); color: var(--sur-sombre); }
+      .entete { position: sticky; top: 0; z-index: 50; background: var(--nuit); color: var(--sur-sombre); --ombre: var(--tatami); }
       .entete-int { display: flex; align-items: center; gap: 28px; padding-block: 12px; }
       .marque { display: flex; align-items: center; gap: 12px; text-decoration: none; margin-right: auto; }
       .marque-txt { display: flex; flex-direction: column; line-height: 1.05; }
-      .marque-sigle { font-family: var(--texte); font-weight: 700; font-size: 19px; letter-spacing: 0.16em; text-transform: uppercase; color: #fff; }
-      .marque-nom { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sur-sombre-sourdine); font-weight: 500; }
+      .marque-sigle { font-family: var(--display); font-weight: 400; font-size: 20px; letter-spacing: 0.04em; color: var(--blanc); }
+      .marque-nom { font-size: 12px; color: var(--sur-sombre-sourdine); font-weight: 500; }
       .nav { display: flex; gap: 26px; }
-      .nav a { text-decoration: none; font-weight: 500; font-size: 15px; color: var(--sur-sombre); }
-      .nav a:hover { color: var(--rouge-vif); }
-      .entete-cta { padding: 11px 20px; font-size: 14.5px; }
+      .nav a { text-decoration: none; font-weight: 600; font-size: 15.5px; color: var(--sur-sombre); padding-block: 6px; border-bottom: 3px solid transparent; transition: border-color var(--transition), color var(--transition); }
+      .nav a:hover { color: var(--jaune); border-bottom-color: var(--jaune); }
+      .entete-cta { padding: 11px 20px; font-size: 15px; box-shadow: 3px 3px 0 var(--ombre); }
       .burger { display: none; position: relative; }
       .burger summary { list-style: none; display: flex; flex-direction: column; gap: 5px; padding: 10px; cursor: pointer; }
       .burger summary::-webkit-details-marker { display: none; }
       .burger summary span { width: 24px; height: 2.5px; background: var(--sur-sombre); }
       .burger-nav {
         position: absolute; right: 0; top: calc(100% + 10px);
-        background: var(--sombre-2); border: 1px solid rgba(245, 242, 236, 0.16); border-radius: var(--rayon);
+        background: var(--nuit-2); border: 1px solid var(--voile-clair); border-radius: var(--rayon);
         display: flex; flex-direction: column; gap: 4px; padding: 16px; min-width: 220px;
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+        box-shadow: 6px 6px 0 var(--tatami);
       }
       .burger-nav a { text-decoration: none; font-weight: 600; padding: 8px 6px; color: var(--sur-sombre); }
       /* Le CTA reste visible sur téléphone : voir « Entête sur petit écran »
@@ -219,19 +219,19 @@ const annee = new Date().getFullYear();
         display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr;
         gap: clamp(28px, 4vw, 56px); padding-bottom: 40px;
       }
-      .pied-sigle { font-family: var(--texte); font-weight: 700; font-size: 22px; letter-spacing: 0.16em; text-transform: uppercase; margin: 10px 0 4px; }
+      .pied-sigle { font-family: var(--display); font-weight: 400; font-size: 24px; letter-spacing: 0.04em; margin: 10px 0 4px; }
       .pied-tagline { color: var(--sur-sombre-sourdine); font-size: 14.5px; }
-      .pied-titre { font-size: 12.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sur-sombre-sourdine); margin: 0 0 14px; font-weight: 700; }
+      .pied-titre { font-size: 15px; color: var(--jaune); margin: 0 0 14px; font-weight: 700; }
       address { font-style: normal; line-height: 1.75; }
-      .pied a { color: var(--sur-sombre); text-decoration-color: rgba(245, 242, 236, 0.35); }
-      .pied a:hover { color: #fff; }
+      .pied a { color: var(--sur-sombre); text-decoration-color: var(--voile-clair); }
+      .pied a:hover { color: var(--jaune); }
       .pied-liste { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
       .pied-liste li { display: flex; justify-content: space-between; gap: 14px; font-size: 15px; }
       .pied-liste.simple li { display: block; color: var(--sur-sombre-sourdine); font-size: 14.5px; }
       .pied-social { display: flex; gap: 16px; margin-top: 16px; }
       .pied-bas {
         display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
-        border-top: 1px solid rgba(245, 242, 236, 0.14);
+        border-top: 1px solid var(--voile-clair);
         padding-block: 20px; font-size: 13.5px; color: var(--sur-sombre-sourdine);
       }
       .pied-bas p { margin: 0; }

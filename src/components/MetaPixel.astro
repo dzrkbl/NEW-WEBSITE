@@ -69,15 +69,14 @@ const pixelId = marketing.metaPixelId;
     max-width: 400px;
     background: var(--papier);
     color: var(--encre);
-    border: 1px solid var(--ligne);
-    border-top: 3px solid var(--rouge);
+    border: 2px solid var(--encre);
     border-radius: var(--rayon);
-    box-shadow: 0 14px 40px rgba(23, 24, 28, 0.22);
+    box-shadow: 6px 6px 0 var(--encre);
     padding: 16px 18px;
   }
   .consentement p { font-size: 13.5px; line-height: 1.55; margin: 0 0 12px; }
   .consentement a { color: var(--rouge); }
   .consentement-actions { display: flex; gap: 10px; }
-  .consentement .btn { padding: 9px 18px; font-size: 13.5px; }
+  .consentement .btn { padding: 9px 18px; font-size: 14px; box-shadow: 3px 3px 0 var(--encre); }
   @media (max-width: 480px) { .consentement { right: 14px; max-width: none; } }
 </style>

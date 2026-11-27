@@ -5,7 +5,7 @@ import photoCompet from '../assets/photos/competition-projection.jpg';
 import photoGroupe from '../assets/photos/groupe-equipe.jpg';
 ---
 
-<section class="bande-sombre" aria-labelledby="compet-titre">
+<section class="fond-nuit dents" aria-labelledby="compet-titre">
   <div class="colonne compet-grille">
     <div class="compet-photos revele">
       <div class="cadre grande">
@@ -46,8 +46,9 @@ import photoGroupe from '../assets/photos/groupe-equipe.jpg';
   .grande img { aspect-ratio: 4 / 3; object-fit: cover; }
   .haute { margin-bottom: 36px; }
   .haute img { aspect-ratio: 3 / 5; object-fit: cover; }
-  .compet-titre { font-size: clamp(34px, 4.8vw, 56px); margin: 14px 0 18px; }
-  .compet-texte p { color: var(--sur-sombre-sourdine); }
+  .compet-titre { font-size: clamp(27px, 3.7vw, 46px); margin: 14px 0 20px; }
+  .compet-photos img { box-shadow: 6px 6px 0 var(--tatami); }
+  .compet-texte p:not(.kicker) { color: var(--sur-sombre-sourdine); }
   .federations {
     list-style: none; margin: 24px 0 0; padding: 0;
     display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px;
@@ -56,7 +57,7 @@ import photoGroupe from '../assets/photos/groupe-equipe.jpg';
     display: flex; align-items: center; gap: 10px;
     font-weight: 600; font-size: 15px; color: var(--sur-sombre);
   }
-  .federations li::before { content: ""; width: 14px; height: 2px; background: var(--rouge-vif); flex: 0 0 auto; }
+  .federations li::before { content: ""; width: 12px; height: 12px; border-radius: 2px; background: var(--jaune); flex: 0 0 auto; }
   @media (max-width: 900px) {
     .compet-grille { grid-template-columns: 1fr; }
     .haute { margin-bottom: 0; }

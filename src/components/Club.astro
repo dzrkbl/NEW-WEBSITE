@@ -6,13 +6,13 @@ import photoMur from '../assets/photos/mur-logo.jpg';
 
 const chiffres = [
   { valeur: String(club.fondation), legende: 'Année de fondation' },
-  { valeur: '4-18', legende: 'Âges des athlètes' },
+  { valeur: '4 à 18', legende: 'Âges des athlètes' },
   { valeur: club.surface, legende: 'De tatamis et de gym' },
   { valeur: String(club.federations.length), legende: 'Fédérations partenaires' },
 ];
 ---
 
-<section id="club" aria-labelledby="club-titre">
+<section id="club" class="fond-rouge dents" aria-labelledby="club-titre">
   <div class="colonne club-grille">
     <div class="club-texte revele">
       <p class="kicker">Le club</p>
@@ -49,22 +49,23 @@ const chiffres = [
 </section>
 
 <style>
-  section { background: var(--papier-2); }
   .club-grille { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
-  .entete-club { font-size: clamp(32px, 4.6vw, 52px); margin: 14px 0 18px; }
-  .club-texte p { color: var(--encre-2); }
+  .entete-club { font-size: clamp(25px, 3.2vw, 40px); margin: 14px 0 20px; }
+  .club-texte p { color: var(--sur-sombre); }
+  .club-texte .kicker { color: var(--sur-sombre); }
   .club-texte em { font-style: italic; }
 
   .chiffres {
     display: grid; grid-template-columns: repeat(4, auto);
-    gap: clamp(18px, 3vw, 40px);
+    gap: clamp(16px, 2.2vw, 30px);
     margin: 30px 0 0; padding: 22px 0 0;
-    border-top: 1px solid var(--ligne);
+    border-top: 2px solid var(--voile-clair);
   }
-  .chiffre dt { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sourdine); font-weight: 600; }
-  .chiffre dd { margin: 2px 0 0; font-size: clamp(30px, 3.4vw, 44px); color: var(--rouge); }
+  .chiffre dt { font-size: 14px; color: var(--sur-sombre); font-weight: 600; }
+  .chiffre dd { margin: 4px 0 0; font-size: clamp(20px, 2vw, 26px); color: var(--jaune); white-space: nowrap; }
 
   .club-photos { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  .club-photos img { box-shadow: 6px 6px 0 var(--nuit); }
   .photo-a img { aspect-ratio: 3 / 4; object-fit: cover; }
   .photo-b { margin-top: 46px; }
   .photo-b img { aspect-ratio: 4 / 5; object-fit: cover; }

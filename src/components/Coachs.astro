@@ -9,7 +9,7 @@ const initiales = (nom: string) =>
   nom.split(' ').map((p) => p[0]).join('');
 ---
 
-<section id="coachs" aria-labelledby="coachs-titre">
+<section id="coachs" class="fond-gi dents" aria-labelledby="coachs-titre">
   <div class="colonne">
     <div class="entete-section revele">
       <p class="kicker">L'équipe</p>
@@ -38,15 +38,15 @@ const initiales = (nom: string) =>
   .liste { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
   .coach {
     display: flex; align-items: center; gap: 16px;
-    background: #fff; border: 1px solid var(--ligne); border-radius: var(--rayon);
+    background: var(--blanc); border: 2px solid var(--ligne); border-radius: var(--rayon);
     padding: 18px;
   }
   .monogramme {
     width: 60px; height: 60px; flex: 0 0 auto;
     display: grid; place-items: center;
-    background: var(--encre); color: var(--papier);
-    font-size: 24px; border-radius: var(--rayon);
-    border-bottom: 3px solid var(--rouge);
+    background: var(--tatami); color: var(--blanc);
+    font-size: 19px; border-radius: var(--rayon);
+    border-bottom: 6px solid var(--jaune);
   }
   .infos { display: flex; flex-direction: column; gap: 2px; }
   .nom { font-weight: 700; font-size: 16.5px; line-height: 1.2; }

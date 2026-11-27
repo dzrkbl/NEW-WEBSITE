@@ -38,14 +38,39 @@ répond à une erreur documentée de l'ancien site. Les lire avant de coder.
    `docs/audit-site-actuel.md` §Redirections — à implémenter au déploiement
    (`public/_redirects` pour Cloudflare Pages).
 8. **Design tokens seulement** : couleurs et polices viennent des variables de
-   `global.css` (`--rouge`, `--encre`, `--papier`…). Aucune couleur en dur dans
-   les composants. Le vert #39B54A et le bleu #003388 de l'ancien thème sont bannis.
+   `global.css` (`--tatami`, `--rouge`, `--jaune`, `--gi`, `--encre`, `--nuit`…).
+   Aucune couleur en dur dans les composants. Le vert #39B54A et le bleu #003388
+   de l'ancien thème WordPress restent bannis (le bleu `--tatami` #1560B3 est une
+   autre couleur : celle des tapis du dojo, échantillonnée dans les photos).
 9. **SEO local** : chaque page a title + meta description uniques ciblant
    « karaté/judo enfant Montréal / Rosemont » (quartier réel — jamais revendiquer
    un quartier où le club n'est pas). Le JSON-LD `SportsActivityLocation` vit
    dans `src/layouts/Base.astro` et lit `club.json`.
 10. **Vie privée (Loi 25)** : aucune donnée de membre dans ce dépôt. Les
     formulaires envoient vers l'app de gestion, rien n'est stocké ici.
+
+## Identité visuelle « tatami » (refonte du 2026-11-27)
+
+Demande du propriétaire : un site qui a une âme, dont les couleurs ont un lien avec
+le club. Tout part donc du dojo réel :
+
+- **Couleurs** : bleu et rouge des tapis, blanc des kimonos (`--gi`), jaune de la
+  première ceinture (`--jaune`, l'étincelle), bleu nuit pour les bandes sombres.
+  Le **rouge est réservé à l'action** (CTA) et à la zone « Le club ».
+- **Typographie** : Dela Gothic One (affiche japonaise, une seule graisse : ne
+  jamais demander de gras) pour les titres ; Hanken Grotesk pour le texte.
+  Un sous-ensemble de 7 kanji (道 忍 者 空 手 柔 礼) vit dans
+  `public/fonts/DelaGothicOne-kanji.woff2` ; en ajouter un demande de régénérer
+  ce fichier et d'étendre son `unicode-range` dans `global.css`.
+- **Motifs** : sections = zones du tatami (classes `fond-gi`, `fond-gi2`,
+  `fond-tatami`, `fond-rouge`, `fond-nuit`) ; `dents` = bord en queue d'aronde des
+  tapis-puzzle entre deux zones ; boutons et tuiles avec ombre franche qui
+  s'enfoncent au clic ; barre des ceintures qui progresse au défilement.
+- **Code couleur des programmes** : la couleur d'une discipline vient de
+  `horaires.json` (`couleur`) et sert partout via les classes `c-bleu`, `c-rouge`,
+  `c-jaune`, `c-encre` (carte du programme, légende, horaire).
+- **Hero** (`Hero.astro`) : mosaïque de tuiles + les 4 repères d'un parent
+  (âge, jours, prix, lieu), lus dans `src/data/`.
 
 ## Intégration avec l'app de gestion (CSHP Gestion)
 

@@ -5,10 +5,15 @@ import photoKarate from '../assets/photos/karate-kumite.jpg';
 import photoJudo from '../assets/photos/judo-enfants.jpg';
 import photoKick from '../assets/photos/salle-entrainement.jpg';
 import photoAgilite from '../assets/photos/ninjas-agilite.jpg';
+import horaires from '../data/horaires.json';
+
+// Chaque programme porte la couleur qu'il a dans l'horaire : un seul code couleur sur tout le site.
+const couleur = (cle: keyof typeof horaires.disciplines) => horaires.disciplines[cle].couleur;
 
 const programmes = [
   {
     nom: 'Ninjas U8',
+    couleur: couleur('ninjas'),
     jp: '忍者',
     ages: '4 à 8 ans',
     photo: photoNinjas,
@@ -17,6 +22,7 @@ const programmes = [
   },
   {
     nom: 'Karaté',
+    couleur: couleur('karate'),
     jp: '空手',
     ages: '6 ans et +',
     photo: photoKarate,
@@ -25,6 +31,7 @@ const programmes = [
   },
   {
     nom: 'Judo',
+    couleur: couleur('judo'),
     jp: '柔道',
     ages: '6 ans et +',
     photo: photoJudo,
@@ -33,6 +40,7 @@ const programmes = [
   },
   {
     nom: 'Cardio-kickboxing femmes',
+    couleur: couleur('kickboxing'),
     jp: null,
     ages: 'Adultes',
     photo: photoKick,
@@ -42,7 +50,7 @@ const programmes = [
 ];
 ---
 
-<section id="programmes" aria-labelledby="programmes-titre">
+<section id="programmes" class="fond-gi dents" aria-labelledby="programmes-titre">
   <div class="colonne">
     <div class="entete-section revele">
       <p class="kicker">Nos programmes</p>
@@ -55,15 +63,13 @@ const programmes = [
 
     <div class="grille cascade">
       {programmes.map((p) => (
-        <article class="carte revele">
+        <article class={`carte revele c-${p.couleur}`}>
           <div class="carte-photo cadre">
             <Image src={p.photo} alt={p.alt} widths={[420, 760]} sizes="(max-width: 700px) 92vw, 24vw" />
+            <span class="carte-ages">{p.ages}</span>
+            {p.jp && <span class="carte-jp display" aria-hidden="true">{p.jp}</span>}
           </div>
           <div class="carte-corps">
-            <p class="carte-meta">
-              <span class="carte-ages">{p.ages}</span>
-              {p.jp && <span class="jp" aria-hidden="true">{p.jp}</span>}
-            </p>
             <h3 class="display carte-nom">{p.nom}</h3>
             <p class="carte-texte">{p.texte}</p>
           </div>
@@ -101,29 +107,39 @@ const programmes = [
     gap: 22px;
   }
   .carte { display: flex; flex-direction: column; background: transparent; }
-  .carte-photo img { aspect-ratio: 3 / 4; object-fit: cover; width: 100%; }
-  .carte-corps { padding: 18px 2px 0; }
-  .carte-meta { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 6px; }
+  .carte-photo img { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; }
+  /* L'âge : la première chose qu'un parent cherche, posée sur la photo. */
   .carte-ages {
-    font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--rouge);
+    position: absolute; left: 10px; top: 10px;
+    background: var(--blanc); color: var(--encre);
+    font-size: 14px; font-weight: 700; line-height: 1;
+    padding: 8px 11px; border-radius: 4px;
+    box-shadow: 3px 3px 0 var(--encre);
   }
-  .carte-nom { font-size: 27px; line-height: 1; margin-bottom: 8px; }
-  .carte-texte { font-size: 15px; color: var(--encre-2); margin: 0; }
+  .carte-jp {
+    position: absolute; right: 0; bottom: 0;
+    background: var(--c); color: var(--sur-c);
+    font-size: 20px; line-height: 1; letter-spacing: 0.06em;
+    padding: 10px 12px; border-radius: var(--rayon) 0 var(--rayon) 0;
+  }
+  /* La ceinture du programme : sa couleur dans l'horaire. */
+  .carte-corps { padding: 16px 2px 0; border-top: 8px solid var(--c); margin-top: 8px; }
+  .carte-nom { font-size: clamp(19px, 1.75vw, 23px); line-height: 1.12; margin-bottom: 8px; }
+  .carte-texte { font-size: 15.5px; color: var(--encre-2); margin: 0; }
 
   .bandeau {
     margin-top: clamp(40px, 6vw, 72px);
     display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 4vw, 56px);
-    background: var(--papier-2); border-radius: var(--rayon);
+    background: var(--gi-2); border-radius: var(--rayon);
     padding: clamp(20px, 3vw, 36px);
     align-items: center;
   }
   .bandeau-photo img { aspect-ratio: 16 / 11; object-fit: cover; width: 100%; }
-  .bandeau-titre { font-size: clamp(30px, 3.6vw, 44px); margin: 12px 0 14px; }
+  .bandeau-titre { font-size: clamp(23px, 2.7vw, 34px); margin: 12px 0 14px; }
   .bandeau-corps p { color: var(--encre-2); }
   .bandeau-corps .btn { margin-top: 6px; }
 
   @media (max-width: 1000px) { .grille { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 900px) { .bandeau { grid-template-columns: 1fr; } }
-  @media (max-width: 520px) { .grille { grid-template-columns: 1fr; } .carte-photo img { aspect-ratio: 4 / 3; } }
+  @media (max-width: 520px) { .grille { grid-template-columns: 1fr; gap: 30px; } .carte-photo img { aspect-ratio: 4 / 3; } }
 </style>
