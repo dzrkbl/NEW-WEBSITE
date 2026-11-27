@@ -19,7 +19,7 @@ const initiales = (nom: string) =>
         Leur exigence est celle de la compétition ; leur patience, celle d'une entreprise familiale.
       </p>
     </div>
-    <ul class="liste" role="list">
+    <ul class="liste cascade" role="list">
       {coachs.map((c) => (
         <li class="coach revele">
           <span class="monogramme display" aria-hidden="true">{initiales(c.nom)}</span>

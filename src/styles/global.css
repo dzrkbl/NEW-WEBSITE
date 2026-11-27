@@ -78,6 +78,8 @@
   --rayon: 2px;
   --colonne: 1180px;
   --transition: 180ms ease;
+  /* Sortie franche puis amortie : un geste qui part vite et se pose. */
+  --sortie: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* --- Base ----------------------------------------------------------- */
@@ -86,6 +88,13 @@ html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+/* Fondu entre les pages (accueil, confidentialité, landings). Natif, sans JS :
+   un navigateur qui ne connaît pas la règle l'ignore et navigue comme avant. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  /* L'entête collante reste en place pendant le fondu au lieu de clignoter. */
+  .entete { view-transition-name: entete; }
 }
 body {
   margin: 0;
@@ -150,6 +159,32 @@ section { padding-block: clamp(56px, 9vw, 104px); }
 .ceintures span:nth-child(6) { background: var(--ceinture-marron); }
 .ceintures span:nth-child(7) { background: var(--ceinture-noire); }
 
+/* Progression : dans l'entête collante, la barre se dévoile de la ceinture
+   blanche à la noire à mesure qu'on descend la page. 100 % CSS (défilement
+   natif), aucun JS. Sans prise en charge, ou si l'utilisateur préfère moins de
+   mouvement, le voile n'existe pas et la barre reste complète, comme avant. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .ceintures-progression { position: relative; }
+    .ceintures-progression::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--sombre);
+      opacity: 0.86;
+      transform-origin: right center;
+      transform: scaleX(0);
+      animation: ceintures-progression linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+}
+/* Départ à 6/7 : la ceinture blanche est acquise dès l'arrivée. */
+@keyframes ceintures-progression {
+  from { transform: scaleX(0.857); }
+  to { transform: scaleX(0); }
+}
+
 /* --- Boutons ---------------------------------------------------------- */
 .btn {
   display: inline-flex;
@@ -167,9 +202,29 @@ section { padding-block: clamp(56px, 9vw, 104px); }
   cursor: pointer;
   transition: background var(--transition), color var(--transition), border-color var(--transition), transform var(--transition);
 }
-.btn:active { transform: translateY(1px); }
-.btn-rouge { background: var(--rouge); color: #fff; }
-.btn-rouge:hover { background: var(--rouge-fonce); }
+.btn:active { transform: scale(0.98); }
+
+/* Le CTA canonique (règle 6) est le seul bouton qui « frappe » : le rouge foncé
+   balaie de gauche à droite, le bouton se soulève, puis s'écrase au clic. */
+.btn-rouge {
+  background-color: var(--rouge);
+  background-image: linear-gradient(var(--rouge-fonce), var(--rouge-fonce));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  color: #fff;
+  transition:
+    background-size 280ms var(--sortie),
+    transform 200ms var(--sortie),
+    box-shadow 200ms var(--sortie);
+}
+.btn-rouge:hover, .btn-rouge:focus-visible { background-size: 100% 100%; }
+@media (hover: hover) {
+  .btn-rouge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--rouge) 70%, transparent);
+  }
+}
+.btn-rouge:active { transform: scale(0.98); box-shadow: none; }
 .btn-contour { background: transparent; color: var(--encre); border-color: var(--encre); }
 .btn-contour:hover { background: var(--encre); color: var(--papier); }
 .btn-contour-clair { background: transparent; color: var(--sur-sombre); border-color: var(--sur-sombre); }
@@ -206,6 +261,32 @@ section { padding-block: clamp(56px, 9vw, 104px); }
    Sans JavaScript la classe n'existe pas, donc rien n'est masqué : la page
    se lit entièrement (règle 5 du projet). Ne jamais cibler `.revele` seul. */
 @media (prefers-reduced-motion: no-preference) {
-  .js .revele { opacity: 0; transform: translateY(14px); transition: opacity 480ms ease, transform 480ms ease; }
+  .js .revele {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 520ms var(--sortie), transform 640ms var(--sortie);
+    transition-delay: var(--delai, 0ms);
+  }
   .js .revele.visible { opacity: 1; transform: none; }
+
+  /* Cascade : dans une grille `.cascade`, les cartes d'une même rangée entrent
+     l'une après l'autre au lieu de surgir en bloc. Le décalage suit le nombre
+     de colonnes (4, puis 2) ; en une colonne, chaque carte entre seule. */
+  @media (min-width: 1001px) {
+    .js .cascade > :nth-child(4n + 2) { --delai: 90ms; }
+    .js .cascade > :nth-child(4n + 3) { --delai: 180ms; }
+    .js .cascade > :nth-child(4n + 4) { --delai: 270ms; }
+  }
+  @media (min-width: 521px) and (max-width: 1000px) {
+    .js .cascade > :nth-child(even) { --delai: 90ms; }
+  }
+
+  /* Dans une cascade, la photo se dévoile comme une cloison coulissante
+     pendant que la carte monte. */
+  .js .cascade > .revele .cadre {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 760ms var(--sortie);
+    transition-delay: var(--delai, 0ms);
+  }
+  .js .cascade > .revele.visible .cadre { clip-path: inset(0 0 0 0); }
 }
