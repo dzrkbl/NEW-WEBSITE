@@ -64,6 +64,13 @@ coder ; ce fichier-ci donne le POURQUOI et l'historique.
   auto-hébergées (`public/fonts/`) : Big Shoulders Display (titres) et Hanken
   Grotesk (texte, y compris le wordmark CSHP du header). Interdits hérités de
   l'audit : le vert #39B54A et le bleu #003388 de l'ancien thème.
+- **Mouvement** (palier 1, 100 % CSS, aucun JS ajouté, tout dans `global.css`) :
+  la barre des ceintures de l'entête se dévoile de la blanche à la noire selon
+  le défilement (`.ceintures-progression`, `animation-timeline: scroll()`) ;
+  les grilles `.cascade` (programmes, coachs) font entrer leurs cartes l'une
+  après l'autre ; le bouton rouge a son balayage au survol ; fondu natif entre
+  les pages (`@view-transition`). Tout est un rehaussement : sans prise en
+  charge, sans JS ou avec « mouvement réduit », le site s'affiche comme avant.
 - **Photos** : `src/assets/photos/` (12 retenues, optimisées par `astro:assets`
   en WebP responsive). Banque complète de l'ancien site : `archives/photos-site-2026/`
   (98 fichiers, sauvegardés avant l'écrasement du WordPress).
