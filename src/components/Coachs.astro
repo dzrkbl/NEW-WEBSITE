@@ -9,7 +9,7 @@ const initiales = (nom: string) =>
   nom.split(' ').map((p) => p[0]).join('');
 ---
 
-<section id="coachs" aria-labelledby="coachs-titre">
+<section id="coachs" class="filet-haut" aria-labelledby="coachs-titre">
   <div class="colonne">
     <div class="entete-section revele">
       <p class="kicker">L'équipe</p>
@@ -35,23 +35,18 @@ const initiales = (nom: string) =>
 </section>
 
 <style>
-  .liste { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-  .coach {
-    display: flex; align-items: center; gap: 16px;
-    background: #fff; border: 1px solid var(--ligne); border-radius: var(--rayon);
-    padding: 18px;
-  }
+  .liste { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0 18px; }
+  .coach { display: flex; align-items: center; gap: 18px; padding: 22px 0; border-top: 1px solid var(--filet); }
   .monogramme {
-    width: 60px; height: 60px; flex: 0 0 auto;
+    width: 58px; height: 58px; flex: 0 0 auto;
     display: grid; place-items: center;
-    background: var(--encre); color: var(--papier);
-    font-size: 24px; border-radius: var(--rayon);
-    border-bottom: 3px solid var(--rouge);
+    border: 1px solid var(--filet-fort); border-radius: var(--rayon);
+    font-size: 27px; letter-spacing: 0.04em; line-height: 1; padding-top: 2px;
   }
   .infos { display: flex; flex-direction: column; gap: 2px; }
-  .nom { font-weight: 700; font-size: 16.5px; line-height: 1.2; }
-  .role { font-size: 13.5px; color: var(--sourdine); }
-  .note { margin-top: 18px; font-size: 14px; color: var(--sourdine); }
+  .nom { font-weight: 500; font-size: 17px; line-height: 1.25; color: var(--ivoire); }
+  .role { font-size: 14.5px; color: var(--sourdine); line-height: 1.4; }
+  .note { margin-top: 26px; font-size: 15px; color: var(--sourdine); }
   @media (max-width: 1000px) { .liste { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 520px) { .liste { grid-template-columns: 1fr; } }
 </style>

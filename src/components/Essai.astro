@@ -4,7 +4,7 @@ import FormulaireEssai from './FormulaireEssai.astro';
 const adresseMaps = encodeURIComponent(`${club.nom}, ${club.adresse.rue}, ${club.adresse.ville}, ${club.adresse.province}`);
 ---
 
-<section id="essai" class="bande-sombre" aria-labelledby="essai-titre">
+<section id="essai" class="filet-haut" aria-labelledby="essai-titre">
   <div class="colonne essai-grille">
     <div class="essai-texte revele">
       <p class="kicker">Essai gratuit</p>
@@ -38,17 +38,18 @@ const adresseMaps = encodeURIComponent(`${club.nom}, ${club.adresse.rue}, ${club
   </div>
 
   <style>
-    .essai-grille { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(32px, 5vw, 80px); align-items: start; }
-    .essai-titre { font-size: clamp(34px, 5vw, 58px); margin: 14px 0 18px; }
-    .essai-titre em { font-style: normal; color: var(--rouge-vif); }
-    .essai-texte > p { color: var(--sur-sombre-sourdine); }
+    .essai-grille { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+    .essai-titre { font-size: clamp(50px, 5.8vw, 88px); margin: 20px 0 26px; }
+    .essai-titre em { font-style: normal; }
+    .essai-texte > p { color: var(--ivoire-2); max-width: 44ch; }
 
-    .coordonnees { margin-top: 30px; display: flex; flex-direction: column; gap: 16px; }
-    .coordonnees p { margin: 0; display: flex; flex-direction: column; gap: 2px; }
-    .etiquette { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sur-sombre-sourdine); font-weight: 700; }
-    .valeur { color: var(--sur-sombre); font-size: 17px; font-weight: 600; text-decoration-color: rgba(245,242,236,0.3); }
-    .valeur:hover { color: #fff; }
+    .coordonnees { margin-top: 38px; border-top: 1px solid var(--filet); }
+    .coordonnees p { margin: 0; max-width: none; display: grid; grid-template-columns: 110px 1fr; gap: 16px; align-items: baseline; padding: 15px 0; border-bottom: 1px solid var(--filet); }
+    .etiquette { font-size: 14.5px; color: var(--sourdine); }
+    .valeur { color: var(--ivoire); font-size: 17px; font-weight: 400; text-decoration-color: var(--filet-fort); text-underline-offset: 4px; }
+    .valeur:hover { text-decoration-color: var(--rouge); }
 
     @media (max-width: 900px) { .essai-grille { grid-template-columns: 1fr; } }
-  </style>
+    @media (max-width: 420px) { .coordonnees p { grid-template-columns: 1fr; gap: 2px; } }
+</style>
 </section>

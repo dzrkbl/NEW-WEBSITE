@@ -63,8 +63,9 @@ const annee = new Date().getFullYear();
     <meta property="og:image:alt" content="Deux enfants du CSHP en plein combat de judo sur les tatamis du dojo" />
     <meta property="og:site_name" content={club.nom} />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preload" href="/fonts/BigShouldersDisplay-800.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/HankenGrotesk-400.woff2" as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#050506" />
+    <link rel="preload" href="/fonts/BebasNeue-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/HankenGrotesk-variable.woff2" as="font" type="font/woff2" crossorigin />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <!-- Marque le document avant le premier rendu : les revelations au defilement
          ne sont appliquees que si le JS tourne. Sans JS, tout reste visible. -->
@@ -111,7 +112,7 @@ const annee = new Date().getFullYear();
       <slot />
     </main>
 
-    <footer class="pied bande-sombre">
+    <footer class="pied filet-haut">
       <div class="colonne pied-int">
         <div class="pied-marque">
           <Image src={logo} alt="" width="64" height="64" />
@@ -180,63 +181,39 @@ const annee = new Date().getFullYear();
     <style>
       .saut {
         position: absolute; left: -999px; top: 0; z-index: 100;
-        background: var(--encre); color: var(--papier); padding: 10px 16px;
+        background: var(--ivoire); color: var(--noir); padding: 10px 16px;
       }
       .saut:focus { left: 0; }
 
-      /* ---- entête (sombre : le logo est conçu pour fond foncé) ---- */
-      .entete { position: sticky; top: 0; z-index: 50; background: var(--sombre); color: var(--sur-sombre); }
-      .entete-int { display: flex; align-items: center; gap: 28px; padding-block: 12px; }
-      .marque { display: flex; align-items: center; gap: 12px; text-decoration: none; margin-right: auto; }
-      .marque-txt { display: flex; flex-direction: column; line-height: 1.05; }
-      .marque-sigle { font-family: var(--texte); font-weight: 700; font-size: 19px; letter-spacing: 0.16em; text-transform: uppercase; color: #fff; }
-      .marque-nom { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sur-sombre-sourdine); font-weight: 500; }
-      .nav { display: flex; gap: 26px; }
-      .nav a { text-decoration: none; font-weight: 500; font-size: 15px; color: var(--sur-sombre); }
-      .nav a:hover { color: var(--rouge-vif); }
-      .entete-cta { padding: 11px 20px; font-size: 14.5px; }
-      .burger { display: none; position: relative; }
-      .burger summary { list-style: none; display: flex; flex-direction: column; gap: 5px; padding: 10px; cursor: pointer; }
-      .burger summary::-webkit-details-marker { display: none; }
-      .burger summary span { width: 24px; height: 2.5px; background: var(--sur-sombre); }
-      .burger-nav {
-        position: absolute; right: 0; top: calc(100% + 10px);
-        background: var(--sombre-2); border: 1px solid rgba(245, 242, 236, 0.16); border-radius: var(--rayon);
-        display: flex; flex-direction: column; gap: 4px; padding: 16px; min-width: 220px;
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+      /* ---- entête (position, fond et fondu au défilement : voir global.css) ---- */
+      .entete-int { display: flex; align-items: center; gap: 34px; padding-block: 12px; }
+      .marque { display: flex; align-items: center; gap: 14px; text-decoration: none; margin-right: auto; }
+      .marque-txt { display: flex; flex-direction: column; line-height: 1.15; }
+      .marque-sigle { font-weight: 600; font-size: 17px; letter-spacing: 0.2em; color: var(--ivoire); }
+      .marque-nom { font-size: 11.5px; letter-spacing: 0.04em; color: var(--sourdine); font-weight: 400; }
+      .nav { display: flex; gap: 32px; }
+      .nav a { position: relative; text-decoration: none; font-weight: 400; font-size: 15px; color: var(--ivoire); padding-block: 6px; }
+      .nav a::after {
+        content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--rouge);
+        transform: scaleX(0); transform-origin: left; transition: transform 280ms var(--sortie);
       }
-      .burger-nav a { text-decoration: none; font-weight: 600; padding: 8px 6px; color: var(--sur-sombre); }
-      /* Le CTA reste visible sur téléphone : voir « Entête sur petit écran »
-         dans global.css (placé là pour garder ce bloc sous le seuil d'inclusion). */
+      .nav a:hover::after, .nav a:focus-visible::after { transform: scaleX(1); }
+      .entete-cta { padding: 12px 22px; font-size: 14.5px; }
+      .burger { display: none; position: relative; }
+      .burger summary { list-style: none; display: flex; flex-direction: column; gap: 6px; padding: 10px 0 10px 10px; cursor: pointer; }
+      .burger summary::-webkit-details-marker { display: none; }
+      .burger summary span { width: 26px; height: 1.5px; background: var(--ivoire); }
+      .burger-nav {
+        position: absolute; right: 0; top: calc(100% + 12px);
+        background: var(--noir-2); border: 1px solid var(--filet); border-radius: var(--rayon);
+        display: flex; flex-direction: column; padding: 10px 22px; min-width: 230px;
+      }
+      .burger-nav a { text-decoration: none; font-weight: 400; font-size: 17px; padding: 13px 0; color: var(--ivoire); border-bottom: 1px solid var(--filet); }
+      .burger-nav a:last-of-type, .burger-nav a:nth-last-of-type(2) { border-bottom: 0; }
       @media (max-width: 880px) {
         .nav { display: none; }
         .burger { display: block; }
       }
-
-      /* ---- pied ---- */
-      .pied { padding-top: clamp(48px, 7vw, 80px); }
-      .pied-int {
-        display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr;
-        gap: clamp(28px, 4vw, 56px); padding-bottom: 40px;
-      }
-      .pied-sigle { font-family: var(--texte); font-weight: 700; font-size: 22px; letter-spacing: 0.16em; text-transform: uppercase; margin: 10px 0 4px; }
-      .pied-tagline { color: var(--sur-sombre-sourdine); font-size: 14.5px; }
-      .pied-titre { font-size: 12.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sur-sombre-sourdine); margin: 0 0 14px; font-weight: 700; }
-      address { font-style: normal; line-height: 1.75; }
-      .pied a { color: var(--sur-sombre); text-decoration-color: rgba(245, 242, 236, 0.35); }
-      .pied a:hover { color: #fff; }
-      .pied-liste { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
-      .pied-liste li { display: flex; justify-content: space-between; gap: 14px; font-size: 15px; }
-      .pied-liste.simple li { display: block; color: var(--sur-sombre-sourdine); font-size: 14.5px; }
-      .pied-social { display: flex; gap: 16px; margin-top: 16px; }
-      .pied-bas {
-        display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
-        border-top: 1px solid rgba(245, 242, 236, 0.14);
-        padding-block: 20px; font-size: 13.5px; color: var(--sur-sombre-sourdine);
-      }
-      .pied-bas p { margin: 0; }
-      @media (max-width: 880px) { .pied-int { grid-template-columns: 1fr 1fr; } }
-      @media (max-width: 540px) { .pied-int { grid-template-columns: 1fr; } }
     </style>
   </body>
 </html>

@@ -45,7 +45,7 @@ const annuel = tarifs.plans.find((p) => p.id === 'ANNUEL');
 const trimestriel = tarifs.plans.find((p) => p.id === 'TRIMESTRIEL');
 ---
 
-<section class="lp-hero bande-sombre" aria-labelledby="lp-titre">
+<section class="lp-hero" aria-labelledby="lp-titre">
   <div class="colonne lp-hero-grille">
     <div class="lp-pitch">
       <p class="kicker">{kicker}</p>
@@ -126,7 +126,7 @@ const trimestriel = tarifs.plans.find((p) => p.id === 'TRIMESTRIEL');
   </div>
 </section>
 
-<section class="lp-final bande-sombre" aria-label="Réserver">
+<section class="lp-final filet-haut" aria-label="Réserver">
   <div class="colonne lp-final-int">
     <h2 class="display lp-h2">Le premier cours, c'est <em>nous</em> qui l'offrons</h2>
     <div class="lp-final-actions">
@@ -137,56 +137,51 @@ const trimestriel = tarifs.plans.find((p) => p.id === 'TRIMESTRIEL');
 </section>
 
 <style>
-  .lp-hero { padding-block: clamp(36px, 5vw, 64px); }
-  .lp-hero-grille { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 64px); align-items: start; }
-  .lp-titre { font-size: clamp(40px, 4.6vw, 62px); margin: 14px 0 20px; }
-  .lp-titre :global(em) { font-style: normal; color: var(--rouge-vif); }
-  .lp-arguments { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-  .lp-arguments li { display: flex; gap: 12px; font-size: 16.5px; align-items: baseline; }
-  .lp-arguments li::before { content: ""; width: 14px; height: 3px; background: var(--rouge-vif); flex: 0 0 auto; transform: translateY(-4px); }
+  .lp-hero { padding-block: clamp(32px, 4vw, 56px) clamp(48px, 6vw, 80px); }
+  .lp-hero-grille { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 72px); align-items: start; }
+  .lp-titre { font-size: clamp(56px, 6.4vw, 96px); margin: 20px 0 28px; }
+  .lp-titre :global(em) { font-style: normal; }
+  .lp-arguments { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border-top: 1px solid var(--filet); }
+  .lp-arguments li { display: flex; gap: 14px; font-size: 17px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--filet); color: var(--ivoire-2); }
+  .lp-arguments li::before { content: ""; width: 14px; height: 1px; background: var(--rouge); flex: 0 0 auto; transform: translateY(-5px); }
   .lp-preuves {
-    list-style: none; display: flex; flex-wrap: wrap; gap: 8px 22px;
-    margin: 26px 0 0; padding: 14px 0 0; border-top: 1px solid rgba(245, 242, 236, 0.2);
-    font-size: 13.5px; color: var(--sur-sombre-sourdine);
+    list-style: none; display: flex; flex-wrap: wrap; gap: 6px 26px;
+    margin: 22px 0 0; padding: 0;
+    font-size: 14.5px; color: var(--sourdine);
   }
-  .lp-preuves li { display: flex; align-items: center; gap: 8px; }
-  .lp-preuves li::before { content: ""; width: 5px; height: 5px; background: var(--rouge-vif); border-radius: 50%; }
 
-  .lp-etapes { padding-block: clamp(28px, 4vw, 48px); border-bottom: 1px solid var(--ligne); }
-  .etapes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-  .etapes li { display: flex; gap: 14px; align-items: flex-start; }
-  .etape-num { font-size: 40px; color: var(--rouge); line-height: 1; }
-  .etape-corps { display: flex; flex-direction: column; gap: 3px; font-size: 14.5px; color: var(--encre-2); }
-  .etape-corps strong { color: var(--encre); font-size: 15.5px; }
+  .lp-etapes { padding-block: clamp(36px, 5vw, 60px); border-top: 1px solid var(--filet); border-bottom: 1px solid var(--filet); }
+  .etapes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+  .etapes li { display: flex; gap: 18px; align-items: flex-start; }
+  .etape-num { font-size: 64px; color: var(--rouge); line-height: 0.85; }
+  .etape-corps { display: flex; flex-direction: column; gap: 4px; font-size: 15.5px; color: var(--sourdine); }
+  .etape-corps strong { color: var(--ivoire); font-size: 17px; font-weight: 500; }
 
-  .lp-preuve { padding-block: clamp(40px, 6vw, 72px); }
-  .lp-preuve-grille { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(24px, 4vw, 56px); align-items: center; }
-  .lp-preuve-grille img { aspect-ratio: 16 / 11; object-fit: cover; width: 100%; }
-  .lp-h2 { font-size: clamp(28px, 3.6vw, 42px); margin: 12px 0 16px; }
-  .lp-preuve-texte ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-  .lp-preuve-texte li { display: flex; gap: 12px; align-items: baseline; font-size: 15.5px; color: var(--encre-2); }
-  .lp-preuve-texte li::before { content: ""; width: 7px; height: 7px; background: var(--rouge); border-radius: 1px; flex: 0 0 auto; }
+  .lp-preuve { padding-block: clamp(56px, 7vw, 96px); }
+  .lp-preuve-grille { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
+  .lp-preuve-grille :global(img) { aspect-ratio: 16 / 11; object-fit: cover; width: 100%; }
+  .lp-h2 { font-size: clamp(42px, 4.8vw, 70px); margin: 18px 0 22px; }
+  .lp-preuve-texte ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border-top: 1px solid var(--filet); }
+  .lp-preuve-texte li { display: flex; gap: 14px; align-items: baseline; font-size: 16.5px; color: var(--ivoire-2); padding: 13px 0; border-bottom: 1px solid var(--filet); }
+  .lp-preuve-texte li::before { content: ""; width: 14px; height: 1px; background: var(--rouge); flex: 0 0 auto; transform: translateY(-5px); }
 
-  .lp-horaire { padding-block: clamp(36px, 5vw, 64px); background: var(--papier-2); }
-  .lp-grille-horaire { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; max-width: 720px; }
-  .lp-grille-horaire li {
-    display: flex; gap: 18px; align-items: baseline;
-    background: #fff; border: 1px solid var(--ligne); border-left: 4px solid var(--rouge);
-    border-radius: var(--rayon); padding: 12px 16px;
-  }
-  .lp-jour { font-weight: 700; min-width: 92px; }
-  .lp-cours { font-size: 14.5px; color: var(--encre-2); }
-  .lp-tarif { margin: 22px 0 0; font-size: 15px; color: var(--encre-2); max-width: 66ch; }
+  .lp-horaire { padding-block: clamp(48px, 6vw, 80px); border-top: 1px solid var(--filet); }
+  .lp-horaire .lp-h2 { margin-top: 0; }
+  .lp-grille-horaire { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; max-width: 760px; border-top: 1px solid var(--filet); }
+  .lp-grille-horaire li { display: flex; gap: 22px; align-items: baseline; padding: 15px 0; border-bottom: 1px solid var(--filet); }
+  .lp-jour { font-family: var(--display); font-size: 26px; letter-spacing: 0.03em; text-transform: uppercase; line-height: 1; color: var(--ivoire); min-width: 118px; }
+  .lp-cours { font-size: 16px; color: var(--ivoire-2); }
+  .lp-tarif { margin: 26px 0 0; font-size: 16px; color: var(--sourdine); max-width: 66ch; }
 
-  .lp-final { padding-block: clamp(36px, 5vw, 60px); }
-  .lp-final-int { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .lp-final { padding-block: clamp(48px, 6vw, 80px); }
+  .lp-final-int { display: flex; align-items: center; justify-content: space-between; gap: 28px; flex-wrap: wrap; }
   .lp-final .lp-h2 { margin: 0; }
-  .lp-final .lp-h2 :global(em), .lp-final em { font-style: normal; color: var(--rouge-vif); }
+  .lp-final em { font-style: normal; }
   .lp-final-actions { display: flex; gap: 14px; flex-wrap: wrap; }
 
   @media (max-width: 900px) {
     .lp-hero-grille, .lp-preuve-grille { grid-template-columns: 1fr; }
-    .etapes { grid-template-columns: 1fr; gap: 16px; }
-    .lp-grille-horaire li { flex-direction: column; gap: 2px; }
+    .etapes { grid-template-columns: 1fr; gap: 20px; }
+    .lp-grille-horaire li { flex-direction: column; gap: 4px; }
   }
 </style>

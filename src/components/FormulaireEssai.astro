@@ -151,21 +151,23 @@ const idBase = `essai-${tag}`;
 </script>
 
 <style>
-  .formulaire { background: var(--papier); color: var(--encre); border-radius: var(--rayon); padding: clamp(22px, 3vw, 34px); }
-  .champ { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .formulaire { background: var(--noir-2); border: 1px solid var(--filet); border-radius: var(--rayon); padding: clamp(22px, 3vw, 38px); }
+  .champ { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
   .champ-rangee { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  label { font-size: 13.5px; font-weight: 700; }
-  .optionnel { color: var(--sourdine); font-weight: 500; }
+  label { font-size: 14.5px; font-weight: 400; color: var(--ivoire-2); }
+  .optionnel { color: var(--sourdine); }
   input, select, textarea {
-    font: inherit; color: var(--encre);
-    background: #fff; border: 1px solid var(--ligne); border-radius: var(--rayon);
-    padding: 11px 12px;
+    font: inherit; font-weight: 400; color: var(--ivoire);
+    background: var(--noir-3); border: 1px solid var(--filet); border-radius: var(--rayon);
+    padding: 13px 14px; width: 100%;
+    transition: border-color var(--transition);
   }
-  input:focus, select:focus, textarea:focus { outline: 2px solid var(--rouge); outline-offset: 1px; border-color: var(--rouge); }
+  input:hover, select:hover, textarea:hover { border-color: var(--filet-fort); }
+  input:focus, select:focus, textarea:focus { outline: 0; border-color: var(--ivoire); }
   .hp { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
-  button.btn { width: 100%; margin-top: 4px; }
-  .statut { min-height: 1.4em; font-weight: 600; font-size: 14.5px; margin: 12px 0 0; color: var(--encre-2); }
-  .repli { font-size: 13.5px; color: var(--sourdine); margin: 10px 0 0; }
-  .repli a { color: var(--encre); }
+  button.btn { width: 100%; margin-top: 6px; }
+  .statut { min-height: 1.4em; font-weight: 500; font-size: 15px; margin: 14px 0 0; color: var(--ivoire); }
+  .repli { font-size: 14.5px; color: var(--sourdine); margin: 10px 0 0; }
+  .repli a { color: var(--ivoire); text-decoration-color: var(--filet-fort); text-underline-offset: 4px; }
   @media (max-width: 560px) { .champ-rangee { grid-template-columns: 1fr; } }
 </style>

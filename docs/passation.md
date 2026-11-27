@@ -57,13 +57,16 @@ coder ; ce fichier-ci donne le POURQUOI et l'historique.
     tant que `metaPixelId` est vide.
   - `Hero`, `Programmes`, `Club`, `Horaire`, `Competition`, `Tarifs`, `Coachs`,
     `Essai` : sections de l'accueil.
-- **Design système** (`src/styles/global.css`) : palette « papier gi / encre /
-  rouge dojo » (`--papier #FAF7F2`, `--encre #17181C`, `--rouge #C8102E`,
-  `--rouge-vif #FF4B45` réservé aux fonds sombres). Motif signature : la barre
-  des ceintures (blanche→noire) sous le header et le footer. Polices
-  auto-hébergées (`public/fonts/`) : Big Shoulders Display (titres) et Hanken
-  Grotesk (texte, y compris le wordmark CSHP du header). Interdits hérités de
-  l'audit : le vert #39B54A et le bleu #003388 de l'ancien thème.
+- **Design système « cinéma sombre »** (`src/styles/global.css`, refonte du
+  27 novembre, choisie sur maquette par le propriétaire) : fond noir, texte
+  ivoire, rouge du logo comme seule couleur (CTA et filets). Photos assombries
+  par un étalonnage commun. Polices auto-hébergées (`public/fonts/`) : Bebas
+  Neue (titres) et Hanken Grotesk variable (texte, un seul fichier). L'ancienne
+  palette « papier / encre » et Big Shoulders Display sont retirées. Une
+  première piste colorée (« tatami ») a été refusée car jugée enfantine : le
+  site parle à des parents. Détails et règles : section « Identité visuelle »
+  de `CLAUDE.md`. Interdits hérités de l'audit : le vert #39B54A et le bleu
+  #003388 de l'ancien thème.
 - **Mouvement** (palier 1, 100 % CSS, aucun JS ajouté, tout dans `global.css`) :
   la barre des ceintures de l'entête se dévoile de la blanche à la noire selon
   le défilement (`.ceintures-progression`, `animation-timeline: scroll()`) ;

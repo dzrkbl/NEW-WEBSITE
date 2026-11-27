@@ -38,14 +38,40 @@ répond à une erreur documentée de l'ancien site. Les lire avant de coder.
    `docs/audit-site-actuel.md` §Redirections — à implémenter au déploiement
    (`public/_redirects` pour Cloudflare Pages).
 8. **Design tokens seulement** : couleurs et polices viennent des variables de
-   `global.css` (`--rouge`, `--encre`, `--papier`…). Aucune couleur en dur dans
-   les composants. Le vert #39B54A et le bleu #003388 de l'ancien thème sont bannis.
+   `global.css` (`--noir`, `--ivoire`, `--sourdine`, `--filet`, `--rouge`…).
+   Aucune couleur en dur dans les composants. Le vert #39B54A et le bleu #003388
+   de l'ancien thème sont bannis.
 9. **SEO local** : chaque page a title + meta description uniques ciblant
    « karaté/judo enfant Montréal / Rosemont » (quartier réel — jamais revendiquer
    un quartier où le club n'est pas). Le JSON-LD `SportsActivityLocation` vit
    dans `src/layouts/Base.astro` et lit `club.json`.
 10. **Vie privée (Loi 25)** : aucune donnée de membre dans ce dépôt. Les
     formulaires envoient vers l'app de gestion, rien n'est stocké ici.
+
+## Identité visuelle « cinéma sombre » (refonte du 2026-11-27)
+
+Direction choisie par le propriétaire sur maquette, après le refus d'une première
+piste jugée enfantine : **le site s'adresse à des parents, pas aux enfants.**
+Pas de couleurs vives en aplat, pas de police ronde, pas de tuiles à ombre.
+
+- **Couleurs** : fond noir (`--noir`), texte ivoire, et le **rouge du logo comme
+  seule couleur**, réservé au CTA et à de fins filets. Les couleurs du dojo
+  viennent des photos elles-mêmes, pas d'aplats.
+- **Photos** : toutes assombries par un étalonnage commun (`--etalonnage`,
+  appliqué à `main img`). Les fondus vers le noir utilisent `rgb(var(--noir-rgb) / x)`.
+- **Typographie** : Bebas Neue pour les titres (majuscules d'affiche, une seule
+  graisse : ne jamais demander de gras), Hanken Grotesk variable pour le texte
+  (un seul fichier, toutes les graisses). Choix du propriétaire parmi 4 polices.
+- **Motifs** : repère de section = un filet rouge puis quelques mots (`.kicker`) ;
+  sections séparées par un filet (`.filet-haut`) ; listes et chiffres en lignes
+  fines plutôt qu'en cartes ; fil des ceintures (3 px) qui progresse au défilement.
+- **Hero** (`Hero.astro`) : photo à gauche qui se fond dans le noir, texte à
+  droite, puis les 4 réponses d'un parent (âge, jours, tarif, adresse) lues dans
+  `src/data/`. L'entête est transparente en haut de page et se fond au noir au
+  défilement (CSS natif, voir `global.css`).
+- **Mouvement** : lent et rare. Une ouverture au chargement (la photo recule, le
+  texte monte), des apparitions au défilement, un rideau sur les photos des
+  programmes. Rien d'autre sans raison.
 
 ## Intégration avec l'app de gestion (CSHP Gestion)
 

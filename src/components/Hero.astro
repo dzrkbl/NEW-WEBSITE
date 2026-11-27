@@ -1,76 +1,176 @@
 ---
+// Ouverture du site, comme un générique : la photo du dojo à gauche, qui se
+// fond dans le noir ; la promesse et l'action à droite ; en bas, les quatre
+// réponses que cherche un parent (âge, jours, tarif, adresse), chacune menant
+// à sa section. Tous les chiffres viennent de src/data/.
 import { getImage } from 'astro:assets';
 import club from '../data/club.json';
-import photoHero from '../assets/photos/hero-judo-enfants.jpg';
-import photoHeroMobile from '../assets/photos/hero-judo-enfants-mobile.jpg';
+import tarifs from '../data/tarifs.json';
+import photoHero from '../assets/photos/hero-judo-enfants-cinema.jpg';
 
-const heroDesktop = await getImage({ src: photoHero, width: 1170, format: 'webp' });
-const heroMobile = await getImage({ src: photoHeroMobile, width: 820, format: 'webp' });
+// La première image de la page montre des enfants (décision du propriétaire).
+// C'est aussi la plus lourde du premier écran : chargée en priorité, en trois tailles.
+const tailles = [640, 900, 1200, 1600];
+const images = await Promise.all(tailles.map((width) => getImage({ src: photoHero, width, format: 'webp', quality: 64 })));
+const srcset = images.map((img, i) => `${img.src} ${tailles[i]}w`).join(', ');
+
+const planDeBase = [...tarifs.plans].sort((a, b) => a.prix - b.prix)[0];
+const finDeSemaine = club.heures.slice(1).map((h) => h.jours.toLowerCase()).join(' et ');
+
+const reperes = [
+  { etiquette: 'Âge', valeur: '4 à 18 ans', detail: 'Ninjas, karaté et judo', href: '#programmes' },
+  { etiquette: 'Jours', valeur: club.heures[0].jours, detail: `${club.heures[0].plage}, ${finDeSemaine} aussi`, href: '#horaire' },
+  {
+    etiquette: 'Tarif',
+    valeur: `${planDeBase.prix} ${tarifs.devise} pour ${planDeBase.periode}`,
+    detail: `${tarifs.taxesIncluses ? 'Taxes incluses, ' : ''}premier cours gratuit`,
+    href: '#tarifs',
+  },
+  { etiquette: 'Adresse', valeur: club.adresse.quartier, detail: club.adresse.rue, href: '#contact' },
+];
 ---
 
 <section class="hero" aria-labelledby="hero-titre">
-  <picture class="hero-photo-cadre">
-    <source media="(max-width: 700px)" srcset={heroMobile.src} />
+  <div class="hero-photo">
     <img
-      src={heroDesktop.src}
+      src={images[1].src}
+      srcset={srcset}
+      sizes="(max-width: 820px) 100vw, 60vw"
       alt="Deux enfants du CSHP en plein combat de judo, kimonos blanc et bleu, sur les tatamis du dojo"
-      class="hero-photo"
       loading="eager"
       fetchpriority="high"
-      width={heroDesktop.attributes.width}
-      height={heroDesktop.attributes.height}
+      width={images[1].attributes.width}
+      height={images[1].attributes.height}
     />
-  </picture>
-  <div class="hero-voile" aria-hidden="true"></div>
-  <div class="colonne hero-contenu">
-    <h1 id="hero-titre">
-      <span class="kicker hero-kicker">École de karaté, judo et ninjas à {club.adresse.quartier}, {club.adresse.ville}</span>
-      <span class="display hero-display">
-        La confiance<br />s'apprend <em>ici.</em>
-      </span>
-    </h1>
-    <p class="hero-sous">
-      Arts martiaux pour les 4 à 18 ans, du premier salut jusqu'au podium.
-      Encadrement de calibre compétitif, esprit de famille, à deux pas de chez vous.
-    </p>
-    <div class="hero-actions">
-      <a href="#essai" class="btn btn-rouge">Réserver un essai gratuit</a>
-      <a href="#horaire" class="btn btn-contour-clair">Voir l'horaire</a>
+  </div>
+
+  <div class="colonne hero-corps">
+    <div class="hero-texte">
+      <h1 id="hero-titre">
+        <span class="kicker hero-lieu">Karaté, judo et Ninjas à {club.adresse.quartier}, {club.adresse.ville}</span>
+        <span class="display hero-display">La confiance<br />s'apprend ici.</span>
+      </h1>
+      <p class="hero-sous">
+        Arts martiaux pour les 4 à 18 ans, du premier salut jusqu'au podium.
+        Encadrement de calibre compétitif, esprit de famille, à deux pas de chez vous.
+      </p>
+      <div class="hero-actions">
+        <a href="#essai" class="btn btn-rouge">Réserver un essai gratuit</a>
+        <a href="#horaire" class="hero-lien">Voir l'horaire</a>
+      </div>
     </div>
-    <ul class="hero-preuves" role="list">
-      <li>Fondé en {club.fondation}</li>
-      <li>Affilié Karaté&nbsp;Québec et Judo&nbsp;Québec</li>
-      <li>Dojo de {club.surface}</li>
+  </div>
+
+  <div class="generique">
+    <ul class="colonne generique-liste" role="list">
+      {reperes.map((r) => (
+        <li>
+          <a href={r.href}>
+            <span class="generique-etiquette">{r.etiquette}</span>
+            <span class="display generique-valeur tabulaire">{r.valeur}</span>
+            <span class="generique-detail">{r.detail}</span>
+          </a>
+        </li>
+      ))}
     </ul>
   </div>
 </section>
 
 <style>
-  .hero { position: relative; min-height: clamp(540px, 84vh, 800px); display: flex; align-items: flex-end; overflow: hidden; background: var(--sombre); }
-  .hero-photo-cadre { position: absolute; inset: 0; display: block; }
-  .hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 45%; }
-  .hero-voile {
-    position: absolute; inset: 0;
+  /* Le hero passe sous l'entête transparente : la photo monte jusqu'en haut de l'écran. */
+  .hero {
+    margin-top: calc(-1 * var(--entete-h));
+    padding: 0;
+    min-height: 100svh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    overflow: hidden;
+  }
+  .hero-photo { position: absolute; inset: 0 41% 0 0; overflow: hidden; }
+  .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 30% 38%; }
+  /* Fondus : vers le noir à droite (où vit le texte), en bas (le générique) et en haut (l'entête). */
+  .hero-photo::after {
+    content: ""; position: absolute; inset: 0;
     background:
-      linear-gradient(to right, rgba(15, 16, 20, 0.5) 0%, rgba(15, 16, 20, 0.18) 34%, rgba(15, 16, 20, 0) 55%),
-      linear-gradient(to top, rgba(15, 16, 20, 0.92) 0%, rgba(15, 16, 20, 0.42) 44%, rgba(15, 16, 20, 0.1) 72%, rgba(15, 16, 20, 0.22) 100%);
+      linear-gradient(90deg, rgb(var(--noir-rgb) / 0) 52%, rgb(var(--noir-rgb) / 0.7) 82%, rgb(var(--noir-rgb) / 1) 100%),
+      linear-gradient(0deg, rgb(var(--noir-rgb) / 1) 0%, rgb(var(--noir-rgb) / 0.55) 20%, rgb(var(--noir-rgb) / 0) 46%),
+      linear-gradient(180deg, rgb(var(--noir-rgb) / 0.8) 0%, rgb(var(--noir-rgb) / 0) 22%);
   }
-  .hero-contenu { position: relative; width: 100%; color: var(--sur-sombre); padding-block: clamp(38px, 5.5vw, 64px); }
-  h1 { display: flex; flex-direction: column; gap: 18px; }
-  .hero-kicker { color: #fff; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4); }
-  .hero-kicker::before { background: var(--rouge-vif); }
-  .hero-display { font-size: clamp(50px, 8.4vw, 104px); color: #fff; }
-  .hero-display em { font-style: normal; color: var(--rouge-vif); }
-  .hero-sous { margin-top: 18px; font-size: clamp(16.5px, 2vw, 19px); max-width: 44ch; color: rgba(245, 242, 236, 0.92); }
-  .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 24px; }
-  .hero-preuves {
-    list-style: none; display: flex; flex-wrap: wrap; gap: 10px 26px;
-    margin: 30px 0 0; padding: 16px 0 0; border-top: 1px solid rgba(245, 242, 236, 0.22);
-    font-size: 14px; font-weight: 500; color: rgba(245, 242, 236, 0.85);
+
+  .hero-corps {
+    position: relative; z-index: 2; width: 100%;
+    display: grid; grid-template-columns: 51% 1fr;
+    padding-top: calc(var(--entete-h) + 40px); padding-bottom: clamp(44px, 6vh, 76px);
   }
-  .hero-preuves li { display: flex; align-items: center; gap: 8px; }
-  .hero-preuves li::before { content: ""; width: 6px; height: 6px; background: var(--rouge-vif); border-radius: 50%; }
-  @media (max-width: 700px) {
-    .hero-photo { object-position: 42% 30%; }
+  .hero-texte { grid-column: 2; }
+  h1 { display: flex; flex-direction: column; gap: 22px; }
+  .hero-display { font-size: clamp(60px, 7.6vw, 114px); line-height: 0.9; text-wrap: initial; }
+  .hero-sous { margin: 26px 0 0; font-size: clamp(17px, 1.4vw, 19px); max-width: 41ch; color: var(--ivoire-2); }
+  .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 20px 30px; margin-top: 36px; }
+  .hero-lien {
+    color: var(--ivoire); font-weight: 400; font-size: 15.5px; text-decoration: none;
+    padding-bottom: 5px; border-bottom: 1px solid var(--filet-fort);
+    transition: border-color var(--transition);
+  }
+  .hero-lien:hover { border-bottom-color: var(--rouge); }
+
+  /* ---- générique : les quatre réponses ---- */
+  .generique { position: relative; z-index: 2; border-top: 1px solid var(--filet); }
+  .generique-liste { list-style: none; margin-block: 0; padding-block: 0; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .generique-liste li { border-left: 1px solid var(--filet); }
+  .generique-liste li:first-child { border-left: 0; }
+  .generique-liste a {
+    display: flex; flex-direction: column; gap: 5px; height: 100%;
+    padding: 22px 26px 28px; text-decoration: none;
+  }
+  .generique-liste li:first-child a { padding-left: 0; }
+  .generique-etiquette { font-size: 14px; color: var(--sourdine); }
+  /* Au survol, un filet rouge se tire sous la réponse. */
+  .generique-valeur {
+    font-size: clamp(25px, 2.3vw, 33px); line-height: 1; width: fit-content; padding-bottom: 6px;
+    background: linear-gradient(var(--rouge), var(--rouge)) no-repeat left bottom / 0 1px;
+    transition: background-size 360ms var(--sortie);
+  }
+  .generique-liste a:hover .generique-valeur, .generique-liste a:focus-visible .generique-valeur { background-size: 100% 1px; }
+  .generique-detail { font-size: 14.5px; color: var(--sourdine); line-height: 1.45; }
+
+  /* ---- ouverture : la photo recule lentement, le texte monte (une fois, au chargement) ----
+     La photo ne passe jamais par l'opacité : elle s'affiche tout de suite. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-photo img { animation: recul 9s var(--sortie) both; }
+    .hero-lieu, .hero-display, .hero-sous, .hero-actions, .generique { animation: monter 900ms var(--sortie) both; }
+    .hero-display { animation-delay: 120ms; }
+    .hero-sous { animation-delay: 260ms; }
+    .hero-actions { animation-delay: 380ms; }
+    .generique { animation-delay: 520ms; }
+    @keyframes recul { from { transform: scale(1.08); } to { transform: none; } }
+    @keyframes monter { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  }
+
+  @media (max-width: 1000px) {
+    .hero-photo { inset: 0 34% 0 0; }
+    .hero-corps { grid-template-columns: 44% 1fr; }
+  }
+  @media (max-width: 820px) {
+    /* Téléphone : la photo en haut, le texte dessous sur fond noir. */
+    .hero { display: block; min-height: 0; }
+    .hero-photo { position: relative; inset: auto; height: 54svh; min-height: 360px; }
+    .hero-photo img { object-position: 26% 30%; }
+    .hero-photo::after {
+      background:
+        linear-gradient(0deg, rgb(var(--noir-rgb) / 1) 0%, rgb(var(--noir-rgb) / 0.35) 30%, rgb(var(--noir-rgb) / 0) 56%),
+        linear-gradient(180deg, rgb(var(--noir-rgb) / 0.8) 0%, rgb(var(--noir-rgb) / 0) 26%);
+    }
+    .hero-corps { display: block; padding-top: 0; padding-bottom: 36px; margin-top: -52px; }
+    h1 { gap: 16px; }
+    .hero-display { font-size: clamp(56px, 17.5vw, 92px); }
+    .hero-sous { margin-top: 18px; }
+    .hero-actions { flex-direction: column; align-items: flex-start; gap: 22px; margin-top: 28px; }
+    .hero-actions .btn { width: 100%; }
+    .generique-liste { grid-template-columns: 1fr 1fr; }
+    .generique-liste li { border-top: 1px solid var(--filet); }
+    .generique-liste li:nth-child(odd) { border-left: 0; }
+    .generique-liste li:nth-child(-n + 2) { border-top: 0; }
+    .generique-liste a { padding: 18px 0 20px 18px; }
+    .generique-liste li:nth-child(odd) a { padding-left: 0; padding-right: 14px; }
   }
 </style>

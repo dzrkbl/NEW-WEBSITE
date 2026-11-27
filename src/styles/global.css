@@ -1,90 +1,85 @@
 /* ==========================================================================
-   CSHP — système de design
-   Papier gi · encre charbon · rouge dojo. Une seule source pour les jetons.
+   CSHP — système de design « cinéma »
+   Fond noir, photos du dojo assombries, titres d'affiche, et le rouge du logo
+   comme seule couleur. Une seule source pour les jetons : aucune couleur en
+   dur ailleurs.
    ========================================================================== */
 
+/* Bebas Neue : majuscules d'affiche (licence OFL). Une seule graisse. */
 @font-face {
-  font-family: 'Big Shoulders Display';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/fonts/BigShouldersDisplay-700.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Big Shoulders Display';
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url('/fonts/BigShouldersDisplay-800.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Hanken Grotesk';
+  font-family: 'Bebas Neue';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/HankenGrotesk-400.woff2') format('woff2');
+  src: url('/fonts/BebasNeue-400.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+/* Hanken Grotesk : police variable, un seul fichier pour toutes les graisses. */
 @font-face {
   font-family: 'Hanken Grotesk';
   font-style: normal;
-  font-weight: 500;
+  font-weight: 100 900;
   font-display: swap;
-  src: url('/fonts/HankenGrotesk-500.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Hanken Grotesk';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/fonts/HankenGrotesk-700.woff2') format('woff2');
+  src: url('/fonts/HankenGrotesk-variable.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 :root {
-  /* Couleurs */
-  --papier: #FAF7F2;
-  --papier-2: #F2EDE4;
-  --encre: #17181C;
-  --encre-2: #33353C;
-  --sourdine: #5D5F66;
-  --ligne: #E5DFD4;
-  --rouge: #C8102E;
-  --rouge-fonce: #9E0C24;
-  --rouge-vif: #FF4B45;      /* accents sur fond sombre uniquement */
-  --sombre: #141519;
-  --sombre-2: #1D1F25;
-  --sur-sombre: #F5F2EC;
-  --sur-sombre-sourdine: #A5A7AE;
+  /* Noirs (la salle obscure) */
+  --noir-rgb: 5 5 6;
+  --noir: #050506;
+  --noir-2: #0D0E10;          /* surfaces : cartes, formulaire */
+  --noir-3: #18191C;          /* champs, éléments posés sur une surface */
 
-  /* Ceintures (ordre réel de progression) */
-  --ceinture-blanche: #EDE9DF;
-  --ceinture-jaune: #F2C230;
-  --ceinture-orange: #E87722;
-  --ceinture-verte: #2E7D4F;
-  --ceinture-bleue: #2457A7;
-  --ceinture-marron: #6B4226;
-  --ceinture-noire: #17181C;
+  /* Ivoire (la lumière de l'écran) */
+  --ivoire-rgb: 243 240 234;
+  --ivoire: #F3F0EA;          /* titres, texte principal */
+  --ivoire-2: #D9D5CE;        /* texte courant */
+  --sourdine: #A9A6A0;        /* texte secondaire */
+  --filet: rgb(var(--ivoire-rgb) / 0.16);
+  --filet-fort: rgb(var(--ivoire-rgb) / 0.36);
+
+  /* Rouge du logo : la seule couleur, réservée à l'action et aux repères */
+  --rouge: #D5152C;
+  --rouge-fonce: #B00F22;
+  --rouge-clair: #FF6B72;     /* liens dans le texte, sur fond noir */
+  --blanc: #FFFFFF;
+
+  /* Code couleur des programmes (filets fins et pastilles seulement) */
+  --prog-bleu: #6A9BE0;
+  --prog-rouge: #E5404F;
+  --prog-jaune: #D9B450;
+  --prog-neutre: #A9A6A0;
+
+  /* Ceintures (ordre réel de progression), pour le fil de lecture */
+  --ceinture-blanche: #F3F0EA;
+  --ceinture-jaune: #E8C24A;
+  --ceinture-orange: #E07F2E;
+  --ceinture-verte: #3F9A63;
+  --ceinture-bleue: #4C7FD0;
+  --ceinture-marron: #8A5A36;
+  --ceinture-noire: #2A2B2F;
 
   /* Typographie */
-  --display: "Big Shoulders Display", "Archivo Narrow", "Arial Narrow", sans-serif;
+  --display: "Bebas Neue", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
   --texte: "Hanken Grotesk", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 
   /* Échelle */
-  --mesure: 62ch;
+  --mesure: 60ch;
   --rayon: 2px;
-  --colonne: 1180px;
-  --transition: 180ms ease;
+  --colonne: 1240px;
+  --entete-h: 79px;
+  --transition: 200ms ease;
   /* Sortie franche puis amortie : un geste qui part vite et se pose. */
   --sortie: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Étalonnage commun des photos : moins saturées, plus denses. */
+  --etalonnage: saturate(0.78) contrast(1.08) brightness(0.82);
 }
+@media (max-width: 560px) { :root { --entete-h: 71px; } }
 
 /* --- Base ----------------------------------------------------------- */
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { background: var(--noir); color-scheme: dark; scroll-behavior: smooth; scroll-padding-top: calc(var(--entete-h) + 12px); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -98,58 +93,83 @@ html { scroll-behavior: smooth; }
 }
 body {
   margin: 0;
-  background: var(--papier);
-  color: var(--encre);
+  background: var(--noir);
+  color: var(--ivoire-2);
   font-family: var(--texte);
-  font-size: 16.5px;
-  line-height: 1.6;
+  font-weight: 350;
+  font-size: 17px;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; }
 p { margin: 0 0 1em; max-width: var(--mesure); }
-strong { font-weight: 700; }
-:focus-visible { outline: 3px solid var(--rouge); outline-offset: 2px; }
+strong { font-weight: 600; color: var(--ivoire); }
+:focus-visible { outline: 2px solid var(--ivoire); outline-offset: 3px; }
+::selection { background: var(--rouge); color: var(--blanc); }
 
 /* --- Typographie d'affiche ------------------------------------------ */
-h1, h2, h3 { margin: 0; }
+h1, h2, h3 { margin: 0; color: var(--ivoire); }
 .display {
   font-family: var(--display);
-  font-weight: 800;
+  font-weight: 400;            /* une seule graisse : jamais de faux gras */
   text-transform: uppercase;
-  letter-spacing: 0.005em;
-  line-height: 0.94;
+  letter-spacing: 0.012em;
+  line-height: 0.92;
+  color: var(--ivoire);
   text-wrap: balance;
 }
+/* Repère de section : un filet rouge, puis quelques mots. */
 .kicker {
   font-family: var(--texte);
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--rouge);
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--sourdine);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
+  margin: 0;
+  max-width: none;
 }
-.kicker::before { content: ""; width: 22px; height: 2px; background: var(--rouge); flex: 0 0 auto; }
-.jp {
-  font-size: 12px;
-  letter-spacing: 0.3em;
-  color: var(--sourdine);
-  font-weight: 500;
-}
+.kicker::before { content: ""; width: 34px; height: 1px; background: var(--rouge); flex: 0 0 auto; }
+.jp { font-size: 13px; letter-spacing: 0.3em; color: var(--sourdine); font-weight: 300; }
 
 /* --- Structure ------------------------------------------------------- */
-.colonne { max-width: var(--colonne); margin-inline: auto; padding-inline: clamp(18px, 4vw, 40px); }
-section { padding-block: clamp(56px, 9vw, 104px); }
-.entete-section { display: flex; flex-direction: column; gap: 14px; margin-bottom: clamp(28px, 4vw, 48px); }
-.entete-section .display { font-size: clamp(34px, 5.4vw, 58px); }
-.entete-section .intro { color: var(--encre-2); font-size: 17.5px; }
+.colonne { max-width: var(--colonne); margin-inline: auto; padding-inline: clamp(20px, 4vw, 48px); }
+section { position: relative; padding-block: clamp(72px, 10vw, 148px); }
+/* Entête de section : le titre à gauche, l'introduction en regard. */
+.entete-section {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  column-gap: clamp(28px, 5vw, 64px);
+  row-gap: 20px;
+  align-items: end;
+  margin-bottom: clamp(36px, 5vw, 64px);
+}
+.entete-section .kicker { grid-column: 1 / -1; }
+.entete-section .display { font-size: clamp(50px, 6.2vw, 94px); }
+.entete-section .intro { color: var(--sourdine); font-size: 18px; max-width: 44ch; margin: 0; padding-bottom: 8px; }
+@media (max-width: 820px) {
+  .entete-section { grid-template-columns: 1fr; row-gap: 16px; }
+  .entete-section .intro { padding-bottom: 0; }
+}
+/* Filet de séparation entre deux scènes. */
+.filet-haut { border-top: 1px solid var(--filet); }
 
-/* --- Barre des ceintures (signature) --------------------------------- */
-.ceintures { display: flex; height: 6px; }
+/* --- Photos ------------------------------------------------------------- */
+main img { filter: var(--etalonnage); }
+.cadre { position: relative; overflow: hidden; background: var(--noir-2); }
+.cadre img { width: 100%; }
+
+/* Couleur de programme : la même partout (légende et horaire). */
+.c-bleu { --c: var(--prog-bleu); }
+.c-rouge { --c: var(--prog-rouge); }
+.c-jaune { --c: var(--prog-jaune); }
+.c-encre { --c: var(--prog-neutre); }
+
+/* --- Fil des ceintures (signature) ----------------------------------- */
+.ceintures { display: flex; height: 3px; }
 .ceintures span { flex: 1; }
 .ceintures span:nth-child(1) { background: var(--ceinture-blanche); }
 .ceintures span:nth-child(2) { background: var(--ceinture-jaune); }
@@ -159,10 +179,10 @@ section { padding-block: clamp(56px, 9vw, 104px); }
 .ceintures span:nth-child(6) { background: var(--ceinture-marron); }
 .ceintures span:nth-child(7) { background: var(--ceinture-noire); }
 
-/* Progression : dans l'entête collante, la barre se dévoile de la ceinture
-   blanche à la noire à mesure qu'on descend la page. 100 % CSS (défilement
+/* Progression : dans l'entête collante, le fil se dévoile de la ceinture
+   blanche à la noire à mesure qu'on descend la page. Tout en CSS (défilement
    natif), aucun JS. Sans prise en charge, ou si l'utilisateur préfère moins de
-   mouvement, le voile n'existe pas et la barre reste complète, comme avant. */
+   mouvement, le voile n'existe pas et le fil reste complet. */
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
     .ceintures-progression { position: relative; }
@@ -170,8 +190,8 @@ section { padding-block: clamp(56px, 9vw, 104px); }
       content: "";
       position: absolute;
       inset: 0;
-      background: var(--sombre);
-      opacity: 0.86;
+      background: var(--noir);
+      opacity: 0.84;
       transform-origin: right center;
       transform: scaleX(0);
       animation: ceintures-progression linear both;
@@ -185,58 +205,36 @@ section { padding-block: clamp(56px, 9vw, 104px); }
   to { transform: scaleX(0); }
 }
 
-/* --- Boutons ---------------------------------------------------------- */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-family: var(--texte);
-  font-weight: 700;
-  font-size: 15.5px;
-  letter-spacing: 0.02em;
-  padding: 15px 28px;
-  border-radius: var(--rayon);
-  border: 1px solid transparent;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background var(--transition), color var(--transition), border-color var(--transition), transform var(--transition);
+/* --- Entête --------------------------------------------------------------
+   Collante. En haut de page elle est transparente (la photo passe dessous) ;
+   elle se fond au noir dès qu'on descend. Sans prise en charge du défilement
+   natif, elle reste simplement noire translucide. */
+.entete {
+  position: sticky; top: 0; z-index: 50;
+  color: var(--ivoire);
+  background-color: rgb(var(--noir-rgb) / 0.88);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
-.btn:active { transform: scale(0.98); }
-
-/* Le CTA canonique (règle 6) est le seul bouton qui « frappe » : le rouge foncé
-   balaie de gauche à droite, le bouton se soulève, puis s'écrase au clic. */
-.btn-rouge {
-  background-color: var(--rouge);
-  background-image: linear-gradient(var(--rouge-fonce), var(--rouge-fonce));
-  background-repeat: no-repeat;
-  background-size: 0% 100%;
-  color: #fff;
-  transition:
-    background-size 280ms var(--sortie),
-    transform 200ms var(--sortie),
-    box-shadow 200ms var(--sortie);
-}
-.btn-rouge:hover, .btn-rouge:focus-visible { background-size: 100% 100%; }
-@media (hover: hover) {
-  .btn-rouge:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--rouge) 70%, transparent);
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .entete {
+      animation: entete-fond linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 240px;
+    }
   }
 }
-.btn-rouge:active { transform: scale(0.98); box-shadow: none; }
-.btn-contour { background: transparent; color: var(--encre); border-color: var(--encre); }
-.btn-contour:hover { background: var(--encre); color: var(--papier); }
-.btn-contour-clair { background: transparent; color: var(--sur-sombre); border-color: var(--sur-sombre); }
-.btn-contour-clair:hover { background: var(--sur-sombre); color: var(--encre); }
-
-/* --- Entête sur petit écran --------------------------------------------
-   Le CTA reste visible en tout temps sur téléphone : c'est l'action principale,
+@keyframes entete-fond {
+  from { background-color: rgb(var(--noir-rgb) / 0); -webkit-backdrop-filter: blur(0); backdrop-filter: blur(0); }
+  to { background-color: rgb(var(--noir-rgb) / 0.88); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+}
+/* Le CTA reste visible en tout temps sur téléphone : c'est l'action principale,
    elle ne doit pas se cacher dans le menu. Le préfixe `header.entete` donne la
    priorité sur les styles de base de l'entête (Base.astro). */
 @media (max-width: 880px) {
-  header.entete .entete-int { gap: 12px; }
-  header.entete .entete-cta { padding: 10px 14px; font-size: 13.5px; white-space: nowrap; }
+  header.entete .entete-int { gap: 14px; }
+  header.entete .entete-cta { padding: 10px 15px; font-size: 13.5px; white-space: nowrap; }
   header.entete .burger-nav .btn { display: none; }
 }
 @media (max-width: 560px) {
@@ -246,23 +244,64 @@ section { padding-block: clamp(56px, 9vw, 104px); }
 }
 @media (max-width: 360px) { header.entete .marque-txt { display: none; } }
 
-/* --- Bandes sombres ---------------------------------------------------- */
-.bande-sombre { background: var(--sombre); color: var(--sur-sombre); }
-.bande-sombre .kicker { color: var(--rouge-vif); }
-.bande-sombre .kicker::before { background: var(--rouge-vif); }
-.bande-sombre .intro { color: var(--sur-sombre-sourdine); }
-
-/* --- Cartes / figures --------------------------------------------------- */
-.cadre { position: relative; }
-.cadre img { border-radius: var(--rayon); }
-.cadre::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border: 1px solid rgba(23, 24, 28, 0.08);
-  border-radius: var(--rayon);
-  pointer-events: none;
+/* --- Pied de page (Base.astro) ---------------------------------------- */
+.pied { padding-top: clamp(56px, 7vw, 88px); }
+.pied-int {
+  display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  gap: clamp(28px, 4vw, 56px); padding-bottom: 48px;
 }
+.pied-sigle { font-weight: 600; font-size: 19px; letter-spacing: 0.2em; color: var(--ivoire); margin: 12px 0 4px; }
+.pied-tagline { color: var(--sourdine); font-size: 15px; }
+.pied-titre { font-family: var(--texte); font-size: 14.5px; color: var(--sourdine); margin: 0 0 16px; font-weight: 400; }
+.pied address { font-style: normal; line-height: 1.8; color: var(--ivoire); }
+.pied a { color: var(--ivoire); text-decoration-color: var(--filet-fort); text-underline-offset: 4px; }
+.pied a:hover { text-decoration-color: var(--rouge); }
+.pied-liste { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; color: var(--ivoire); }
+.pied-liste li { display: flex; justify-content: space-between; gap: 14px; font-size: 15.5px; }
+.pied-liste li span:last-child { white-space: nowrap; text-align: right; }
+.pied-liste.simple li { display: block; color: var(--ivoire-2); }
+.pied-social { display: flex; gap: 18px; margin-top: 18px; }
+.pied-bas {
+  display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  border-top: 1px solid var(--filet);
+  padding-block: 22px; font-size: 14px; color: var(--sourdine);
+}
+.pied-bas p { margin: 0; }
+@media (max-width: 880px) { .pied-int { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 540px) { .pied-int { grid-template-columns: 1fr; } }
+
+/* --- Boutons ---------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--texte);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  padding: 17px 30px;
+  border-radius: var(--rayon);
+  border: 1px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-size 320ms var(--sortie), background-color var(--transition), color var(--transition), border-color var(--transition), transform 160ms var(--sortie);
+}
+.btn:active { transform: scale(0.985); }
+/* Le CTA canonique (règle 6) : le seul aplat rouge de la page. Au survol, un
+   rouge plus sombre le traverse de gauche à droite. */
+.btn-rouge {
+  background-color: var(--rouge);
+  background-image: linear-gradient(var(--rouge-fonce), var(--rouge-fonce));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  color: var(--blanc);
+}
+.btn-rouge:hover, .btn-rouge:focus-visible { background-size: 100% 100%; }
+/* Action secondaire : un simple contour, qui s'allume au survol. */
+.btn-contour, .btn-contour-clair { background: transparent; color: var(--ivoire); border-color: var(--filet-fort); }
+.btn-contour:hover, .btn-contour-clair:hover { background: var(--ivoire); color: var(--noir); border-color: var(--ivoire); }
 
 /* --- Utilitaires -------------------------------------------------------- */
 .tabulaire { font-variant-numeric: tabular-nums; }
@@ -279,8 +318,8 @@ section { padding-block: clamp(56px, 9vw, 104px); }
 @media (prefers-reduced-motion: no-preference) {
   .js .revele {
     opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 520ms var(--sortie), transform 640ms var(--sortie);
+    transform: translateY(22px);
+    transition: opacity 760ms var(--sortie), transform 900ms var(--sortie);
     transition-delay: var(--delai, 0ms);
   }
   .js .revele.visible { opacity: 1; transform: none; }
@@ -289,19 +328,19 @@ section { padding-block: clamp(56px, 9vw, 104px); }
      l'une après l'autre au lieu de surgir en bloc. Le décalage suit le nombre
      de colonnes (4, puis 2) ; en une colonne, chaque carte entre seule. */
   @media (min-width: 1001px) {
-    .js .cascade > :nth-child(4n + 2) { --delai: 90ms; }
-    .js .cascade > :nth-child(4n + 3) { --delai: 180ms; }
-    .js .cascade > :nth-child(4n + 4) { --delai: 270ms; }
+    .js .cascade > :nth-child(4n + 2) { --delai: 110ms; }
+    .js .cascade > :nth-child(4n + 3) { --delai: 220ms; }
+    .js .cascade > :nth-child(4n + 4) { --delai: 330ms; }
   }
   @media (min-width: 521px) and (max-width: 1000px) {
-    .js .cascade > :nth-child(even) { --delai: 90ms; }
+    .js .cascade > :nth-child(even) { --delai: 110ms; }
   }
 
-  /* Dans une cascade, la photo se dévoile comme une cloison coulissante
+  /* Dans une cascade, la photo se dévoile comme un rideau qui s'ouvre
      pendant que la carte monte. */
   .js .cascade > .revele .cadre {
     clip-path: inset(0 100% 0 0);
-    transition: clip-path 760ms var(--sortie);
+    transition: clip-path 1000ms var(--sortie);
     transition-delay: var(--delai, 0ms);
   }
   .js .cascade > .revele.visible .cadre { clip-path: inset(0 0 0 0); }

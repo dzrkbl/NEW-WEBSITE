@@ -2,75 +2,69 @@
 import { Image } from 'astro:assets';
 import club from '../data/club.json';
 import photoSeiza from '../assets/photos/seiza-discipline.jpg';
-import photoMur from '../assets/photos/mur-logo.jpg';
 
 const chiffres = [
   { valeur: String(club.fondation), legende: 'Année de fondation' },
-  { valeur: '4-18', legende: 'Âges des athlètes' },
+  { valeur: '4 à 18', legende: 'Âges des athlètes' },
   { valeur: club.surface, legende: 'De tatamis et de gym' },
   { valeur: String(club.federations.length), legende: 'Fédérations partenaires' },
 ];
 ---
 
-<section id="club" aria-labelledby="club-titre">
-  <div class="colonne club-grille">
-    <div class="club-texte revele">
-      <p class="kicker">Le club</p>
-      <h2 id="club-titre" class="display entete-club">Une entreprise familiale,<br />des standards de compétition</h2>
-      <p>
-        Fondé en {club.fondation} à {club.adresse.quartier}, le CSHP est né d'une conviction :
-        les arts martiaux forment autant le caractère que le corps. Nos fondateurs et
-        entraîneurs ont performé au plus haut niveau de leurs disciplines. Ils transmettent
-        aujourd'hui la même exigence, dans un esprit d'entraide et de famille.
-      </p>
-      <p>
-        Discipline, respect, persévérance : chaque cours est pensé pour faire progresser
-        l'athlète <em>et</em> le citoyen. Du premier salut aux championnats de
-        Karaté Québec et Judo Québec, chaque jeune avance à son rythme et trouve sa place.
-      </p>
-      <dl class="chiffres tabulaire">
-        {chiffres.map((c) => (
-          <div class="chiffre">
-            <dt>{c.legende}</dt>
-            <dd class="display">{c.valeur}</dd>
-          </div>
-        ))}
-      </dl>
-    </div>
-    <div class="club-photos revele">
-      <div class="cadre photo-a">
-        <Image src={photoSeiza} alt="Jeunes karatékas agenouillés en seiza, alignés sur le tatami" widths={[520, 900]} sizes="(max-width: 900px) 92vw, 34vw" />
-      </div>
-      <div class="cadre photo-b">
-        <Image src={photoMur} alt="Le mur du dojo avec le logo du Centre Sportif de Haute-Performance" widths={[520, 900]} sizes="(max-width: 900px) 92vw, 30vw" />
-      </div>
-    </div>
+<section id="club" class="club filet-haut" aria-labelledby="club-titre">
+  <div class="club-photo cadre revele">
+    <Image src={photoSeiza} alt="Jeunes karatékas en kimono blanc sur le tatami, devant le mur du dojo" widths={[640, 1000, 1400]} sizes="(max-width: 900px) 100vw, 52vw" />
+  </div>
+  <div class="club-texte revele">
+    <p class="kicker">Le club</p>
+    <h2 id="club-titre" class="display entete-club">Une entreprise familiale, des standards de compétition</h2>
+    <p>
+      Fondé en {club.fondation} à {club.adresse.quartier}, le CSHP est né d'une conviction :
+      les arts martiaux forment autant le caractère que le corps. Nos fondateurs et
+      entraîneurs ont performé au plus haut niveau de leurs disciplines. Ils transmettent
+      aujourd'hui la même exigence, dans un esprit d'entraide et de famille.
+    </p>
+    <p>
+      Discipline, respect, persévérance : chaque cours est pensé pour faire progresser
+      l'athlète <em>et</em> le citoyen. Du premier salut aux championnats de
+      Karaté Québec et Judo Québec, chaque jeune avance à son rythme et trouve sa place.
+    </p>
+    <dl class="chiffres tabulaire">
+      {chiffres.map((c) => (
+        <div class="chiffre">
+          <dt>{c.legende}</dt>
+          <dd class="display">{c.valeur}</dd>
+        </div>
+      ))}
+    </dl>
   </div>
 </section>
 
 <style>
-  section { background: var(--papier-2); }
-  .club-grille { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
-  .entete-club { font-size: clamp(32px, 4.6vw, 52px); margin: 14px 0 18px; }
-  .club-texte p { color: var(--encre-2); }
+  /* Une scène en deux moitiés : la photo, plein bord, se fond dans le texte. */
+  .club { display: grid; grid-template-columns: 1.1fr 1fr; padding: 0; min-height: min(820px, 100svh); }
+  .club-photo { min-height: 100%; }
+  .club-photo :global(img) { position: absolute; inset: 0; height: 100%; object-fit: cover; object-position: 50% 62%; }
+  .club-photo::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgb(var(--noir-rgb) / 0) 55%, rgb(var(--noir-rgb) / 1) 100%);
+  }
+  .club-texte { align-self: center; padding: clamp(64px, 8vw, 112px) clamp(20px, 6vw, 96px) clamp(64px, 8vw, 96px) clamp(20px, 3vw, 40px); }
+  .entete-club { font-size: clamp(44px, 4.9vw, 74px); margin: 20px 0 28px; }
+  .club-texte p { max-width: 47ch; }
   .club-texte em { font-style: italic; }
 
-  .chiffres {
-    display: grid; grid-template-columns: repeat(4, auto);
-    gap: clamp(18px, 3vw, 40px);
-    margin: 30px 0 0; padding: 22px 0 0;
-    border-top: 1px solid var(--ligne);
-  }
-  .chiffre dt { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sourdine); font-weight: 600; }
-  .chiffre dd { margin: 2px 0 0; font-size: clamp(30px, 3.4vw, 44px); color: var(--rouge); }
-
-  .club-photos { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
-  .photo-a img { aspect-ratio: 3 / 4; object-fit: cover; }
-  .photo-b { margin-top: 46px; }
-  .photo-b img { aspect-ratio: 4 / 5; object-fit: cover; }
+  .chiffres { display: grid; grid-template-columns: 1fr 1fr; margin: 44px 0 0; border-top: 1px solid var(--filet); }
+  .chiffre { display: flex; flex-direction: column-reverse; padding: 20px 0 18px; border-bottom: 1px solid var(--filet); }
+  .chiffre:nth-child(odd) { border-right: 1px solid var(--filet); padding-right: 22px; }
+  .chiffre:nth-child(even) { padding-left: 26px; }
+  .chiffre dt { font-size: 14.5px; color: var(--sourdine); margin-top: 6px; }
+  .chiffre dd { margin: 0; font-size: clamp(46px, 4.6vw, 66px); }
 
   @media (max-width: 900px) {
-    .club-grille { grid-template-columns: 1fr; }
-    .chiffres { grid-template-columns: repeat(2, 1fr); }
+    .club { grid-template-columns: 1fr; min-height: 0; }
+    .club-photo { min-height: 0; height: 440px; }
+    .club-photo::after { background: linear-gradient(0deg, rgb(var(--noir-rgb) / 1) 0%, rgb(var(--noir-rgb) / 0) 50%); }
+    .club-texte { padding: 8px clamp(20px, 4vw, 48px) 72px; }
   }
 </style>
