@@ -139,14 +139,14 @@ const trimestriel = tarifs.plans.find((p) => p.id === 'TRIMESTRIEL');
 <style>
   .lp-hero { padding-block: clamp(36px, 5vw, 64px); }
   .lp-hero-grille { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 64px); align-items: start; }
-  .lp-titre { font-size: clamp(30px, 3.6vw, 46px); margin: 14px 0 20px; }
+  .lp-titre { font-size: clamp(40px, 4.6vw, 62px); margin: 14px 0 20px; }
   .lp-titre :global(em) { font-style: normal; color: var(--rouge-vif); }
   .lp-arguments { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
   .lp-arguments li { display: flex; gap: 12px; font-size: 16.5px; align-items: baseline; }
   .lp-arguments li::before { content: ""; width: 14px; height: 3px; background: var(--rouge-vif); flex: 0 0 auto; transform: translateY(-4px); }
   .lp-preuves {
     list-style: none; display: flex; flex-wrap: wrap; gap: 8px 22px;
-    margin: 26px 0 0; padding: 14px 0 0; border-top: 1px solid var(--voile-clair);
+    margin: 26px 0 0; padding: 14px 0 0; border-top: 1px solid rgba(245, 242, 236, 0.2);
     font-size: 13.5px; color: var(--sur-sombre-sourdine);
   }
   .lp-preuves li { display: flex; align-items: center; gap: 8px; }
@@ -155,14 +155,14 @@ const trimestriel = tarifs.plans.find((p) => p.id === 'TRIMESTRIEL');
   .lp-etapes { padding-block: clamp(28px, 4vw, 48px); border-bottom: 1px solid var(--ligne); }
   .etapes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
   .etapes li { display: flex; gap: 14px; align-items: flex-start; }
-  .etape-num { font-size: 32px; color: var(--rouge); line-height: 1; }
+  .etape-num { font-size: 40px; color: var(--rouge); line-height: 1; }
   .etape-corps { display: flex; flex-direction: column; gap: 3px; font-size: 14.5px; color: var(--encre-2); }
   .etape-corps strong { color: var(--encre); font-size: 15.5px; }
 
   .lp-preuve { padding-block: clamp(40px, 6vw, 72px); }
   .lp-preuve-grille { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(24px, 4vw, 56px); align-items: center; }
   .lp-preuve-grille img { aspect-ratio: 16 / 11; object-fit: cover; width: 100%; }
-  .lp-h2 { font-size: clamp(24px, 3vw, 36px); margin: 12px 0 16px; }
+  .lp-h2 { font-size: clamp(28px, 3.6vw, 42px); margin: 12px 0 16px; }
   .lp-preuve-texte ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
   .lp-preuve-texte li { display: flex; gap: 12px; align-items: baseline; font-size: 15.5px; color: var(--encre-2); }
   .lp-preuve-texte li::before { content: ""; width: 7px; height: 7px; background: var(--rouge); border-radius: 1px; flex: 0 0 auto; }
@@ -171,7 +171,7 @@ const trimestriel = tarifs.plans.find((p) => p.id === 'TRIMESTRIEL');
   .lp-grille-horaire { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; max-width: 720px; }
   .lp-grille-horaire li {
     display: flex; gap: 18px; align-items: baseline;
-    background: var(--blanc); border: 1px solid var(--ligne); border-left: 6px solid var(--rouge);
+    background: #fff; border: 1px solid var(--ligne); border-left: 4px solid var(--rouge);
     border-radius: var(--rayon); padding: 12px 16px;
   }
   .lp-jour { font-weight: 700; min-width: 92px; }

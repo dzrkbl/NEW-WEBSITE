@@ -24,7 +24,7 @@ const cssFiltre = legende
   .join('');
 ---
 
-<section id="horaire" class="fond-gi dents" aria-labelledby="horaire-titre">
+<section id="horaire" aria-labelledby="horaire-titre">
   <div class="colonne">
     <div class="entete-section revele">
       <p class="kicker">Horaire de la semaine</p>
@@ -42,7 +42,7 @@ const cssFiltre = legende
       {legende.map((l) => (
         <>
           <input type="radio" name="filtre-horaire" id={`filtre-${l.cle}`} class="visually-hidden" />
-          <label for={`filtre-${l.cle}`}><span class={`pastille c-${l.couleur}`}></span>{l.label}</label>
+          <label for={`filtre-${l.cle}`}><span class={`pastille ${l.couleur}`}></span>{l.label}</label>
         </>
       ))}
     </fieldset>
@@ -57,7 +57,7 @@ const cssFiltre = legende
             {j.cours.map((c) => {
               const d = disciplines[c.discipline as Cle];
               return (
-                <li class={`cours c-${d.couleur}`} data-d={c.discipline}>
+                <li class={`cours ${d.couleur}`} data-d={c.discipline}>
                   <span class="heure tabulaire">{c.heure}</span>
                   <span class="quoi">
                     <span class="disc">{d.label}</span>
@@ -88,20 +88,24 @@ const cssFiltre = legende
   .filtres label {
     display: inline-flex; align-items: center; gap: 8px;
     min-height: 44px; padding: 0 16px;
-    background: var(--blanc); border: 2px solid var(--ligne); border-radius: var(--rayon);
+    background: #fff; border: 1px solid var(--ligne); border-radius: 999px;
     cursor: pointer; user-select: none;
     transition: background var(--transition), color var(--transition), border-color var(--transition);
   }
   .filtres label:hover { border-color: var(--encre); }
   .filtres input:checked + label { background: var(--encre); border-color: var(--encre); color: var(--papier); }
-  .filtres input:focus-visible + label { outline: 3px solid var(--jaune); outline-offset: 2px; box-shadow: 0 0 0 5px var(--encre); }
+  .filtres input:focus-visible + label { outline: 3px solid var(--rouge); outline-offset: 2px; }
   /* Navigateur sans :has : le filtre ne peut pas agir, on retombe sur une simple légende. */
   @supports not selector(:has(*)) {
     .filtres { gap: 10px 24px; }
     .filtres input, .filtres label[for="filtre-tous"] { display: none; }
     .filtres label { min-height: 0; padding: 0; background: none; border: 0; border-radius: 0; cursor: default; }
   }
-  .pastille { width: 12px; height: 12px; border-radius: 2px; display: inline-block; background: var(--c); }
+  .pastille { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .pastille.bleu { background: var(--ceinture-bleue); }
+  .pastille.rouge { background: var(--rouge); }
+  .pastille.jaune { background: var(--ceinture-jaune); }
+  .pastille.encre { background: var(--encre-2); }
 
   .grille-horaire {
     display: grid;
@@ -109,21 +113,25 @@ const cssFiltre = legende
     gap: 14px;
   }
   .jour h3 {
-    font-size: 16px; color: var(--encre); font-weight: 700;
-    padding-bottom: 8px; border-bottom: 3px solid var(--encre);
+    font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--sourdine); font-weight: 700;
+    padding-bottom: 10px; border-bottom: 2px solid var(--encre);
     margin-bottom: 12px;
   }
   .jour ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
   .cours {
     display: flex; flex-direction: column; gap: 2px;
-    background: var(--blanc); border: 1px solid var(--ligne);
-    border-left: 6px solid var(--c, var(--encre-2));
+    background: #fff; border: 1px solid var(--ligne);
+    border-left: 4px solid var(--encre-2);
     border-radius: var(--rayon);
     padding: 10px 12px;
     transition: opacity 220ms var(--sortie);
   }
   .jour { transition: opacity 220ms var(--sortie); }
-  .heure { font-size: 14px; font-weight: 700; color: var(--sourdine); }
+  .cours.bleu { border-left-color: var(--ceinture-bleue); }
+  .cours.rouge { border-left-color: var(--rouge); }
+  .cours.jaune { border-left-color: var(--ceinture-jaune); }
+  .heure { font-size: 13px; font-weight: 700; color: var(--sourdine); }
   .quoi { display: flex; flex-direction: column; }
   .disc { font-weight: 700; font-size: 14.5px; line-height: 1.25; }
   .niveau { font-size: 13px; color: var(--sourdine); }

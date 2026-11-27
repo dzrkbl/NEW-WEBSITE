@@ -57,17 +57,13 @@ coder ; ce fichier-ci donne le POURQUOI et l'historique.
     tant que `metaPixelId` est vide.
   - `Hero`, `Programmes`, `Club`, `Horaire`, `Competition`, `Tarifs`, `Coachs`,
     `Essai` : sections de l'accueil.
-- **Design système « tatami »** (`src/styles/global.css`, refonte du 27 novembre) :
-  les couleurs viennent du dojo : bleu et rouge des tapis (`--tatami #1560B3`,
-  `--rouge #D4213A`, réservé à l'action), blanc kimono (`--gi`), jaune de la
-  première ceinture (`--jaune #FFC83D`), bleu nuit (`--nuit`). Polices
-  auto-hébergées (`public/fonts/`) : Dela Gothic One (titres, une seule graisse,
-  plus 7 kanji en sous-ensemble) et Hanken Grotesk (texte). Motifs : zones du
-  tatami (`fond-*`), bord en dents de tapis-puzzle (`dents`), tuiles à ombre
-  franche, barre des ceintures. L'ancienne palette « papier / encre / rouge »
-  et Big Shoulders Display sont retirées. Détails : section « Identité visuelle »
-  de `CLAUDE.md`. Interdits hérités de l'audit : le vert #39B54A et le bleu
-  #003388 de l'ancien thème.
+- **Design système** (`src/styles/global.css`) : palette « papier gi / encre /
+  rouge dojo » (`--papier #FAF7F2`, `--encre #17181C`, `--rouge #C8102E`,
+  `--rouge-vif #FF4B45` réservé aux fonds sombres). Motif signature : la barre
+  des ceintures (blanche→noire) sous le header et le footer. Polices
+  auto-hébergées (`public/fonts/`) : Big Shoulders Display (titres) et Hanken
+  Grotesk (texte, y compris le wordmark CSHP du header). Interdits hérités de
+  l'audit : le vert #39B54A et le bleu #003388 de l'ancien thème.
 - **Mouvement** (palier 1, 100 % CSS, aucun JS ajouté, tout dans `global.css`) :
   la barre des ceintures de l'entête se dévoile de la blanche à la noire selon
   le défilement (`.ceintures-progression`, `animation-timeline: scroll()`) ;

@@ -1,197 +1,76 @@
 ---
-// Accueil du dojo. À gauche : la promesse et l'action. À droite : une mosaïque
-// de tuiles posées comme des tapis (photos réelles, repères du club, 道).
-// En bas : les quatre réponses que cherche un parent, chacune menant à sa section.
 import { getImage } from 'astro:assets';
 import club from '../data/club.json';
-import tarifs from '../data/tarifs.json';
-import photoJudo from '../assets/photos/hero-judo-enfants-mobile.jpg';
-import photoKarate from '../assets/photos/karate-cours.jpg';
+import photoHero from '../assets/photos/hero-judo-enfants.jpg';
+import photoHeroMobile from '../assets/photos/hero-judo-enfants-mobile.jpg';
 
-// La première image de la page montre des enfants (décision du propriétaire).
-// Elle est aussi l'image la plus lourde du premier écran : chargée en priorité.
-const judo = await getImage({ src: photoJudo, width: 880, format: 'webp' });
-const judoPetit = await getImage({ src: photoJudo, width: 520, format: 'webp' });
-const karate = await getImage({ src: photoKarate, width: 880, format: 'webp' });
-const karatePetit = await getImage({ src: photoKarate, width: 520, format: 'webp' });
-
-const planDeBase = [...tarifs.plans].sort((a, b) => a.prix - b.prix)[0];
-const finDeSemaine = club.heures.slice(1).map((h) => h.jours.toLowerCase()).join(' et ');
-
-const reperes = [
-  { question: 'Quel âge ?', reponse: '4 à 18 ans', detail: 'Ninjas, karaté et judo', href: '#programmes' },
-  { question: 'Quels jours ?', reponse: club.heures[0].jours, detail: `${club.heures[0].plage}, ${finDeSemaine} aussi`, href: '#horaire' },
-  {
-    question: 'Combien ?',
-    reponse: `${planDeBase.prix} ${tarifs.devise}`,
-    detail: `pour ${planDeBase.periode}${tarifs.taxesIncluses ? ', taxes incluses' : ''}`,
-    href: '#tarifs',
-  },
-  { question: 'Où ?', reponse: club.adresse.quartier, detail: club.adresse.rue, href: '#contact' },
-];
+const heroDesktop = await getImage({ src: photoHero, width: 1170, format: 'webp' });
+const heroMobile = await getImage({ src: photoHeroMobile, width: 820, format: 'webp' });
 ---
 
-<section class="hero fond-tatami" aria-labelledby="hero-titre">
-  <div class="colonne hero-grille">
-    <div class="hero-texte">
-      <h1 id="hero-titre">
-        <span class="hero-lieu">École de karaté, judo et Ninjas à {club.adresse.quartier}, {club.adresse.ville}</span>
-        <span class="display hero-display">La confiance s'apprend ici.</span>
-      </h1>
-      <p class="hero-sous">
-        Arts martiaux pour les 4 à 18 ans, du premier salut jusqu'au podium.
-        Encadrement de calibre compétitif, esprit de famille, à deux pas de chez vous.
-      </p>
-      <div class="hero-actions">
-        <a href="#essai" class="btn btn-rouge">Réserver un essai gratuit</a>
-        <a href="#horaire" class="btn btn-contour-clair">Voir l'horaire</a>
-      </div>
+<section class="hero" aria-labelledby="hero-titre">
+  <picture class="hero-photo-cadre">
+    <source media="(max-width: 700px)" srcset={heroMobile.src} />
+    <img
+      src={heroDesktop.src}
+      alt="Deux enfants du CSHP en plein combat de judo, kimonos blanc et bleu, sur les tatamis du dojo"
+      class="hero-photo"
+      loading="eager"
+      fetchpriority="high"
+      width={heroDesktop.attributes.width}
+      height={heroDesktop.attributes.height}
+    />
+  </picture>
+  <div class="hero-voile" aria-hidden="true"></div>
+  <div class="colonne hero-contenu">
+    <h1 id="hero-titre">
+      <span class="kicker hero-kicker">École de karaté, judo et ninjas à {club.adresse.quartier}, {club.adresse.ville}</span>
+      <span class="display hero-display">
+        La confiance<br />s'apprend <em>ici.</em>
+      </span>
+    </h1>
+    <p class="hero-sous">
+      Arts martiaux pour les 4 à 18 ans, du premier salut jusqu'au podium.
+      Encadrement de calibre compétitif, esprit de famille, à deux pas de chez vous.
+    </p>
+    <div class="hero-actions">
+      <a href="#essai" class="btn btn-rouge">Réserver un essai gratuit</a>
+      <a href="#horaire" class="btn btn-contour-clair">Voir l'horaire</a>
     </div>
-
-    <div class="mosaique">
-      <div class="tuile tuile-photo t-judo">
-        <img
-          src={judo.src}
-          srcset={`${judoPetit.src} 520w, ${judo.src} 880w`}
-          sizes="(max-width: 900px) 62vw, 30vw"
-          alt="Deux enfants du CSHP en plein combat de judo, kimonos blanc et bleu, sur les tatamis du dojo"
-          loading="eager"
-          fetchpriority="high"
-          width={judo.attributes.width}
-          height={judo.attributes.height}
-        />
-      </div>
-      <p class="tuile t-depuis">
-        <span class="tuile-petit">Depuis</span>
-        <span class="display tuile-grand tabulaire">{club.fondation}</span>
-      </p>
-      <p class="tuile t-voie">
-        <span class="display kanji" aria-hidden="true">道</span>
-        <span class="tuile-petit">Dō, la voie</span>
-      </p>
-      <p class="tuile t-surface">
-        <span class="display tuile-grand tabulaire">{club.surface}</span>
-        <span class="tuile-petit">de tatamis</span>
-      </p>
-      <div class="tuile tuile-photo t-karate">
-        <img
-          src={karate.src}
-          srcset={`${karatePetit.src} 520w, ${karate.src} 880w`}
-          sizes="(max-width: 900px) 62vw, 30vw"
-          alt="Démonstration d'un coup de pied devant de jeunes karatékas assis sur le tatami"
-          loading="eager"
-          width={karate.attributes.width}
-          height={karate.attributes.height}
-        />
-      </div>
-    </div>
-  </div>
-
-  <div class="colonne">
-    <ul class="reperes" role="list">
-      {reperes.map((r) => (
-        <li>
-          <a href={r.href} class="repere">
-            <span class="repere-question">{r.question}</span>
-            <span class="display repere-reponse tabulaire">{r.reponse}</span>
-            <span class="repere-detail">{r.detail}</span>
-          </a>
-        </li>
-      ))}
+    <ul class="hero-preuves" role="list">
+      <li>Fondé en {club.fondation}</li>
+      <li>Affilié Karaté&nbsp;Québec et Judo&nbsp;Québec</li>
+      <li>Dojo de {club.surface}</li>
     </ul>
   </div>
 </section>
 
 <style>
-  .hero { padding-block: clamp(28px, 4.5vw, 56px) clamp(44px, 6vw, 76px); overflow: clip; }
-  .hero-grille { display: grid; grid-template-columns: 1.12fr 0.88fr; gap: clamp(28px, 4.5vw, 64px); align-items: center; }
-
-  h1 { display: flex; flex-direction: column; gap: 16px; }
-  .hero-lieu { font-size: 16.5px; font-weight: 600; color: var(--sur-sombre); display: flex; align-items: center; gap: 10px; }
-  .hero-lieu::before { content: ""; width: 12px; height: 12px; background: var(--jaune); border-radius: 2px; flex: 0 0 auto; }
-  .hero-display { font-size: clamp(42px, 5.5vw, 74px); line-height: 1.02; color: var(--blanc); max-width: 11ch; }
-  .hero-sous { margin: 22px 0 0; font-size: clamp(17px, 1.6vw, 19.5px); max-width: 46ch; color: var(--sur-sombre); }
-  .hero-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 28px; }
-
-  /* ---- mosaïque : 3 × 3 tuiles carrées, jointives comme des tapis ---- */
-  .mosaique {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-areas:
-      "judo judo depuis"
-      "judo judo voie"
-      "surface karate karate";
-    gap: 8px;
+  .hero { position: relative; min-height: clamp(540px, 84vh, 800px); display: flex; align-items: flex-end; overflow: hidden; background: var(--sombre); }
+  .hero-photo-cadre { position: absolute; inset: 0; display: block; }
+  .hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 45%; }
+  .hero-voile {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to right, rgba(15, 16, 20, 0.5) 0%, rgba(15, 16, 20, 0.18) 34%, rgba(15, 16, 20, 0) 55%),
+      linear-gradient(to top, rgba(15, 16, 20, 0.92) 0%, rgba(15, 16, 20, 0.42) 44%, rgba(15, 16, 20, 0.1) 72%, rgba(15, 16, 20, 0.22) 100%);
   }
-  .tuile {
-    margin: 0; max-width: none; aspect-ratio: 1;
-    border-radius: var(--rayon); overflow: hidden;
-    display: flex; flex-direction: column; justify-content: flex-end; gap: 2px;
-    padding: clamp(10px, 1.3vw, 16px);
+  .hero-contenu { position: relative; width: 100%; color: var(--sur-sombre); padding-block: clamp(38px, 5.5vw, 64px); }
+  h1 { display: flex; flex-direction: column; gap: 18px; }
+  .hero-kicker { color: #fff; text-shadow: 0 1px 10px rgba(0, 0, 0, 0.4); }
+  .hero-kicker::before { background: var(--rouge-vif); }
+  .hero-display { font-size: clamp(50px, 8.4vw, 104px); color: #fff; }
+  .hero-display em { font-style: normal; color: var(--rouge-vif); }
+  .hero-sous { margin-top: 18px; font-size: clamp(16.5px, 2vw, 19px); max-width: 44ch; color: rgba(245, 242, 236, 0.92); }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 24px; }
+  .hero-preuves {
+    list-style: none; display: flex; flex-wrap: wrap; gap: 10px 26px;
+    margin: 30px 0 0; padding: 16px 0 0; border-top: 1px solid rgba(245, 242, 236, 0.22);
+    font-size: 14px; font-weight: 500; color: rgba(245, 242, 236, 0.85);
   }
-  .tuile-photo { padding: 0; aspect-ratio: auto; }
-  .tuile-photo img { width: 100%; height: 100%; object-fit: cover; }
-  .t-judo { grid-area: judo; }
-  .t-judo img { object-position: 58% 40%; }
-  .t-karate { grid-area: karate; aspect-ratio: 2 / 1; }
-  .t-karate img { object-position: 50% 62%; }
-  .t-depuis { grid-area: depuis; background: var(--rouge); color: var(--blanc); }
-  .t-voie { grid-area: voie; background: var(--jaune); color: var(--encre); justify-content: space-between; }
-  .t-surface { grid-area: surface; background: var(--tatami-vif); color: var(--blanc); }
-  .tuile-petit { font-size: clamp(12.5px, 1.05vw, 14.5px); font-weight: 700; line-height: 1.2; }
-  .tuile-grand { font-size: clamp(17px, 2vw, 27px); line-height: 1.12; }
-  .kanji { font-size: clamp(46px, 6.4vw, 88px); line-height: 0.9; }
-
-  /* ---- repères : les quatre réponses, une tuile chacune ---- */
-  .reperes {
-    list-style: none; margin: clamp(32px, 4.5vw, 56px) 0 0; padding: 0;
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
-  }
-  .repere {
-    height: 100%;
-    display: flex; flex-direction: column; gap: 4px;
-    background: var(--gi); color: var(--encre);
-    border-radius: var(--rayon); padding: 16px 18px 18px;
-    text-decoration: none;
-    box-shadow: 4px 4px 0 var(--nuit);
-    transition: transform 140ms var(--sortie), box-shadow 140ms var(--sortie), background var(--transition);
-  }
-  .repere-question { font-size: 14.5px; font-weight: 700; color: var(--rouge); }
-  .repere-reponse { font-size: clamp(18px, 1.75vw, 23px); line-height: 1.12; }
-  .repere-detail { font-size: 14.5px; color: var(--encre-2); line-height: 1.35; }
-  @media (hover: hover) {
-    .repere:hover { background: var(--jaune); transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--nuit); }
-    .repere:hover .repere-question { color: var(--encre); }
-  }
-  .repere:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--nuit); }
-
-  /* ---- arrivée : on pose les tapis, un par un (une seule fois, au chargement) ----
-     La grande photo ne passe jamais par l'opacité : elle s'affiche tout de suite. */
-  @media (prefers-reduced-motion: no-preference) {
-    .tuile { animation: poser 620ms var(--sortie) both; }
-    .t-judo { animation-name: poser-photo; }
-    .t-depuis { animation-delay: 120ms; }
-    .t-voie { animation-delay: 210ms; }
-    .t-karate { animation-delay: 300ms; }
-    .t-surface { animation-delay: 390ms; }
-    @keyframes poser {
-      from { opacity: 0; transform: translateY(26px) rotate(-3deg) scale(0.92); }
-      to { opacity: 1; transform: none; }
-    }
-    @keyframes poser-photo {
-      from { transform: translateY(18px) scale(0.97); }
-      to { transform: none; }
-    }
-  }
-
-  @media (max-width: 900px) {
-    .hero-grille { grid-template-columns: 1fr; }
-    .hero-display { font-size: clamp(36px, 10.4vw, 62px); max-width: none; }
-    .mosaique { max-width: 560px; }
-    .reperes { grid-template-columns: 1fr 1fr; }
-  }
-  @media (max-width: 420px) {
-    .repere { padding: 13px 14px 15px; }
-    .repere-detail { font-size: 13.5px; }
+  .hero-preuves li { display: flex; align-items: center; gap: 8px; }
+  .hero-preuves li::before { content: ""; width: 6px; height: 6px; background: var(--rouge-vif); border-radius: 50%; }
+  @media (max-width: 700px) {
+    .hero-photo { object-position: 42% 30%; }
   }
 </style>
